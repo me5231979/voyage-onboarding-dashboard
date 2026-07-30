@@ -523,3 +523,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .filterlabel .legend__key { color: var(--ink-soft); }
 /* solid nav over light working surfaces */
 body.view-light .nav { background: rgba(20,20,20,.96); }
+
+/* tile type-dot row; top border color is set inline from content */
+.cattile__dots { display: flex; gap: .35rem; margin-top: .6rem; }
+.cattile__dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.cattile.on .cattile__dot { box-shadow: 0 0 0 1px rgba(255,255,255,.6); }
+.section--day .cattile.on { border-top-color: var(--vu-black) !important; }

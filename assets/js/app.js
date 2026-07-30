@@ -302,9 +302,17 @@
       if (!mine.length) return '';
       var open = mine.filter(function (it) { return !isDone(it.id); }).length;
       var on = state.filter === t.id;
-      return '<button type="button" aria-pressed="' + on + '" class="cattile' + (t.hard ? ' cattile--hard' : '') + (on ? ' on' : '') + '" data-tile="' + t.id + '">' +
+      var typeCounts = {};
+      mine.forEach(function (it) { var k = it.type || 'task'; typeCounts[k] = (typeCounts[k] || 0) + 1; });
+      var dominant = Object.keys(typeCounts).sort(function (x, y) { return typeCounts[y] - typeCounts[x]; })[0];
+      var edge = (VOYAGE.typeDefs[dominant] || {}).edge || 'var(--vu-gold-flat)';
+      var dots = Object.keys(VOYAGE.typeDefs).filter(function (k) { return typeCounts[k]; }).map(function (k) {
+        return '<i class="cattile__dot" style="background:' + VOYAGE.typeDefs[k].edge + '" title="' + VOYAGE.typeDefs[k].label + ' · ' + typeCounts[k] + '"></i>';
+      }).join('');
+      return '<button type="button" aria-pressed="' + on + '" class="cattile' + (on ? ' on' : '') + '" data-tile="' + t.id + '" style="border-top-color:' + edge + '">' +
         (t.hard ? '<span class="cattile__badge">Deadlines</span>' : '') +
-        '<h3>' + esc(t.label) + '</h3><span class="cattile__count">' + (open ? open + ' to go · ' : '') + mine.length + ' items</span></button>';
+        '<h3>' + esc(t.label) + '</h3><span class="cattile__count">' + (open ? open + ' to go · ' : '') + mine.length + ' items</span>' +
+        '<span class="cattile__dots" aria-hidden="true">' + dots + '</span></button>';
     }).join('');
     $$('#catTiles [data-tile]').forEach(function (b) {
       b.addEventListener('click', function () {
