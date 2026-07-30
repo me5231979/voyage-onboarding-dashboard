@@ -1,30 +1,40 @@
 name: Fetch hero montage
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       video_url:
         description: 'URL of the hero montage MP4'
         required: false
-        default: 'https://d8j0ntlcm91z4.cloudfront.net/user_3CCurpI0FW75YAnAl4Hbz3vPdBv/hf_20260730_182339_881ab076-6ebd-4cce-8220-4f469dd263b3.mp4'
 
 permissions:
   contents: write
+
+env:
+  VIDEO_URL: ${{ github.event.inputs.video_url || 'https://d8j0ntlcm91z4.cloudfront.net/user_3CCurpI0FW75YAnAl4Hbz3vPdBv/hf_20260730_182339_881ab076-6ebd-4cce-8220-4f469dd263b3.mp4' }}
 
 jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Check whether montage already committed
+        id: check
+        run: echo "exists=$([ -f assets/video/hero-montage.mp4 ] && echo yes || echo no)" >> "$GITHUB_OUTPUT"
       - name: Download montage
+        if: steps.check.outputs.exists == 'no'
         run: |
-          curl -fsSL -o assets/video/hero-montage.mp4 "${{ github.event.inputs.video_url }}"
+          curl -fsSL -o assets/video/hero-montage.mp4 "$VIDEO_URL"
           ls -la assets/video/
       - name: Extract poster frame
+        if: steps.check.outputs.exists == 'no'
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
           ffmpeg -y -i assets/video/hero-montage.mp4 -vf "select=eq(n\,10)" -frames:v 1 -q:v 4 assets/img/hero-poster.jpg
       - name: Commit assets
+        if: steps.check.outputs.exists == 'no'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
