@@ -26,6 +26,7 @@ jobs:
       - name: Download montage
         if: steps.check.outputs.exists == 'no'
         run: |
+          mkdir -p assets/video assets/img
           curl -fsSL -o assets/video/hero-montage.mp4 "$VIDEO_URL"
           ls -la assets/video/
       - name: Extract poster frame
