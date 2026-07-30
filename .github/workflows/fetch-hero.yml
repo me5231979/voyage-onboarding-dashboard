@@ -1,0 +1,33 @@
+name: Fetch hero montage
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: 'URL of the hero montage MP4'
+        required: false
+        default: 'https://d8j0ntlcm91z4.cloudfront.net/user_3CCurpI0FW75YAnAl4Hbz3vPdBv/hf_20260730_182339_881ab076-6ebd-4cce-8220-4f469dd263b3.mp4'
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download montage
+        run: |
+          curl -fsSL -o assets/video/hero-montage.mp4 "${{ github.event.inputs.video_url }}"
+          ls -la assets/video/
+      - name: Extract poster frame
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          ffmpeg -y -i assets/video/hero-montage.mp4 -vf "select=eq(n\,10)" -frames:v 1 -q:v 4 assets/img/hero-poster.jpg
+      - name: Commit assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/video/hero-montage.mp4 assets/img/hero-poster.jpg
+          git diff --cached --quiet || git commit -m "Add hero montage video and poster frame"
+          git push
