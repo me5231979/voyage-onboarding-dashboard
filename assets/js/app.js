@@ -170,7 +170,10 @@
 
   function cardHTML(it) {
     var cat = VOYAGE.cats[it.cat];
-    var due = it.due ? '<span class="item__due ' + it.due + '">' + (it.due === 'hard' ? '● Due ' : 'Due ') + esc(it.dueLabel) + '</span>' : '';
+    var due = it.due ? '<span class="item__due ' + it.due + '">' + (it.due === 'hard' ? '● ' : '') + esc(it.dueLabel) + '</span>' : '';
+    var legal = it.legal ? '<span class="lawchip lawchip--' + it.legal.toLowerCase() + '" title="' + esc(it.cite || '') + '">' + it.legal + '</span>' : '';
+    var cad = it.cadence ? '<span>' + esc(it.cadence) + '</span>' : '';
+    var cond = it.cond ? '<p class="item__prereq">⚠ ' + esc(it.cond) + '</p>' : '';
     var prereq = '';
     if (it.prereq) {
       var p = itemById(it.prereq);
@@ -181,8 +184,8 @@
     return '<article class="item" data-item="' + it.id + '">' +
       '<div class="item__top"><span class="item__cat">' + esc(cat.label) + '</span>' + pillFor(it.id, it) + '</div>' +
       '<h4>' + esc(it.title) + '</h4>' +
-      '<div class="item__meta"><span>' + it.mins + ' min</span><span class="srcbadge">' + esc(it.src) + '</span>' + due + '</div>' +
-      prereq +
+      '<div class="item__meta"><span>' + it.mins + ' min</span><span class="srcbadge">' + esc(it.src) + '</span>' + legal + due + cad + '</div>' +
+      cond + prereq +
       '<div class="item__actions">' +
         '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + (done ? 'Revisit' : 'Open') + '</a>' +
         (done ? '' : '<button type="button" class="item__minor" data-done="' + it.id + '">Mark as done</button>') +
@@ -302,6 +305,19 @@
       return '<div class="lane"><div class="lane__title"><h3>' + esc(lane.title) + '</h3><span>' + esc(lane.kicker) + '</span></div>' + cards + '</div>';
     }).join('');
 
+    /* compliance center */
+    var comp = items.filter(function (it) { return it.cite; });
+    $('#compRows').innerHTML = comp.map(function (it) {
+      return '<div class="comprow">' +
+        '<div class="comprow__main"><b>' + esc(it.title) + '</b><small>' + esc(it.course || '') + (it.cond ? ' · ⚠ ' + esc(it.cond) : '') + '</small></div>' +
+        '<div><span class="lawchip lawchip--' + it.legal.toLowerCase() + '">' + it.legal + '</span><small class="comprow__cite">' + esc(it.cite) + '</small></div>' +
+        '<div class="comprow__when"><b>' + esc(it.dueLabel) + '</b><small>' + esc(it.cadence) + '</small></div>' +
+        '<div>' + pillFor(it.id, it) + '</div>' +
+        '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + (isDone(it.id) ? 'Revisit' : 'Start') + '</a></div>';
+    }).join('');
+    $('#compMeta').textContent = comp.filter(function (it) { return it.legal === 'Legal'; }).length + ' legally required · ' +
+      comp.filter(function (it) { return it.legal === 'Advisory'; }).length + ' advisory (policy) · tuned to ' + locName(p.loc) + ' and your role tier';
+
     /* people */
     $('#people').innerHTML = VOYAGE.people.map(function (pp) {
       return '<div class="person"><span class="avatar">' + esc(pp.init) + '</span><b>' + esc(pp.name) + '</b><span>' + esc(pp.role) + '</span><span class="rel">' + esc(pp.rel) + '</span>' +
@@ -400,18 +416,45 @@
   }
 
   /* search */
+  var catalog = null, catalogLoading = false, catalogWaiters = [];
+  var OL_PREFIX = 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=';
+  function loadCatalog(then) {
+    if (catalog) { if (then) then(); return; }
+    if (then) catalogWaiters.push(then);
+    if (catalogLoading) return;
+    catalogLoading = true;
+    fetch('assets/data/catalog.json').then(function (r) { return r.json(); })
+      .then(function (d) {
+        catalog = d;
+        catalogWaiters.splice(0).forEach(function (fn) { fn(); });
+      })
+      .catch(function () { catalogLoading = false; catalogWaiters.length = 0; });
+  }
   function buildSearch() {
     var input = $('#bigSearch'), out = $('#searchResults');
     var placeholders = ['Search parking, benefits, HIPAA, Culture Amp…', 'Search pay stubs, badge, Epic, holidays…', 'Search harassment training, W-4, VPN…'];
     var pi = 0;
     setInterval(function () { if (!input.value && document.activeElement !== input) { pi = (pi + 1) % placeholders.length; input.placeholder = placeholders[pi]; } }, 5000);
+    input.addEventListener('focus', function () { loadCatalog(); });
     input.addEventListener('input', function () {
       var q = input.value.trim().toLowerCase();
       if (!q) { out.innerHTML = ''; return; }
+      if (!catalog) loadCatalog(function () { input.dispatchEvent(new Event('input')); });
       var pool = myItems().map(function (it) { return { title: it.title, sub: it.src + ' · ' + it.mins + ' min' + (isDone(it.id) ? ' · completed' : ''), href: it.href, id: it.id }; })
         .concat(VOYAGE.programs.map(function (x) { return { title: x.name, sub: 'FLH Program · ' + x.who, href: 'https://me5231979.github.io/Course_Library/' }; }))
         .concat(VOYAGE.renewals.map(function (r) { return { title: r.title, sub: r.src + ' · renews in ' + r.days + ' days', href: r.href }; }));
       var hits = pool.filter(function (r) { return (r.title + ' ' + r.sub).toLowerCase().indexOf(q) > -1; }).slice(0, 6);
+      if (catalog && hits.length < 8) {
+        var seen = {};
+        hits.forEach(function (h) { seen[h.title.toLowerCase()] = 1; });
+        for (var i = 0; i < catalog.length && hits.length < 8; i++) {
+          var name = catalog[i][0];
+          if (name.toLowerCase().indexOf(q) > -1 && !seen[name.toLowerCase()]) {
+            seen[name.toLowerCase()] = 1;
+            hits.push({ title: name, sub: 'Oracle Learn · active course catalog', href: OL_PREFIX + catalog[i][1] });
+          }
+        }
+      }
       out.innerHTML = hits.length ? hits.map(function (r) {
         return '<div class="result"><div class="result__main"><b>' + esc(r.title) + '</b><small>' + esc(r.sub) + '</small></div>' +
           '<a class="btn"' + (r.id ? ' data-go="' + r.id + '"' : '') + ' href="' + esc(r.href) + '" target="_blank" rel="noopener">Open</a></div>';

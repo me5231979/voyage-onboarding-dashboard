@@ -261,6 +261,25 @@ main section[id] { scroll-margin-top: var(--nav-h); }
 .profilecard p { font-size: .9rem; color: rgba(255,255,255,.7); flex: 1; min-width: 240px; }
 .profilecard p b { color: #fff; font-weight: 600; }
 
+/* ---------- Compliance Center ---------- */
+.lawchip { display: inline-block; font-family: var(--font-condensed); font-weight: 700;
+  font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; border-radius: 3px;
+  padding: .18rem .5rem; }
+.lawchip--legal { background: rgba(176,65,62,.2); color: #e29d9b; border: 1px solid rgba(176,65,62,.5); }
+.lawchip--advisory { background: rgba(207,174,112,.12); color: var(--vu-gold-flat); border: 1px solid rgba(207,174,112,.4); }
+.compmeta { font-size: .88rem; color: rgba(255,255,255,.6); margin-top: .6rem; }
+.comptable { margin-top: 1.4rem; display: grid; gap: .7rem; }
+.comprow { display: grid; grid-template-columns: minmax(0,2.2fr) minmax(0,1.4fr) minmax(0,1fr) auto auto;
+  gap: 1.1rem; align-items: center; background: #232323; border: 1px solid rgba(255,255,255,.13);
+  border-radius: var(--radius); padding: .95rem 1.15rem; }
+.comprow__main b { display: block; font-weight: 600; font-size: .95rem; color: #fff; }
+.comprow__main small, .comprow small { display: block; font-size: .74rem; color: rgba(255,255,255,.5); margin-top: .15rem; }
+.comprow__cite { max-width: 220px; }
+.comprow__when b { display: block; font-size: .82rem; font-weight: 600; color: rgba(255,255,255,.85); }
+.comprow .btn { padding: .5rem .95rem; font-size: .78rem; }
+@media (max-width: 900px) { .comprow { grid-template-columns: 1fr auto; }
+  .comprow__when, .comprow > div:nth-child(2) { display: none; } }
+
 /* ---------- Skill chips (SBJA) on dark ---------- */
 .skillchips { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1rem; }
 .skillchips--center { justify-content: center; margin-top: 1.4rem; }

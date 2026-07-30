@@ -9,6 +9,10 @@ A personalized, location- and role-aware onboarding experience for Vanderbilt st
 3. **Live dashboard (Days 1–30)** — three swim lanes (Before Day 1 / Week 1 / Weeks 2–4), six priority tiles with Safety & Compliance carrying the red "Deadlines" accent, a real-time progress ring, benefits-window countdown, "Up next" logic (hard dates first, prerequisites respected), people-to-meet cards with Outlook-style intro scheduling, and announcements.
 4. **Returning-learner view (Day 31+)** — universal search with rotating placeholder hints, "Pick up where you left off," role/department-tuned shelf, color-coded renewals calendar (green >60 / amber 30–60 / red <30 days), Explore Vanderbilt shelf, quick-action rails, and personal history.
 
+## Compliance, from the matrix
+
+The compliance path is generated from the Compliance Training Matrix (Master Matrix tab): one card per Course × State × Tier row, each deep-linked to the matching active course in Oracle Learn. Every requirement carries its legal basis (LEGAL with statutory citation, or ADVISORY policy), completion window, cadence, and worksite-trigger caveats (NY Retail Worker Safety, FL lodging human trafficking). A Compliance Center table on the dashboard shows the signed-in person exactly what their state and role tier require. The Day 31+ search also queries the full 44,000-course active catalog (lazy-loaded index) with Oracle Learn deep links.
+
 ## Click-based completion capture
 
 Every card's primary CTA is the tracked completion signal. Clicks flip the status pill instantly ("Not started" → "Opened" → "Complete"). Items backed by an API source (Oracle Learn, Oracle HCM, Culture Amp, Vector Solutions) upgrade to **✓ Verified** — here simulated with a short delay standing in for the nightly reconciliation job. Click events are logged (`user, item, timestamp`) into `localStorage`, feeding the recently-viewed and completed rails. Confetti fires only for completions over 30 minutes, and `prefers-reduced-motion` kills it (and the hero video).
