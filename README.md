@@ -13,6 +13,10 @@ A personalized, location- and role-aware onboarding experience for Vanderbilt st
 
 The compliance path is generated from the Compliance Training Matrix (Master Matrix tab): one card per Course × State × Tier row, each deep-linked to the matching active course in Oracle Learn. Every requirement carries its legal basis (LEGAL with statutory citation, or ADVISORY policy), completion window, cadence, and worksite-trigger caveats (NY Retail Worker Safety, FL lodging human trafficking). A Compliance Center table on the dashboard shows the signed-in person exactly what their state and role tier require. The Day 31+ search also queries the full 44,000-course active catalog (lazy-loaded index) with Oracle Learn deep links.
 
+## SCORM: real identity from Oracle
+
+The site doubles as a SCORM 1.2 package (`imsmanifest.xml` + `assets/js/scorm.js`). Launched inside Oracle Learning, the adapter discovers the LMS API, reads the real learner name and ID (`cmi.core.student_name` / `student_id`), replaces the demo persona, and reports the SCO as **completed** when the learner finishes the personalization gate — so Oracle records a genuine completion for the Voyage module. Build the uploadable zip with `bash scripts/build-scorm.sh`. Standalone (GitHub Pages), no API is found and the labeled demo profile is used instead. SCORM only exposes name and ID — manager, department, location, and job code still come from the Oracle HCM REST integration in production.
+
 ## Click-based completion capture
 
 Every card's primary CTA is the tracked completion signal. Clicks flip the status pill instantly ("Not started" → "Opened" → "Complete"). Items backed by an API source (Oracle Learn, Oracle HCM, Culture Amp, Vector Solutions) upgrade to **✓ Verified** — here simulated with a short delay standing in for the nightly reconciliation job. Click events are logged (`user, item, timestamp`) into `localStorage`, feeding the recently-viewed and completed rails. Confetti fires only for completions over 30 minutes, and `prefers-reduced-motion` kills it (and the hero video).

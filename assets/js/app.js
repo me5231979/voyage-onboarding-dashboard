@@ -141,6 +141,7 @@
     $('#gateFinish').addEventListener('click', function () {
       state.profile = { loc: draft.loc, family: draft.family, sub: draft.sub, role: draft.role };
       save();
+      if (window.VoyageSCORM && window.VoyageSCORM.connected) window.VoyageSCORM.complete();
       show('dashboard');
       toast('Your path is ready, ' + firstName() + '. Welcome aboard.');
     });
@@ -533,6 +534,12 @@
     var parts = full.trim().split(/\s+/);
     $('#idInitials').textContent = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
     $('#idName').textContent = full;
+  }
+  var sc = window.VoyageSCORM;
+  if (sc && sc.connected) {
+    if (sc.name && !state.name) { state.name = sc.name; save(); }
+    $('#idMeta').textContent = 'Signed in via Oracle Learning' + (sc.id ? ' · Learner ID ' + sc.id : '') + ' — pulled live from the LMS';
+    $('#renameBtn').hidden = true;
   }
   paintIdentity();
   $('#renameBtn').addEventListener('click', function () {
