@@ -458,7 +458,7 @@
       out.innerHTML = hits.length ? hits.map(function (r) {
         return '<div class="result"><div class="result__main"><b>' + esc(r.title) + '</b><small>' + esc(r.sub) + '</small></div>' +
           '<a class="btn"' + (r.id ? ' data-go="' + r.id + '"' : '') + ' href="' + esc(r.href) + '" target="_blank" rel="noopener">Open</a></div>';
-      }).join('') : '<div class="result"><div class="result__main"><b>No matches for “' + esc(input.value.trim()) + '”</b><small>Try a system name, a policy, or ask HR.</small></div><a class="btn" href="mailto:hr@vanderbilt.edu?subject=' + encodeURIComponent('Can’t find: ' + input.value.trim()) + '">Ask HR</a></div>';
+      }).join('') : '<div class="result"><div class="result__main"><b>No matches for “' + esc(input.value.trim()) + '”</b><small>Try a system name, a policy, or ask PCB.</small></div><a class="btn" href="mailto:hr@vanderbilt.edu?subject=' + encodeURIComponent('Can’t find: ' + input.value.trim()) + '">Ask PCB</a></div>';
     });
   }
 

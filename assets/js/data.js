@@ -210,7 +210,7 @@ const VOYAGE = {
 
   quickPeople: [
     { name: 'Jordan Blake', sub: 'Manager' },
-    { name: 'HR Business Partner', sub: 'People & culture' },
+    { name: 'PCB Business Partner', sub: 'People, Culture & Belonging' },
     { name: 'IT Support — 615-343-9999', sub: 'Tech help' },
     { name: 'Benefits contact', sub: 'Total Rewards' },
     { name: 'EAP', sub: 'Confidential support' }
