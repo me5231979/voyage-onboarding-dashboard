@@ -78,10 +78,10 @@
 
       <!-- Step 2: Department -->
       <div class="gate__step" data-step="2" hidden>
-        <p class="eyebrow" style="text-align:center">Step 2 of 3 · Department</p>
-        <h2 class="h2">Find your <em class="gold-text">department</em>.</h2>
-        <p class="lead">Pulled from Oracle HCM. Start typing, or browse by division.</p>
-        <div class="gate__search"><input type="text" id="deptSearch" placeholder="Search departments…" aria-label="Search departments"></div>
+        <p class="eyebrow" style="text-align:center">Step 2 of 3 · Job family</p>
+        <h2 class="h2">Find your <em class="gold-text">job family</em>.</h2>
+        <p class="lead">From Vanderbilt's Skills-Based Job Architecture — 18 families, 95 sub-families. Start typing, or browse by family.</p>
+        <div class="gate__search"><input type="text" id="deptSearch" placeholder="Search job families and sub-families…" aria-label="Search job families"></div>
         <ul class="deptlist" id="deptList"></ul>
         <div class="dept__preview" id="deptPreview" hidden></div>
         <div class="gate__nav">
@@ -109,6 +109,7 @@
         <div class="gate__summary">
           <p class="path" id="summaryPath"></p>
           <p class="hours" id="summaryHours"></p>
+          <div class="skillchips skillchips--center" id="summarySkills"></div>
         </div>
         <div class="gate__nav" style="justify-content:center">
           <button class="gate__back" data-back="3">← Adjust</button>
@@ -212,6 +213,7 @@
 
           <div class="shelf">
             <div class="shelf__head"><h3 id="shelfForYouTitle">Because you're an <em>IC</em> in <em>HR</em></h3><span>Tuned to you</span></div>
+            <div class="skillchips" id="shelfSkills"></div>
             <div class="lane__cards" id="shelfForYou"></div>
           </div>
 
@@ -221,7 +223,7 @@
           </div>
 
           <div class="shelf">
-            <div class="shelf__head"><h3>Explore <em>Vanderbilt</em></h3><span>Keep growing</span></div>
+            <div class="shelf__head"><h3>The Futures <em>Learning Hub</em></h3><span>Programs for you</span></div>
             <div class="lane__cards" id="shelfExplore"></div>
           </div>
 
@@ -289,6 +291,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="assets/js/sbja.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/app.js"></script>
 </body>

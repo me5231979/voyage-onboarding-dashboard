@@ -5,7 +5,7 @@ A personalized, location- and role-aware onboarding experience for Vanderbilt st
 ## The experience
 
 1. **Welcome (Day 0)** — a hero video montage of people working together across campus and office settings (generated with Higgsfield), plus an identity card pre-populated from Oracle HCM. Nothing kills momentum like retyping data HR already has.
-2. **Three-question personalization gate** — Location → Department → Role, one screen each with progress dots. Selections drive parking vendor, safety contacts, state compliance tracks (CA gets the 2-hour harassment module, TN gets 1 hour), benefits nuances, and role depth (managers, clinical, research, faculty, student-facing).
+2. **Three-question personalization gate** — Location → Job family → Role, one screen each with progress dots. The job-family step searches Vanderbilt's real Skills-Based Job Architecture (18 families, 95 sub-families from SBJA), and picking a sub-family surfaces the skills that matter there. Selections drive parking vendor, safety contacts, state compliance tracks (CA gets the 2-hour harassment module, TN gets 1 hour), benefits nuances, and role depth (managers, clinical, research, faculty, student-facing).
 3. **Live dashboard (Days 1–30)** — three swim lanes (Before Day 1 / Week 1 / Weeks 2–4), six priority tiles with Safety & Compliance carrying the red "Deadlines" accent, a real-time progress ring, benefits-window countdown, "Up next" logic (hard dates first, prerequisites respected), people-to-meet cards with Outlook-style intro scheduling, and announcements.
 4. **Returning-learner view (Day 31+)** — universal search with rotating placeholder hints, "Pick up where you left off," role/department-tuned shelf, color-coded renewals calendar (green >60 / amber 30–60 / red <30 days), Explore Vanderbilt shelf, quick-action rails, and personal history.
 
@@ -20,7 +20,8 @@ Zero-dependency static site: hand-written HTML/CSS/JS, self-hosted fonts (Libre 
 - `index.html` — all four views (welcome, gate, dashboard, returning)
 - `assets/css/styles.css` — shared FLH design system (same as Course Library)
 - `assets/css/voyage.css` — dashboard-specific components
-- `assets/js/data.js` — the personalization catalog (audience rules per item)
+- `assets/js/data.js` — the personalization catalog (audience rules per item) plus the 12-program FLH portfolio (CHART, Leadership Redefined, Manager Voyage, SPEAK, Anchors Edge, Talent Marketplace, VAULT, Summit, Navigators Session, Compliance, Cohort Certification, Coaching)
+- `assets/js/sbja.js` — generated from the SBJA workbook: family → sub-family architecture and per-sub-family skills
 - `assets/js/app.js` — router, gate, renderers, click tracking, search
 - `assets/video/hero-montage.mp4` — Higgsfield-generated hero montage (fetched by the `fetch-hero` workflow)
 

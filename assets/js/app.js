@@ -33,6 +33,12 @@
   function itemById(id) { for (var i = 0; i < VOYAGE.items.length; i++) if (VOYAGE.items[i].id === id) return VOYAGE.items[i]; return null; }
   function locName(id) { for (var i = 0; i < VOYAGE.locations.length; i++) if (VOYAGE.locations[i].id === id) return VOYAGE.locations[i].name; return ''; }
   function roleName(id) { for (var i = 0; i < VOYAGE.roles.length; i++) if (VOYAGE.roles[i].id === id) return VOYAGE.roles[i].name; return ''; }
+  function myPrograms(role) {
+    return VOYAGE.programs.filter(function (pr) {
+      if (pr.aud === 'all' || pr.aud === 'esl') return true;
+      return role === 'manager' && (pr.aud === 'manager' || pr.aud === 'exec');
+    });
+  }
 
   /* ---------- view router ---------- */
   function show(view) {
@@ -56,13 +62,22 @@
   /* =====================================================================
      GATE — three-question personalization
      ===================================================================== */
-  var draft = { loc: null, dept: null, role: null };
+  var draft = { loc: null, family: null, sub: null, role: null };
+
+  function skillsFor(family, sub) {
+    return (typeof SBJA !== 'undefined' && SBJA.skills[family + '|' + sub]) || [];
+  }
+  function skillChips(family, sub, max) {
+    var sk = skillsFor(family, sub).slice(0, max || 8);
+    if (!sk.length) return '';
+    return sk.map(function (s) { return '<span class="skillpill">' + esc(s) + '</span>'; }).join('');
+  }
 
   function gateStep(n) {
     $$('.gate__step').forEach(function (s) { s.hidden = s.getAttribute('data-step') !== String(n); });
     $$('.gate__dots i').forEach(function (d, i) { d.classList.toggle('on', i < n); });
     if (n === 4) {
-      $('#summaryPath').innerHTML = 'Here’s your custom path: <b>' + esc(roleName(draft.role)) + '</b> · <b>' + esc(draft.dept) + '</b> · <b>' + esc(locName(draft.loc)) + '</b>';
+      $('#summaryPath').innerHTML = 'Here’s your custom path: <b>' + esc(roleName(draft.role)) + '</b> · <b>' + esc(draft.sub) + '</b> (' + esc(draft.family) + ') · <b>' + esc(locName(draft.loc)) + '</b>';
       var mins = VOYAGE.items.filter(function (it) {
         if (!it.aud) return true;
         if (it.aud.loc && it.aud.loc.indexOf(draft.loc) === -1) return false;
@@ -70,6 +85,8 @@
         return true;
       }).reduce(function (a, it) { return a + it.mins; }, 0);
       $('#summaryHours').innerHTML = 'Approximately <b>' + (Math.round(mins / 30) / 2) + ' hours</b> across your first 30 days.';
+      var chips = skillChips(draft.family, draft.sub, 8);
+      $('#summarySkills').innerHTML = chips ? '<p class="skillchips__label">Skills that matter in your sub-family</p>' + chips : '';
     }
   }
 
@@ -88,12 +105,15 @@
     renderDeptList('');
     $('#deptSearch').addEventListener('input', function () { renderDeptList(this.value.trim().toLowerCase()); });
     $('#deptList').addEventListener('click', function (e) {
-      var b = e.target.closest('[data-dept]'); if (!b) return;
-      draft.dept = b.getAttribute('data-dept');
-      $$('[data-dept]').forEach(function (t) { t.classList.toggle('on', t === b); });
+      var b = e.target.closest('[data-sub]'); if (!b) return;
+      draft.family = b.getAttribute('data-fam');
+      draft.sub = b.getAttribute('data-sub');
+      $$('[data-sub]').forEach(function (t) { t.classList.toggle('on', t === b); });
       var pv = $('#deptPreview');
       pv.hidden = false;
-      pv.innerHTML = 'You’ll be joining <b>' + esc(draft.dept) + '</b>. Your department lead is <b>' + esc(VOYAGE.deptStats.lead) + '</b>, and <b>' + VOYAGE.deptStats.recentJoiners + ' colleagues</b> joined in the last 90 days.';
+      var chips = skillChips(draft.family, draft.sub, 6);
+      pv.innerHTML = 'You’ll be joining <b>' + esc(draft.sub) + '</b> in the <b>' + esc(draft.family) + '</b> family. Your area lead is <b>' + esc(VOYAGE.deptStats.lead) + '</b>, and <b>' + VOYAGE.deptStats.recentJoiners + ' colleagues</b> joined in the last 90 days.' +
+        (chips ? '<div class="skillchips"><p class="skillchips__label">Skills that matter here</p>' + chips + '</div>' : '');
       $('#deptNext').disabled = false;
     });
 
@@ -118,7 +138,7 @@
       });
     });
     $('#gateFinish').addEventListener('click', function () {
-      state.profile = { loc: draft.loc, dept: draft.dept, role: draft.role };
+      state.profile = { loc: draft.loc, family: draft.family, sub: draft.sub, role: draft.role };
       save();
       show('dashboard');
       toast('Your path is ready, ' + VOYAGE.user.first + '. Welcome aboard.');
@@ -126,11 +146,13 @@
   }
 
   function renderDeptList(q) {
-    $('#deptList').innerHTML = VOYAGE.departments.map(function (g) {
-      var hits = g.items.filter(function (d) { return !q || d.toLowerCase().indexOf(q) > -1; });
+    var fams = (typeof SBJA !== 'undefined' && SBJA.families) || [];
+    $('#deptList').innerHTML = fams.map(function (g) {
+      var famHit = g.family.toLowerCase().indexOf(q) > -1;
+      var hits = g.subs.filter(function (d) { return !q || famHit || d.toLowerCase().indexOf(q) > -1; });
       if (!hits.length) return '';
-      return '<li class="group">' + esc(g.group) + '</li>' + hits.map(function (d) {
-        return '<li><button type="button" data-dept="' + esc(d) + '"' + (draft.dept === d ? ' class="on"' : '') + '>' + esc(d) + '</button></li>';
+      return '<li class="group">' + esc(g.family) + '</li>' + hits.map(function (d) {
+        return '<li><button type="button" data-fam="' + esc(g.family) + '" data-sub="' + esc(d) + '"' + (draft.sub === d && draft.family === g.family ? ' class="on"' : '') + '>' + esc(d) + '</button></li>';
       }).join('');
     }).join('');
   }
@@ -240,7 +262,7 @@
     var p = state.profile || {};
 
     $('#dashGreeting').textContent = greeting() + ', ' + VOYAGE.user.first;
-    $('#dashDay').textContent = 'Day ' + VOYAGE.user.startOffsetDays + ' of your first 30 · ' + esc(locName(p.loc)).replace('&amp;', '&');
+    $('#dashDay').textContent = 'Day ' + VOYAGE.user.startOffsetDays + ' of your first 30 · ' + (p.sub || '') + ' · ' + locName(p.loc);
 
     var doneCount = items.filter(function (it) { return isDone(it.id); }).length;
     var pct = items.length ? Math.round(doneCount / items.length * 100) : 0;
@@ -316,8 +338,10 @@
     var items = myItems();
 
     $('#returnGreeting').textContent = 'Welcome back, ' + VOYAGE.user.first;
-    $('#returnMeta').textContent = roleName(p.role) + ' · ' + (p.dept || '') + ' · ' + locName(p.loc);
-    $('#shelfForYouTitle').innerHTML = 'Because you’re a <em>' + esc(roleName(p.role)) + '</em> in <em>' + esc(p.dept || 'your department') + '</em>';
+    $('#returnMeta').textContent = roleName(p.role) + ' · ' + (p.sub || '') + ' (' + (p.family || '') + ') · ' + locName(p.loc);
+    $('#shelfForYouTitle').innerHTML = 'Because you’re a <em>' + esc(roleName(p.role)) + '</em> in <em>' + esc(p.sub || 'your sub-family') + '</em>';
+    var chips = skillChips(p.family, p.sub, 10);
+    $('#shelfSkills').innerHTML = chips ? '<p class="skillchips__label">Skills that matter in ' + esc(p.sub || 'your sub-family') + ' — from the Skills-Based Job Architecture</p>' + chips : '';
 
     /* resume: opened but not complete */
     var resume = items.filter(function (it) { return statusOf(it.id) === 'opened'; }).slice(0, 3);
@@ -338,11 +362,12 @@
         '<a class="btn" href="' + esc(r.href) + '" target="_blank" rel="noopener">Renew</a></div>';
     }).join('');
 
-    /* explore */
-    $('#shelfExplore').innerHTML = VOYAGE.explore.map(function (x) {
-      return '<article class="item"><div class="item__top"><span class="item__cat">Explore</span><span class="srcbadge">' + esc(x.src) + '</span></div>' +
-        '<h4>' + esc(x.title) + '</h4><div class="item__meta"><span>' + esc(x.desc) + '</span></div>' +
-        '<div class="item__actions"><a class="btn" href="' + esc(x.href) + '" target="_blank" rel="noopener">Explore</a></div></article>';
+    /* FLH programs, filtered by role */
+    $('#shelfExplore').innerHTML = myPrograms(p.role).map(function (x) {
+      return '<article class="item"><div class="item__top"><span class="item__cat">FLH Program</span><span class="srcbadge">' + esc(x.who) + '</span></div>' +
+        '<h4>' + esc(x.name) + '</h4><div class="item__meta"><span>' + esc(x.what) + '</span></div>' +
+        '<p class="item__prereq">' + esc(x.value) + '</p>' +
+        '<div class="item__actions"><a class="btn" href="https://me5231979.github.io/Course_Library/" target="_blank" rel="noopener">Learn more</a></div></article>';
     }).join('');
 
     /* quick rails */
@@ -371,7 +396,7 @@
       return '<li><a data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + esc(it.title) + '<small>' + (statusOf(it.id) === 'verified' ? 'Verified in ' + esc(it.src) : 'Complete') + '</small></a></li>';
     }).join('') : '<li class="empty">Nothing completed yet.</li>';
 
-    $('#reProfile').onclick = function () { draft = { loc: null, dept: null, role: null }; show('gate'); gateStep(1); };
+    $('#reProfile').onclick = function () { draft = { loc: null, family: null, sub: null, role: null }; show('gate'); gateStep(1); };
   }
 
   /* search */
@@ -384,7 +409,7 @@
       var q = input.value.trim().toLowerCase();
       if (!q) { out.innerHTML = ''; return; }
       var pool = myItems().map(function (it) { return { title: it.title, sub: it.src + ' · ' + it.mins + ' min' + (isDone(it.id) ? ' · completed' : ''), href: it.href, id: it.id }; })
-        .concat(VOYAGE.explore.map(function (x) { return { title: x.title, sub: x.src, href: x.href }; }))
+        .concat(VOYAGE.programs.map(function (x) { return { title: x.name, sub: 'FLH Program · ' + x.who, href: 'https://me5231979.github.io/Course_Library/' }; }))
         .concat(VOYAGE.renewals.map(function (r) { return { title: r.title, sub: r.src + ' · renews in ' + r.days + ' days', href: r.href }; }));
       var hits = pool.filter(function (r) { return (r.title + ' ' + r.sub).toLowerCase().indexOf(q) > -1; }).slice(0, 6);
       out.innerHTML = hits.length ? hits.map(function (r) {

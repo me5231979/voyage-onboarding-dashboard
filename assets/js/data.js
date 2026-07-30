@@ -19,13 +19,49 @@ const VOYAGE = {
       detail: 'Commuter benefits · Kaiser plans available', p: 'Satellite research site. CA 2-hour harassment prevention and state disability.' }
   ],
 
-  departments: [
-    { group: 'Academic Affairs', items: ['Provost Office', 'Peabody College', 'School of Engineering', 'College of Arts & Science'] },
-    { group: 'Medical Center', items: ['VUMC Nursing', 'VUMC Clinical Operations', 'VUMC Research Administration'] },
-    { group: 'Finance & Administration', items: ['Human Resources', 'Finance & Accounting', 'Facilities & Campus Services', 'Information Technology'] },
-    { group: 'Athletics & Student Life', items: ['Athletics', 'Dean of Students', 'Student Care Network'] }
-  ],
+  /* Job architecture comes from SBJA (assets/js/sbja.js): 18 families, 95 sub-families */
   deptStats: { lead: 'Taylor Morgan', recentJoiners: 12 },
+
+  /* Futures Learning Hub program portfolio (from FLH_Programs.xlsx).
+     aud: 'all' | 'manager' (people leaders) | 'exec' | 'esl' */
+  programs: [
+    { name: 'CHART', aud: 'all', who: 'All staff',
+      what: "FLH's AI fluency program: a self-paced platform, a 4-week intensive, and an ongoing workshop series with VUIT.",
+      value: 'Builds baseline AI capability across the workforce and drives AI enablement.' },
+    { name: 'Leadership Redefined', aud: 'manager', who: 'M1–E1 leaders',
+      what: "Vanderbilt's premier Chancellor-sponsored development program for senior leaders: six leadership modules, a capstone innovation project, three coaching sessions, and weekly synthesis sessions.",
+      value: 'Prepares leaders to move with clarity, agility, and conviction.' },
+    { name: 'Manager Voyage', aud: 'manager', who: 'Managers',
+      what: 'Leadership program for new and newly promoted people managers.',
+      value: 'Establishes a consistent management baseline early in the manager lifecycle.' },
+    { name: 'SPEAK', aud: 'esl', who: 'Staff building English proficiency',
+      what: 'Language literacy program powered via EdAssist.',
+      value: 'Removes language barriers to participation and advancement.' },
+    { name: 'Anchors Edge', aud: 'all', who: 'All staff',
+      what: 'Weekly all-staff virtual lunch-and-learn series.',
+      value: 'A low-barrier, recurring touchpoint for continuous learning.' },
+    { name: 'Talent Marketplace', aud: 'all', who: 'All staff',
+      what: 'Oracle Grow-based staff talent platform.',
+      value: 'Connects staff to growth opportunities and surfaces internal talent for mobility.' },
+    { name: 'VAULT', aud: 'exec', who: 'Executive stakeholders',
+      what: 'Bi-monthly community of practice and enterprise governance council.',
+      value: 'Guides talent and learning strategy at the executive level.' },
+    { name: 'Summit', aud: 'all', who: 'All staff',
+      what: 'Structured program for retaining, developing, and moving staff: Oracle, change management, a 5-business-day internal search process, and deliberate people practices. Transfer Portal is the employee front door.',
+      value: 'Gives committed staff a visible path forward before a vacancy forces the conversation.' },
+    { name: 'Navigators Session', aud: 'all', who: 'Facilitators & aspiring facilitators',
+      what: "FLH's facilitator network and facilitation education program.",
+      value: "Builds internal facilitation capability, extending FLH's reach." },
+    { name: 'Compliance', aud: 'all', who: 'All staff',
+      what: 'Ongoing and annual compliance education and delivery, with role-dependent content where needed.',
+      value: 'Keeps the workforce current on required compliance and manages institutional risk.' },
+    { name: 'Cohort Certification Program', aud: 'all', who: 'All staff',
+      what: 'Non-degree certification programs funded through the tuition reimbursement benefit, run as cohorts in partnership with EdAssist.',
+      value: 'Reduces cost and builds community by moving through certifications together.' },
+    { name: 'Coaching', aud: 'all', who: 'All staff',
+      what: 'Professional coaching in partnership with Abroad (carries an additional cost).',
+      value: 'Extends individualized development support across the workforce.' }
+  ],
 
   roles: [
     { id: 'manager', name: 'People manager', kicker: 'Leads a team', p: 'Adds manager modules, approvals, Culture Amp manager kit, FMLA administration.' },

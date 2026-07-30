@@ -261,6 +261,17 @@ main section[id] { scroll-margin-top: var(--nav-h); }
 .profilecard p { font-size: .9rem; color: rgba(255,255,255,.7); flex: 1; min-width: 240px; }
 .profilecard p b { color: #fff; font-weight: 600; }
 
+/* ---------- Skill chips (SBJA) on dark ---------- */
+.skillchips { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1rem; }
+.skillchips--center { justify-content: center; margin-top: 1.4rem; }
+.skillchips__label { flex-basis: 100%; font-family: var(--font-condensed); font-weight: 700;
+  font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--vu-gold-flat); margin-bottom: .2rem; }
+.skillchips .skillpill { display: inline-block; font-family: var(--font-condensed); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .05em; font-size: .62rem; line-height: 1.4;
+  padding: .26rem .6rem; border-radius: 999px; border: 1px solid rgba(207,174,112,.45);
+  color: var(--vu-gold-flat); }
+
 /* ---------- Confetti ---------- */
 .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 200; overflow: hidden; }
 .confetti i { position: absolute; top: -12px; width: 8px; height: 12px; opacity: .9;
