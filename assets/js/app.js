@@ -20,6 +20,15 @@
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
   /* ---------- audience filter ---------- */
+  function meetItems() {
+    return VOYAGE.people.map(function (pp, i) {
+      return { id: 'meet-' + i, type: 'meet', title: 'Meet ' + pp.name + ' — ' + pp.role.toLowerCase(),
+        cat: 'people', lane: VOYAGE.peopleLanes[i] || 'w1', mins: 30, src: 'Outlook', api: false,
+        due: 'soft', dueLabel: (VOYAGE.peopleLanes[i] === 'w24' ? 'Day 21' : 'Week 1'),
+        href: 'mailto:?subject=' + encodeURIComponent('Intro: ' + pp.name + ' + ' + firstName()) +
+          '&body=' + encodeURIComponent('Scheduling a 30-minute introduction during my first weeks.') };
+    });
+  }
   function myItems() {
     var p = state.profile || {};
     return VOYAGE.items.filter(function (it) {
@@ -27,11 +36,15 @@
       if (it.aud.loc && it.aud.loc.indexOf(p.loc) === -1) return false;
       if (it.aud.role && it.aud.role.indexOf(p.role) === -1) return false;
       return true;
-    });
+    }).concat(meetItems());
   }
   function statusOf(id) { return state.status[id] || 'todo'; }
   function isDone(id) { var s = statusOf(id); return s === 'done' || s === 'verified'; }
-  function itemById(id) { for (var i = 0; i < VOYAGE.items.length; i++) if (VOYAGE.items[i].id === id) return VOYAGE.items[i]; return null; }
+  function itemById(id) {
+    for (var i = 0; i < VOYAGE.items.length; i++) if (VOYAGE.items[i].id === id) return VOYAGE.items[i];
+    if (id.indexOf('meet-') === 0) { var m = meetItems(); for (var j = 0; j < m.length; j++) if (m[j].id === id) return m[j]; }
+    return null;
+  }
   function locName(id) { for (var i = 0; i < VOYAGE.locations.length; i++) if (VOYAGE.locations[i].id === id) return VOYAGE.locations[i].name; return ''; }
   function roleName(id) { for (var i = 0; i < VOYAGE.roles.length; i++) if (VOYAGE.roles[i].id === id) return VOYAGE.roles[i].name; return ''; }
   function myPrograms(role) {
@@ -48,6 +61,7 @@
     $('#navDash').hidden = !hasProfile;
     $('#navReturn').hidden = !hasProfile;
     $('#navCta').textContent = hasProfile ? 'My path' : 'Begin onboarding';
+    document.body.classList.toggle('view-light', view === 'dashboard' || view === 'returning');
     if (view === 'dashboard') renderDashboard();
     if (view === 'returning') renderReturning();
     window.scrollTo(0, 0);
@@ -170,6 +184,11 @@
     return '<span class="pill pill--todo">Not started</span>';
   }
 
+  var CTA_BY_TYPE = { meet: 'Schedule intro', survey: 'Take survey', read: 'Open', task: 'Start', course: 'Start', compliance: 'Start' };
+  function typeChip(it) {
+    var t = VOYAGE.typeDefs[it.type] || VOYAGE.typeDefs.task;
+    return '<span class="typechip typechip--' + (it.type || 'task') + '">' + t.label + '</span>';
+  }
   function cardHTML(it) {
     var cat = VOYAGE.cats[it.cat];
     var due = it.due ? '<span class="item__due ' + it.due + '">' + (it.due === 'hard' ? '● ' : '') + esc(it.dueLabel) + '</span>' : '';
@@ -183,13 +202,13 @@
     }
     var saved = state.saved.indexOf(it.id) > -1;
     var done = isDone(it.id);
-    return '<article class="item" data-item="' + it.id + '">' +
-      '<div class="item__top"><span class="item__cat">' + esc(cat.label) + '</span>' + pillFor(it.id, it) + '</div>' +
+    return '<article class="item item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
+      '<div class="item__top">' + typeChip(it) + pillFor(it.id, it) + '</div>' +
       '<h4>' + esc(it.title) + '</h4>' +
       '<div class="item__meta"><span>' + it.mins + ' min</span><span class="srcbadge">' + esc(it.src) + '</span>' + legal + due + cad + '</div>' +
       cond + prereq +
       '<div class="item__actions">' +
-        '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + (done ? 'Revisit' : 'Start') + '</a>' +
+        '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + (done ? 'Revisit' : (CTA_BY_TYPE[it.type] || 'Start')) + '</a>' +
         (done ? '' : '<button type="button" class="item__minor" data-done="' + it.id + '">Mark as done</button>') +
         '<button type="button" class="item__minor" data-save="' + it.id + '">' + (saved ? 'Saved ✓' : 'Save for later') + '</button>' +
       '</div></article>';
@@ -294,6 +313,9 @@
         save(); renderDashboard();
       });
     });
+    $('#typeLegend').innerHTML = Object.keys(VOYAGE.typeDefs).map(function (k) {
+      return '<span class="legend__key legend__key--' + k + '">' + VOYAGE.typeDefs[k].label + '</span>';
+    }).join('');
     var fc = $('#filterClear');
     fc.classList.toggle('show', !!state.filter);
     fc.onclick = function () { state.filter = null; save(); renderDashboard(); };
@@ -324,12 +346,6 @@
     }).join('');
     $('#compMeta').textContent = comp.filter(function (it) { return it.legal === 'Legal'; }).length + ' legally required · ' +
       comp.filter(function (it) { return it.legal === 'Advisory'; }).length + ' advisory (policy) · tuned to ' + locName(p.loc) + ' and your role tier';
-
-    /* people */
-    $('#people').innerHTML = VOYAGE.people.map(function (pp) {
-      return '<div class="person"><span class="avatar">' + esc(pp.init) + '</span><b>' + esc(pp.name) + '</b><span>' + esc(pp.role) + '</span><span class="rel">' + esc(pp.rel) + '</span>' +
-        '<a href="mailto:?subject=Intro%3A%20' + encodeURIComponent(pp.name) + '%20%2B%20' + encodeURIComponent(VOYAGE.user.first) + '&body=Scheduling%20a%2030-minute%20intro.">Schedule intro</a></div>';
-    }).join('');
 
     /* up next: hard-dated first, prereqs met, not done */
     var next = items.filter(function (it) {

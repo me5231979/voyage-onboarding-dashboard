@@ -121,7 +121,7 @@
   </section>
 
   <!-- ============ VIEW: LIVE DASHBOARD (Days 1–30) ============ -->
-  <section class="view section on-dark" id="view-dashboard" data-view="dashboard" style="padding-top:calc(var(--nav-h) + 2.5rem)">
+  <section class="view section on-cream section--day" id="view-dashboard" data-view="dashboard" style="padding-top:calc(var(--nav-h) + 2.5rem)">
     <div class="wrap wrap--wide">
       <div class="dashhead">
         <div class="dashhead__greet">
@@ -148,7 +148,7 @@
 
       <div class="howline" data-reveal>Every card links straight into its source system — <b>the click is your completion signal</b>. Systems with an API verify true completion overnight and upgrade the card to <b>✓ Verified</b>.</div>
 
-      <div class="filterlabel"><span>Filter your path by category</span><button type="button" class="filterclear" id="filterClear">✕ Show everything</button></div>
+      <div class="filterlabel"><span>Filter your path by category</span><button type="button" class="filterclear" id="filterClear">✕ Show everything</button><span class="legend" id="typeLegend" aria-label="Activity types"></span></div>
       <div class="cattiles" id="catTiles" role="group" aria-label="Filter your path by category"></div>
 
       <div class="dashgrid">
@@ -158,11 +158,9 @@
           <p class="eyebrow" style="margin-top:3.5rem">Compliance Center</p>
           <h2 class="h2" style="font-size:clamp(1.5rem,3vw,2rem)">Required, by <em class="gold-text">state and role</em>.</h2>
           <p class="compmeta" id="compMeta"></p>
+          <p class="compnote">These are the same red Compliance cards from your path above — collected here with the legal detail behind each one.</p>
           <div class="comptable" id="compRows"></div>
 
-          <p class="eyebrow" style="margin-top:3.5rem">People to meet</p>
-          <h2 class="h2" style="font-size:clamp(1.5rem,3vw,2rem)">Your first <em class="gold-text">introductions</em>.</h2>
-          <div class="people" id="people"></div>
         </div>
 
         <aside class="rail" aria-label="Up next and announcements">
@@ -189,7 +187,7 @@
   </section>
 
   <!-- ============ VIEW: RETURNING LEARNER (Day 31+) ============ -->
-  <section class="view section on-dark" id="view-returning" data-view="returning" style="padding-top:calc(var(--nav-h) + 2.5rem)">
+  <section class="view section on-cream section--day" id="view-returning" data-view="returning" style="padding-top:calc(var(--nav-h) + 2.5rem)">
     <div class="wrap wrap--wide">
       <div class="dashhead">
         <div class="dashhead__greet">

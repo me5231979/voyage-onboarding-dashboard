@@ -395,3 +395,131 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .idcard__rename { display: block; background: none; border: 0; padding: .3rem 0 0; cursor: pointer;
   font: 600 .8rem var(--font-sans); color: var(--vu-gold-flat); text-align: left; }
 .idcard__rename:hover { color: var(--vu-highlight, #ECB748); text-decoration: underline; }
+
+/* =====================================================================
+   TYPED ACTIVITY CARDS + LIGHT WORKING SURFACE
+   Hero and gate stay dark & cinematic; the Days 1-30 path and the
+   Day 31+ home base move onto cream (Course Library rhythm), where the
+   VU accent palette carries the activity types. Red = compliance only.
+   ===================================================================== */
+
+/* ---- activity type tokens (VU brand accents) ---- */
+.item--compliance { --t-edge: #B0413E; --t-text: #8F2E28; --t-tint: rgba(176,65,62,.09); }
+.item--course     { --t-edge: #CFAE70; --t-text: #946E24; --t-tint: rgba(207,174,112,.18); }
+.item--task       { --t-edge: #B3C9CD; --t-text: #48616B; --t-tint: rgba(179,201,205,.28); }
+.item--meet       { --t-edge: #8BA18E; --t-text: #4F6653; --t-tint: rgba(139,161,142,.22); }
+.item--survey     { --t-edge: #ECB748; --t-text: #8A6410; --t-tint: rgba(236,183,72,.2); }
+.item--read       { --t-edge: #946E24; --t-text: #946E24; --t-tint: rgba(148,110,36,.1); }
+
+.typechip { display: inline-flex; align-items: center; gap: .45rem; font: 700 .78rem var(--font-sans);
+  letter-spacing: .01em; color: var(--t-text, #555); background: var(--t-tint, transparent);
+  border-radius: 999px; padding: .28rem .75rem .28rem .55rem; }
+.typechip::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--t-edge, #999); }
+
+/* legend keys reuse the same colors */
+.legend { display: inline-flex; flex-wrap: wrap; gap: .4rem 1.1rem; margin-left: auto; }
+.legend__key { display: inline-flex; align-items: center; gap: .4rem; font: 600 .8rem var(--font-sans); color: var(--ink-soft, #555); }
+.legend__key::before { content: ''; width: 9px; height: 9px; border-radius: 50%; }
+.legend__key--compliance::before { background: #B0413E; }
+.legend__key--course::before { background: #CFAE70; }
+.legend__key--task::before { background: #B3C9CD; }
+.legend__key--meet::before { background: #8BA18E; }
+.legend__key--survey::before { background: #ECB748; }
+.legend__key--read::before { background: #946E24; }
+
+/* ---- light working surface (.section--day) ---- */
+.section--day .dashhead__greet .day { color: var(--vu-oak); }
+.section--day .ring .track { stroke: #ddd6c8; }
+.section--day .ring__label b { color: var(--vu-black); }
+.section--day .ring__label span span { color: var(--ink-soft); }
+.section--day .viewtoggle { border-color: rgba(28,28,28,.35); background: #fff; }
+.section--day .viewtoggle button { color: var(--ink-soft); }
+.section--day .viewtoggle button.on { background: var(--vu-black); color: #fff; }
+.section--day .btn--ghost { color: var(--vu-black); border-color: rgba(28,28,28,.35); }
+.section--day .btn--ghost:hover { border-color: var(--vu-oak); color: var(--vu-oak); }
+
+.section--day .howline { background: #fff; border-color: var(--line); color: var(--vu-black); }
+.section--day .howline b { color: var(--vu-oak); }
+.section--day .filterlabel span:first-child { color: var(--vu-black); }
+.section--day .filterclear { border-color: rgba(28,28,28,.4); color: var(--vu-black); }
+.section--day .filterclear:hover { border-color: var(--vu-oak); color: var(--vu-oak); }
+
+.section--day .cattile { background: #fff; border-color: var(--line); border-top-color: var(--vu-gold-flat); color: var(--vu-black); }
+.section--day .cattile--hard { border-top-color: #B0413E; }
+.section--day .cattile:hover { border-color: var(--vu-gold-flat); }
+.section--day .cattile.on { background: var(--vu-black); border-color: var(--vu-black); }
+.section--day .cattile.on h3, .section--day .cattile.on .cattile__count { color: #fff; }
+.section--day .cattile__count { color: var(--ink-soft); }
+.section--day .cattile__badge { background: rgba(176,65,62,.1); color: #8F2E28; border-color: rgba(176,65,62,.4); }
+.section--day .cattile.on .cattile__badge { background: rgba(255,255,255,.15); color: #fff; border-color: rgba(255,255,255,.4); }
+
+.section--day .lane__title { border-bottom-color: #ddd6c8; }
+.section--day .lane__title span { color: var(--ink-soft); }
+.section--day .lane__count { color: var(--vu-oak); }
+.section--day .lane__empty { border-color: #c9c2b2; color: var(--ink-soft); }
+
+.section--day .item { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--t-edge, var(--line)); }
+.section--day .item:hover { border-color: var(--t-edge, var(--vu-gold-flat)); border-left-color: var(--t-edge); }
+.section--day .item h4 { color: var(--vu-black); }
+.section--day .item__meta { color: var(--ink-soft); }
+.section--day .item__due.hard { color: #8F2E28; }
+.section--day .item__due.soft { color: var(--ink-soft); }
+.section--day .item__prereq { color: #6a6a6a; }
+.section--day .item__prereq b { color: var(--vu-black); }
+.section--day .item__minor { color: var(--ink-soft); }
+.section--day .item__minor:hover { color: var(--vu-oak); }
+.section--day .srcbadge { color: var(--ink-soft); border-color: #c9c9c9; }
+.section--day .pill--todo { color: #6a6a6a; border-color: #b5b5b5; }
+.section--day .pill--opened { color: #8A6410; border-color: rgba(236,183,72,.7); background: rgba(236,183,72,.14); }
+.section--day .pill--done { color: var(--vu-oak); border-color: rgba(148,110,36,.5); background: rgba(207,174,112,.16); }
+.section--day .pill--verified { color: var(--vu-black); background: var(--vu-gold-flat); border-color: var(--vu-gold-flat); }
+.section--day .lawchip--legal { background: rgba(176,65,62,.1); color: #8F2E28; border-color: rgba(176,65,62,.45); }
+.section--day .lawchip--advisory { background: rgba(207,174,112,.15); color: var(--vu-oak); border-color: rgba(148,110,36,.4); }
+
+.section--day .compmeta { color: var(--ink-soft); }
+.section--day .compnote { font-size: .85rem; color: #6a6a6a; margin-top: .3rem; font-style: italic; }
+.section--day .comprow { background: #fff; border-color: var(--line); }
+.section--day .comprow__main b { color: var(--vu-black); }
+.section--day .comprow__main small, .section--day .comprow small { color: var(--ink-soft); }
+.section--day .comprow__when b { color: var(--vu-black); }
+
+.section--day .railbox { background: #fff; border-color: var(--line); }
+.section--day .railbox h4 { color: var(--vu-oak); }
+.section--day .railbox li { border-top-color: var(--line); }
+.section--day .railbox li a, .section--day .railbox li button { color: var(--vu-black); }
+.section--day .railbox li a:hover, .section--day .railbox li button:hover { color: var(--vu-oak); }
+.section--day .railbox li small { color: var(--ink-soft); }
+.section--day .railbox .empty { color: #8a8a8a; }
+.section--day .railbox--announce li { color: var(--vu-black); }
+.section--day .countdown b { color: var(--vu-oak); }
+.section--day .countdown span { color: var(--ink-soft); }
+
+.section--day .bigsearch input { background: #fff; border-color: #c9c2b2; color: var(--vu-black); }
+.section--day .bigsearch input::placeholder { color: #8a8a8a; }
+.section--day .bigsearch input:focus { border-color: var(--vu-gold-flat); }
+.section--day .result { background: #fff; border-color: var(--line); }
+.section--day .result__main b { color: var(--vu-black); }
+.section--day .result__main small { color: var(--ink-soft); }
+
+.section--day .shelf__head { border-bottom-color: #ddd6c8; }
+.section--day .shelf__head h3 em { color: var(--vu-oak); }
+.section--day .shelf__head span { color: var(--ink-soft); }
+.section--day .renewal { background: #fff; border-color: var(--line); }
+.section--day .renewal__main b { color: var(--vu-black); }
+.section--day .renewal__main small { color: var(--ink-soft); }
+.section--day .renewal__days--green { background: rgba(139,161,142,.16); color: #4F6653; border-color: rgba(139,161,142,.5); }
+.section--day .renewal__days--amber { background: rgba(236,183,72,.16); color: #8A6410; border-color: rgba(236,183,72,.55); }
+.section--day .renewal__days--red { background: rgba(176,65,62,.1); color: #8F2E28; border-color: rgba(176,65,62,.5); }
+
+.section--day .skillchips .skillpill { color: var(--vu-oak); border-color: rgba(148,110,36,.45); }
+.section--day .skillchips__label { color: var(--vu-oak); }
+.section--day .item__cat { color: var(--vu-oak); }
+.section--day .profilecard { border-color: #c9c2b2; }
+.section--day .profilecard p { color: var(--vu-black); }
+.section--day .profilecard p b { color: var(--vu-black); }
+.section--day .profilecard .btn--ghost { color: var(--vu-black); }
+
+/* legend sits inside .filterlabel — win its span color on light */
+.filterlabel .legend__key { color: var(--ink-soft); }
+/* solid nav over light working surfaces */
+body.view-light .nav { background: rgba(20,20,20,.96); }
