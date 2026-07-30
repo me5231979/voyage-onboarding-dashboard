@@ -9,14 +9,14 @@ const VOYAGE = {
   user: { first: 'Alex', last: 'Rivera', vunetid: 'riveraa1', manager: 'Jordan Blake', startOffsetDays: 4 },
 
   locations: [
-    { id: 'tn', name: 'Tennessee — Nashville', kicker: 'Main campus · VUMC',
-      detail: 'Kirkland Hall · Medical Center North · One Hundred Oaks', p: 'Main campus and Medical Center. VUPD, VU Parking Services, TN compliance track.' },
-    { id: 'ny', name: 'New York', kicker: 'Satellite · Clinical & research',
-      detail: 'Partnered garage · Local PD coordination', p: 'Satellite clinical and research site. NY state compliance and commuter benefits.' },
-    { id: 'fl', name: 'Florida', kicker: 'Satellite · Clinical',
-      detail: 'On-site lot · Local safety contacts', p: 'Satellite clinical site. FL compliance track and local benefits nuances.' },
-    { id: 'ca', name: 'California', kicker: 'Satellite · Research',
-      detail: 'Commuter benefits · Kaiser plans available', p: 'Satellite research site. CA 2-hour harassment prevention and state disability.' }
+    { id: 'tn', name: 'Tennessee — Nashville', kicker: 'Nashville campus',
+      detail: 'Kirkland Hall · One Hundred Oaks', p: 'The Nashville campus. VUPD, VU Parking Services, and the TN compliance track.' },
+    { id: 'ny', name: 'New York', kicker: 'New York campus',
+      detail: 'Partnered garage · Local safety contacts', p: 'The New York campus. NY state compliance track and commuter benefits.' },
+    { id: 'fl', name: 'Florida', kicker: 'Florida campus',
+      detail: 'On-site lot · Local safety contacts', p: 'The Florida campus. FL compliance track and local benefits nuances.' },
+    { id: 'ca', name: 'California', kicker: 'California campus',
+      detail: 'Commuter benefits · Kaiser plans available', p: 'The California campus. CA harassment-prevention track and state disability coverage.' }
   ],
 
   /* Job architecture comes from SBJA (assets/js/sbja.js): 18 families, 95 sub-families */
@@ -67,7 +67,7 @@ const VOYAGE = {
     { id: 'manager', name: 'People manager', kicker: 'Leads a team', p: 'Adds manager modules, approvals, Culture Amp manager kit, FMLA administration.' },
     { id: 'ic', name: 'Individual contributor', kicker: 'Core path', p: 'The standard staff path: systems, benefits, culture, and role learning.' },
     { id: 'faculty', name: 'Faculty / academic', kicker: 'Teaching & scholarship', p: 'Adds academic policy, FERPA depth, and faculty governance orientation.' },
-    { id: 'clinical', name: 'Clinical / patient-facing', kicker: 'VUMC', p: 'Adds HIPAA depth, infection control, and credentialing links.' },
+    { id: 'clinical', name: 'Clinical / patient-facing', kicker: 'Health services', p: 'Adds HIPAA depth, infection control, and credentialing links.' },
     { id: 'research', name: 'Research', kicker: 'Labs & studies', p: 'Adds IRB, IACUC, lab safety, and export control.' },
     { id: 'student', name: 'Student-facing', kicker: 'Student services', p: 'Adds FERPA and Title IX depth and Student Care Network orientation.' }
   ],
@@ -130,7 +130,7 @@ const VOYAGE = {
     { id: 'mgr-ca', type: 'course',    title: 'Culture Amp manager kit — 1:1s & check-ins', cat: 'systems', lane: 'w24', mins: 25, src: 'Culture Amp', api: true, due: 'soft', dueLabel: 'Day 21', aud: { role: ['manager'] }, href: 'https://www.cultureamp.com/' },
     { id: 'mgr-oracle', type: 'course',title: 'Oracle approvals: timecards, requisitions, expenses', cat: 'systems', lane: 'w24', mins: 20, src: 'Oracle HCM', api: true, due: 'soft', dueLabel: 'Day 14', aud: { role: ['manager'] }, href: 'https://hr.vanderbilt.edu/oracle/' },
     { id: 'infection', type: 'compliance', title: 'Bloodborne Pathogen Awareness 2.0', cat: 'safety', lane: 'w1', mins: 30, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: 'Day 7', aud: { role: ['clinical'] }, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300001633833959' },
-    { id: 'epic', type: 'course',      title: 'Epic access & clinical systems setup', cat: 'systems', lane: 'w1', mins: 45, src: 'IT Portal', api: false, due: 'hard', dueLabel: 'Day 5', aud: { role: ['clinical'] }, href: 'https://www.vumc.org/', prereq: 'vunetid' },
+    { id: 'epic', type: 'task',      title: 'Clinical systems access — health services', cat: 'systems', lane: 'w1', mins: 45, src: 'IT Portal', api: false, due: 'hard', dueLabel: 'Day 5', aud: { role: ['clinical'] }, href: 'https://it.vanderbilt.edu/', prereq: 'vunetid' },
     { id: 'labsafety', type: 'compliance', title: 'Laboratory Safety', cat: 'safety', lane: 'w1', mins: 40, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: 'Day 7', aud: { role: ['research'] }, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300001633958517' },
     { id: 'biosafety', type: 'compliance', title: 'Biosafety 101 — Standard Microbiological Practices (VU EHS)', cat: 'safety', lane: 'w24', mins: 45, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: 'Day 21', aud: { role: ['research'] }, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002424826840' },
     { id: 'irb', type: 'compliance',       title: 'IRB Basics Course', cat: 'compliance', lane: 'w24', mins: 45, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: 'Day 21', aud: { role: ['research'] }, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300001523737433' },
