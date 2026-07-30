@@ -308,3 +308,90 @@ main section[id] { scroll-margin-top: var(--nav-h); }
 /* ---------- View transitions ---------- */
 .view { display: none; }
 .view.active { display: block; }
+
+/* =====================================================================
+   LEGIBILITY & CLARITY PASS (ui-ux-pro-max audit)
+   - Antonio condensed reserved for eyebrows and big numerals only;
+     all small labels move to Inter at >=0.78rem.
+   - Muted text lifted to >=4.5:1 on #232323 (white at 72%+).
+   - Visible keyboard focus, clear filter affordance.
+   ===================================================================== */
+
+/* small labels: Inter, bigger, readable */
+.pill, .srcbadge, .lawchip, .cattile__badge {
+  font-family: var(--font-sans); font-weight: 600; letter-spacing: .02em;
+  text-transform: none; font-size: .78rem; }
+.skillchips .skillpill { font-family: var(--font-sans); font-weight: 600;
+  text-transform: none; letter-spacing: .01em; font-size: .8rem; padding: .3rem .75rem;
+  color: #E8D9B8; border-color: rgba(207,174,112,.55); }
+.tile__kicker, .item__cat, .cattile__count, .skillchips__label,
+.lane__title span, .shelf__head span, .person .rel {
+  font-family: var(--font-sans); font-weight: 600; text-transform: none;
+  letter-spacing: .01em; font-size: .82rem; }
+.item__cat { color: #DCC08A; }
+.railbox h4 { font-size: .85rem; letter-spacing: .08em; }
+.eyebrow { font-size: .85rem; }
+.dashhead__greet .day { font-family: var(--font-sans); font-weight: 600;
+  text-transform: none; letter-spacing: .01em; font-size: .95rem; color: #DCC08A; }
+.ring__label span span { font-family: var(--font-sans); font-weight: 600;
+  text-transform: none; letter-spacing: 0; font-size: .68rem; color: rgba(255,255,255,.8); }
+.renewal__days span { font-family: var(--font-sans); font-weight: 600;
+  text-transform: none; letter-spacing: .02em; font-size: .7rem; }
+.gate__summary .hours b { font-family: var(--font-sans); }
+
+/* contrast: lift muted text to readable levels on dark */
+.tile p { color: rgba(255,255,255,.8); font-size: .9rem; }
+.tile__detail { color: rgba(255,255,255,.66); font-size: .82rem; }
+.item__meta { color: rgba(255,255,255,.76); font-size: .82rem; }
+.item__due.soft { color: rgba(255,255,255,.76); }
+.item__prereq { color: rgba(255,255,255,.66); font-size: .8rem; }
+.item__prereq b { color: rgba(255,255,255,.85); }
+.item__minor { color: rgba(255,255,255,.72); font-size: .82rem; }
+.srcbadge { color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.35); }
+.pill--todo { color: rgba(255,255,255,.78); border-color: rgba(255,255,255,.45); }
+.cattile__count { color: rgba(255,255,255,.75); }
+.lane__title span { color: rgba(255,255,255,.72); }
+.lane__empty { color: rgba(255,255,255,.66); font-size: .92rem; }
+.railbox li a, .railbox li button { color: rgba(255,255,255,.9); font-size: .9rem; }
+.railbox li small { color: rgba(255,255,255,.66); font-size: .78rem; }
+.railbox .empty { color: rgba(255,255,255,.62); }
+.railbox--announce li { color: rgba(255,255,255,.85); font-size: .88rem; }
+.countdown span { color: rgba(255,255,255,.78); }
+.result__main small { color: rgba(255,255,255,.68); font-size: .8rem; }
+.renewal__main small { color: rgba(255,255,255,.68); font-size: .8rem; }
+.comprow__main small, .comprow small { color: rgba(255,255,255,.68); font-size: .8rem; }
+.comprow__when b { color: rgba(255,255,255,.92); }
+.compmeta { color: rgba(255,255,255,.75); }
+.deptlist button { color: rgba(255,255,255,.92); }
+.deptlist .group { font-family: var(--font-sans); font-weight: 700; text-transform: none;
+  letter-spacing: .01em; font-size: .82rem; color: #DCC08A; }
+.dept__preview { color: rgba(255,255,255,.9); }
+.gate__summary .hours { color: rgba(255,255,255,.82); }
+.hero__idcard span span { color: rgba(255,255,255,.75); }
+.bigsearch input::placeholder { color: rgba(255,255,255,.55); }
+.profilecard p { color: rgba(255,255,255,.82); }
+
+/* filter affordance */
+.filterlabel { display: flex; align-items: center; gap: 1rem; margin-top: 2.4rem; }
+.filterlabel span { font: 600 .85rem var(--font-sans); color: rgba(255,255,255,.75); }
+.filterclear { display: none; background: none; border: 1px solid rgba(255,255,255,.4);
+  color: #fff; border-radius: 999px; padding: .3rem .85rem; font: 600 .8rem var(--font-sans);
+  cursor: pointer; }
+.filterclear:hover { border-color: var(--vu-gold-flat); color: var(--vu-gold-flat); }
+.filterclear.show { display: inline-block; }
+.cattiles { margin-top: .9rem; }
+.lane__count { margin-left: auto; font: 600 .82rem var(--font-sans); color: #DCC08A; }
+
+/* helper strip */
+.howline { margin-top: 1.6rem; border: 1px solid rgba(207,174,112,.3); background: rgba(207,174,112,.07);
+  border-radius: var(--radius); padding: .85rem 1.15rem; font-size: .88rem; color: rgba(255,255,255,.85); }
+.howline b { color: var(--vu-gold-flat); font-weight: 600; }
+
+/* keyboard focus */
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--vu-highlight, #ECB748); outline-offset: 2px; }
+
+/* demo-profile rename */
+.idcard__rename { display: block; background: none; border: 0; padding: .3rem 0 0; cursor: pointer;
+  font: 600 .8rem var(--font-sans); color: var(--vu-gold-flat); text-align: left; }
+.idcard__rename:hover { color: var(--vu-highlight, #ECB748); text-decoration: underline; }

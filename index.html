@@ -26,8 +26,8 @@
     <img class="nav__vicon" src="assets/img/vu-v-icon-nav.png" alt="Vanderbilt University" width="34" height="25">
   </a>
   <nav class="nav__links" aria-label="Sections">
-    <a href="#" data-nav="dashboard" hidden id="navDash">My path</a>
-    <a href="#" data-nav="returning" hidden id="navReturn">Find anything</a>
+    <a href="#" data-nav="dashboard" hidden id="navDash">My first 30 days</a>
+    <a href="#" data-nav="returning" hidden id="navReturn">Search &amp; library</a>
     <a class="btn" href="#" id="navCta">Begin onboarding</a>
   </nav>
 </header>
@@ -53,7 +53,8 @@
         <span class="avatar" id="idInitials">AR</span>
         <span>
           <b id="idName">Alex Rivera</b>
-          <span id="idMeta">VUnetID riveraa1 · Manager: Jordan Blake · Pre-populated from Oracle HCM</span>
+          <span id="idMeta">Demo profile — at launch this card is pre-populated from your Oracle HCM record via single sign-on</span>
+          <button type="button" class="idcard__rename" id="renameBtn">Not Alex? Use your name</button>
         </span>
       </div>
     </div>
@@ -138,13 +139,16 @@
         </div>
         <div class="dashhead__actions">
           <div class="viewtoggle" role="group" aria-label="Switch view">
-            <button class="on" data-nav="dashboard">Days 1–30</button>
-            <button data-nav="returning">Day 31+</button>
+            <button class="on" data-nav="dashboard">First 30 days</button>
+            <button data-nav="returning">Home base</button>
           </div>
           <a class="btn btn--ghost" href="mailto:hr@vanderbilt.edu?subject=Onboarding%20question">Ask PCB</a>
         </div>
       </div>
 
+      <div class="howline" data-reveal>Every card links straight into its source system — <b>the click is your completion signal</b>. Systems with an API verify true completion overnight and upgrade the card to <b>✓ Verified</b>.</div>
+
+      <div class="filterlabel"><span>Filter your path by category</span><button type="button" class="filterclear" id="filterClear">✕ Show everything</button></div>
       <div class="cattiles" id="catTiles" role="group" aria-label="Filter your path by category"></div>
 
       <div class="dashgrid">
@@ -196,8 +200,8 @@
         <div class="dashhead__spacer"></div>
         <div class="dashhead__actions">
           <div class="viewtoggle" role="group" aria-label="Switch view">
-            <button data-nav="dashboard">Days 1–30</button>
-            <button class="on" data-nav="returning">Day 31+</button>
+            <button data-nav="dashboard">First 30 days</button>
+            <button class="on" data-nav="returning">Home base</button>
           </div>
           <a class="btn btn--ghost" href="mailto:hr@vanderbilt.edu?subject=Question">Ask PCB</a>
         </div>
@@ -274,7 +278,7 @@
         <h4>Voyage</h4>
         <ul>
           <li><a href="#" data-nav="dashboard">My first 30 days</a></li>
-          <li><a href="#" data-nav="returning">Find anything</a></li>
+          <li><a href="#" data-nav="returning">Search &amp; library</a></li>
           <li><a href="mailto:hr@vanderbilt.edu">Ask PCB</a></li>
         </ul>
       </div>

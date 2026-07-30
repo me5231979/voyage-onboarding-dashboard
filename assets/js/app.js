@@ -13,6 +13,7 @@
   var state = load() || { profile: null, status: {}, saved: [], events: [], filter: null };
 
   function load() { try { return JSON.parse(localStorage.getItem(LS)); } catch (e) { return null; } }
+  function firstName() { return (state.name && state.name.split(' ')[0]) || VOYAGE.user.first; }
   function save() { try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {} }
   function $(s, c) { return (c || document).querySelector(s); }
   function $$(s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); }
@@ -141,7 +142,7 @@
       state.profile = { loc: draft.loc, family: draft.family, sub: draft.sub, role: draft.role };
       save();
       show('dashboard');
-      toast('Your path is ready, ' + VOYAGE.user.first + '. Welcome aboard.');
+      toast('Your path is ready, ' + firstName() + '. Welcome aboard.');
     });
   }
 
@@ -187,7 +188,7 @@
       '<div class="item__meta"><span>' + it.mins + ' min</span><span class="srcbadge">' + esc(it.src) + '</span>' + legal + due + cad + '</div>' +
       cond + prereq +
       '<div class="item__actions">' +
-        '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + (done ? 'Revisit' : 'Open') + '</a>' +
+        '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + (done ? 'Revisit' : 'Start') + '</a>' +
         (done ? '' : '<button type="button" class="item__minor" data-done="' + it.id + '">Mark as done</button>') +
         '<button type="button" class="item__minor" data-save="' + it.id + '">' + (saved ? 'Saved ✓' : 'Save for later') + '</button>' +
       '</div></article>';
@@ -264,7 +265,7 @@
     var items = myItems();
     var p = state.profile || {};
 
-    $('#dashGreeting').textContent = greeting() + ', ' + VOYAGE.user.first;
+    $('#dashGreeting').textContent = greeting() + ', ' + firstName();
     $('#dashDay').textContent = 'Day ' + VOYAGE.user.startOffsetDays + ' of your first 30 · ' + (p.sub || '') + ' · ' + locName(p.loc);
 
     var doneCount = items.filter(function (it) { return isDone(it.id); }).length;
@@ -281,7 +282,7 @@
       if (!mine.length) return '';
       var open = mine.filter(function (it) { return !isDone(it.id); }).length;
       var on = state.filter === t.id;
-      return '<button type="button" class="cattile' + (t.hard ? ' cattile--hard' : '') + (on ? ' on' : '') + '" data-tile="' + t.id + '">' +
+      return '<button type="button" aria-pressed="' + on + '" class="cattile' + (t.hard ? ' cattile--hard' : '') + (on ? ' on' : '') + '" data-tile="' + t.id + '">' +
         (t.hard ? '<span class="cattile__badge">Deadlines</span>' : '') +
         '<h3>' + esc(t.label) + '</h3><span class="cattile__count">' + (open ? open + ' to go · ' : '') + mine.length + ' items</span></button>';
     }).join('');
@@ -292,6 +293,9 @@
         save(); renderDashboard();
       });
     });
+    var fc = $('#filterClear');
+    fc.classList.toggle('show', !!state.filter);
+    fc.onclick = function () { state.filter = null; save(); renderDashboard(); };
 
     /* lanes */
     var tile = null;
@@ -300,9 +304,11 @@
 
     $('#lanes').innerHTML = VOYAGE.lanes.map(function (lane) {
       var mine = visible.filter(function (it) { return it.lane === lane.id; });
+      var laneDone = mine.filter(function (it) { return isDone(it.id); }).length;
+      var count = mine.length ? '<span class="lane__count">' + laneDone + ' of ' + mine.length + ' complete</span>' : '';
       var cards = mine.length ? '<div class="lane__cards">' + mine.map(cardHTML).join('') + '</div>'
         : '<div class="lane__empty">Nothing in this lane' + (tile ? ' for ' + esc(tile.label) : '') + '.</div>';
-      return '<div class="lane"><div class="lane__title"><h3>' + esc(lane.title) + '</h3><span>' + esc(lane.kicker) + '</span></div>' + cards + '</div>';
+      return '<div class="lane"><div class="lane__title"><h3>' + esc(lane.title) + '</h3><span>' + esc(lane.kicker) + '</span>' + count + '</div>' + cards + '</div>';
     }).join('');
 
     /* compliance center */
@@ -353,7 +359,7 @@
     var p = state.profile || {};
     var items = myItems();
 
-    $('#returnGreeting').textContent = 'Welcome back, ' + VOYAGE.user.first;
+    $('#returnGreeting').textContent = 'Welcome back, ' + firstName();
     $('#returnMeta').textContent = roleName(p.role) + ' · ' + (p.sub || '') + ' (' + (p.family || '') + ') · ' + locName(p.loc);
     $('#shelfForYouTitle').innerHTML = 'Because you’re a <em>' + esc(roleName(p.role)) + '</em> in <em>' + esc(p.sub || 'your sub-family') + '</em>';
     var chips = skillChips(p.family, p.sub, 10);
@@ -522,10 +528,17 @@
   window.addEventListener('scroll', function () { nav.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
   var y = $('#year'); if (y) y.textContent = new Date().getFullYear();
 
-  var idc = $('#idInitials');
-  idc.textContent = VOYAGE.user.first[0] + VOYAGE.user.last[0];
-  $('#idName').textContent = VOYAGE.user.first + ' ' + VOYAGE.user.last;
-  $('#idMeta').textContent = 'VUnetID ' + VOYAGE.user.vunetid + ' · Manager: ' + VOYAGE.user.manager + ' · Pre-populated from Oracle HCM';
+  function paintIdentity() {
+    var full = state.name || (VOYAGE.user.first + ' ' + VOYAGE.user.last);
+    var parts = full.trim().split(/\s+/);
+    $('#idInitials').textContent = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+    $('#idName').textContent = full;
+  }
+  paintIdentity();
+  $('#renameBtn').addEventListener('click', function () {
+    var n = window.prompt('What should we call you?', state.name || '');
+    if (n && n.trim()) { state.name = n.trim(); save(); paintIdentity(); rerenderActive(); }
+  });
 
   if (state.profile) show('welcome'); else show('welcome');
   reveal();
