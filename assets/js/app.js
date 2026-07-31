@@ -278,8 +278,8 @@
           '<button type="button" class="item__minor item__minor--text" data-optcancel="' + it.id + '">Cancel</button></div></div></div></article>';
     }
     return '<article class="item item--row item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
-      typeChip(it) +
-      '<div class="row__main"><h4>' + esc(it.title) + rec + mvBadge(it) + '</h4>' +
+      '<div class="row__chips">' + typeChip(it) + mvBadge(it) + rec + '</div>' +
+      '<div class="row__main"><h4>' + esc(it.title) + '</h4>' +
         '<div class="item__meta"><span>' + it.mins + ' min</span><span class="srcbadge">' + esc(it.src) + '</span>' + due +
         (it.cadence ? '<span>' + esc(it.cadence) + '</span>' : '') + prereq + cond + '</div></div>' +
       pillFor(it.id, it) +
@@ -486,13 +486,19 @@
       return '<span class="legend__key legend__key--' + k + '">' + VOYAGE.typeDefs[k].label + '</span>';
     }).join('');
     var fc = $('#filterClear');
-    fc.classList.toggle('show', !!state.filter);
-    fc.onclick = function () { state.filter = null; save(); renderDashboard(); };
+    fc.classList.toggle('show', !!(state.filter || state.mvOnly));
+    fc.onclick = function () { state.filter = null; state.mvOnly = false; save(); renderDashboard(); };
+    var mf = $('#mvFilter');
+    mf.hidden = p.role !== 'manager';
+    mf.classList.toggle('on', !!state.mvOnly);
+    mf.setAttribute('aria-pressed', String(!!state.mvOnly));
+    mf.onclick = function () { state.mvOnly = !state.mvOnly; save(); renderDashboard(); };
 
     /* lanes */
     var tile = null;
     VOYAGE.tiles.forEach(function (t) { if (t.id === state.filter) tile = t; });
     var visible = tile ? items.filter(function (it) { return tile.cats.indexOf(it.cat) > -1; }) : items;
+    if (state.mvOnly) visible = visible.filter(isManagerOnly);
 
     $('#lanes').innerHTML = VOYAGE.lanes.map(function (lane) {
       var mine = visible.filter(function (it) { return it.lane === lane.id; });
@@ -542,8 +548,9 @@
      ===================================================================== */
   function growRow(g, label, mv) {
     return '<article class="item item--row item--course">' +
-      '<span class="typechip typechip--course">' + esc(label) + '</span>' +
-      '<div class="row__main"><h4>' + esc(g.name) + (mv ? '<span class="mvbadge" title="Part of the Manager Voyage — manager-only development">⚓ Manager’s Voyage</span>' : '') + '</h4>' +
+      '<div class="row__chips"><span class="typechip typechip--course">' + esc(label) + '</span>' +
+      (mv ? '<span class="mvbadge" title="Part of the Manager Voyage — manager-only development">⚓ Manager’s Voyage</span>' : '') + '</div>' +
+      '<div class="row__main"><h4>' + esc(g.name) + '</h4>' +
       '<div class="item__meta"><span>' + g.mins + ' min</span><span class="srcbadge">Oracle Learn</span></div></div>' +
       '<span></span>' +
       '<div class="item__actions"><a class="btn" href="' + esc(g.href) + '" target="_blank" rel="noopener">Start</a>' +

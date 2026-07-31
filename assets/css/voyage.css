@@ -626,3 +626,15 @@ body.view-light .nav { background: rgba(20,20,20,.96); }
 @media (max-width: 900px) {
   .cattile__badge { position: static; display: inline-block; margin-bottom: .45rem; }
 }
+
+/* badges stack in the left chip column — titles stay clean */
+.row__chips { display: flex; flex-direction: column; align-items: flex-start; gap: .35rem; min-width: 0; }
+.row__chips .mvbadge, .row__chips .recbadge { margin-left: 0; font-size: .66rem; padding: .18rem .6rem; }
+@media (max-width: 860px) { .item--row .row__chips { grid-row: 1; flex-direction: row; flex-wrap: wrap; } }
+
+/* Manager's Voyage-only toggle */
+.mvfilter { background: transparent; border: 1px solid var(--vu-black); color: var(--vu-black);
+  border-radius: 999px; padding: .3rem .95rem; font: 700 .78rem var(--font-sans); cursor: pointer;
+  transition: all .2s var(--ease); }
+.mvfilter:hover { border-color: var(--vu-oak); color: var(--vu-oak); }
+.mvfilter.on { background: var(--vu-black); color: var(--vu-gold-flat); }
