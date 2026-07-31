@@ -24,7 +24,7 @@ const VOYAGE = {
   /* Futures Learning Hub program portfolio (from FLH_Programs.xlsx).
      aud: 'all' | 'manager' (people leaders) | 'exec' | 'esl' */
   programs: [
-    { name: 'CHART', aud: 'all', who: 'All staff',
+    { name: 'CHART', aud: 'all', who: 'All staff', href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemId=300003133195222&learningItemType=ORA_CLASS',
       what: "FLH's AI fluency program: a self-paced platform, a 4-week intensive, and an ongoing workshop series with VUIT.",
       value: 'Builds baseline AI capability across the workforce and drives AI enablement.' },
     { name: 'Leadership Redefined', aud: 'manager', who: 'M1–E1 leaders',
@@ -39,7 +39,7 @@ const VOYAGE = {
     { name: 'Anchors Edge', aud: 'all', who: 'All staff',
       what: 'Weekly all-staff virtual lunch-and-learn series.',
       value: 'A low-barrier, recurring touchpoint for continuous learning.' },
-    { name: 'Talent Marketplace', aud: 'all', who: 'All staff',
+    { name: 'Talent Marketplace', aud: 'all', who: 'All staff', href: 'https://www.vanderbilt.edu/pcb/talent-marketplace/',
       what: 'Oracle Grow-based staff talent platform.',
       value: 'Connects staff to growth opportunities and surfaces internal talent for mobility.' },
     { name: 'VAULT', aud: 'exec', who: 'Executive stakeholders',
@@ -113,8 +113,8 @@ const VOYAGE = {
 
     /* ---- AI Enablement ---- */
     { id: 'chart', type: 'course', rec: true, title: 'CHART — AI fluency for every Vanderbilt role', cat: 'ai', lane: 'w1', mins: 60, src: 'Oracle Learn', api: true, due: null, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemId=300003133195222&learningItemType=ORA_CLASS' },
-    { id: 'aibasics', type: 'course', rec: true, title: 'AI Basics — Vanderbilt Learning Series', cat: 'ai', lane: 'w24', mins: 90, src: 'Learning Series', api: false, due: null, href: 'https://me5231979.github.io/AI_Classroom/' },
-    { id: 'ai201', type: 'course', rec: true, title: 'AI 201: Beyond the Basics', cat: 'ai', lane: 'w24', mins: 90, src: 'Learning Series', api: false, due: null, href: 'https://me5231979.github.io/AI-Advanced/', prereq: 'aibasics' },
+    { id: 'aibasics', type: 'course', rec: true, title: 'AI Basics: What Every Professional Needs to Know', cat: 'ai', lane: 'w24', mins: 60, src: 'Oracle Learn', api: true, due: null, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300003100146415' },
+    { id: 'ai201', type: 'course', rec: true, title: 'What Is Generative AI?', cat: 'ai', lane: 'w24', mins: 45, src: 'Oracle Learn', api: true, due: null, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857283770', prereq: 'aibasics' },
 
     { id: 'R-021', title: "VU Emergency Preparedness & Response", course: "PCB Compliance Module — emergency preparedness video & active assailant training", cat: 'safety', type: 'compliance', lane: 'w1', mins: 30, src: 'Oracle Learn', api: true, due: 'soft', dueLabel: 'Day 14', cadence: 'Annual', legal: 'Advisory', cite: "VU PCB compliance module", href: "https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemId=300002882491370&learningItemType=ORA_CLASS" },
     { id: 'R-022', title: "VU Emergency Preparedness — Supplemental Materials", course: "Emergency preparedness guide & simulation", cat: 'safety', type: 'compliance', lane: 'w24', mins: 15, src: 'Oracle Learn', api: true, due: 'soft', dueLabel: 'Day 21', cadence: 'Annual', legal: 'Advisory', cite: "VU PCB compliance module", prereq: 'R-021', href: "https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemId=300002882442178&learningItemType=ORA_CLASS" },
@@ -221,9 +221,9 @@ const VOYAGE = {
   ],
 
   explore: [
-    { title: 'Futures Learning Hub — leadership development', desc: 'Programs that grow leaders at every level.', src: 'FLH', href: 'https://me5231979.github.io/Course_Library/' },
-    { title: 'AI upskilling — AI Basics & AI 201', desc: 'From first prompt to governed workflows.', src: 'Learning Series', href: 'https://me5231979.github.io/AI_Classroom/' },
-    { title: 'Building Brave Teams workshop', desc: 'Psychological safety, practiced live.', src: 'FLH', href: 'https://me5231979.github.io/Course_Library/' },
+    { title: 'Futures Learning Hub — leadership development', desc: 'Programs that grow leaders at every level.', src: 'FLH', href: 'https://www.vanderbilt.edu/pcb/' },
+    { title: 'AI upskilling — start with AI Basics', desc: 'From first prompt to governed workflows.', src: 'Oracle Learn', href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300003100146415' },
+    { title: 'Building Brave Teams workshop', desc: 'Psychological safety, practiced live.', src: 'FLH', href: 'https://www.vanderbilt.edu/pcb/' },
     { title: 'Mentoring, tuition benefits & wellness', desc: 'Grow beyond the role you were hired for.', src: 'HR', href: 'https://hr.vanderbilt.edu/' }
   ],
 

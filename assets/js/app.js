@@ -469,7 +469,7 @@
       return '<article class="item"><div class="item__top"><span class="item__cat">FLH Program</span><span class="srcbadge">' + esc(x.who) + '</span></div>' +
         '<h4>' + esc(x.name) + '</h4><div class="item__meta"><span>' + esc(x.what) + '</span></div>' +
         '<p class="item__prereq">' + esc(x.value) + '</p>' +
-        '<div class="item__actions"><a class="btn" href="https://me5231979.github.io/Course_Library/" target="_blank" rel="noopener">Learn more</a></div></article>';
+        '<div class="item__actions"><a class="btn" href="' + esc(x.href || 'https://www.vanderbilt.edu/pcb/') + '" target="_blank" rel="noopener">Learn more</a></div></article>';
     }).join('');
 
     /* quick rails */
@@ -527,7 +527,7 @@
       if (!q) { out.innerHTML = ''; return; }
       if (!catalog) loadCatalog(function () { input.dispatchEvent(new Event('input')); });
       var pool = myItems().map(function (it) { return { title: it.title, sub: it.src + ' · ' + it.mins + ' min' + (isDone(it.id) ? ' · completed' : ''), href: it.href, id: it.id }; })
-        .concat(VOYAGE.programs.map(function (x) { return { title: x.name, sub: 'FLH Program · ' + x.who, href: 'https://me5231979.github.io/Course_Library/' }; }))
+        .concat(VOYAGE.programs.map(function (x) { return { title: x.name, sub: 'FLH Program · ' + x.who, href: x.href || 'https://www.vanderbilt.edu/pcb/' }; }))
         .concat(VOYAGE.renewals.map(function (r) { return { title: r.title, sub: r.src + ' · renews in ' + r.days + ' days', href: r.href }; }));
       var hits = pool.filter(function (r) { return (r.title + ' ' + r.sub).toLowerCase().indexOf(q) > -1; }).slice(0, 6);
       if (catalog && hits.length < 8) {
