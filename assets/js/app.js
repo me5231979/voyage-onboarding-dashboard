@@ -75,6 +75,7 @@
     $('#navReturn').hidden = !hasProfile;
     $('#navCta').textContent = hasProfile ? T('My path') : T('Begin onboarding');
     $('#beginBtn').textContent = hasProfile ? T('Continue your voyage') : T("Let's tailor your first weeks");
+    paintHeroLead(hasProfile);
     document.body.classList.toggle('view-light', view === 'dashboard' || view === 'returning' || view === 'engage');
     if (view === 'dashboard') renderDashboard();
     if (view === 'returning') renderReturning();
@@ -466,6 +467,12 @@
     if (name === 'engage') renderEngage();
     $('#navCta').textContent = state.profile ? T('My path') : T('Begin onboarding');
     $('#beginBtn').textContent = state.profile ? T('Continue your voyage') : T("Let's tailor your first weeks");
+    paintHeroLead(!!state.profile);
+  }
+  function paintHeroLead(hasProfile) {
+    $('#heroLead').textContent = hasProfile
+      ? T('Welcome back. Your dashboard is right where you left it — your path, your progress, and your people, all in one place. Step in and pick up where you left off.')
+      : T("You've finished Vanderbilt Voyage (Classroom) — this is what comes next. A few quick questions tune your first 90 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you.");
   }
 
   /* =====================================================================
