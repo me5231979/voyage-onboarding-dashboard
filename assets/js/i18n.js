@@ -144,7 +144,10 @@
     'First 90 days': 'Primeros 90 días',
     'of 90-day path': 'de la ruta de 90 días',
     'Ask PCB': 'Pregunta a PCB',
-    'Keep growing': 'Sigue creciendo'
+    'Keep growing': 'Sigue creciendo',
+    'Before you begin': 'Antes de comenzar',
+    'A word before you set sail': 'Unas palabras antes de zarpar',
+    'This short video plays once. Watch it to the end to unlock your 90-day path.': 'Este breve video se reproduce una sola vez. Míralo hasta el final para desbloquear tu ruta de 90 días.'
   };
 
   /* ------------------------------------------------ Français */
@@ -263,7 +266,10 @@
     'First 90 days': '90 premiers jours',
     'of 90-day path': 'du parcours de 90 jours',
     'Ask PCB': 'Contacter PCB',
-    'Keep growing': 'Continuer à progresser'
+    'Keep growing': 'Continuer à progresser',
+    'Before you begin': 'Avant de commencer',
+    'A word before you set sail': 'Un mot avant de lever l’ancre',
+    'This short video plays once. Watch it to the end to unlock your 90-day path.': 'Cette courte vidéo ne se joue qu’une fois. Regardez-la jusqu’au bout pour déverrouiller votre parcours de 90 jours.'
   };
 
   /* ------------------------------------------------ Deutsch */
@@ -382,7 +388,10 @@
     'First 90 days': 'Erste 90 Tage',
     'of 90-day path': 'des 90-Tage-Pfads',
     'Ask PCB': 'PCB fragen',
-    'Keep growing': 'Weiter wachsen'
+    'Keep growing': 'Weiter wachsen',
+    'Before you begin': 'Bevor Sie beginnen',
+    'A word before you set sail': 'Ein Wort, bevor Sie in See stechen',
+    'This short video plays once. Watch it to the end to unlock your 90-day path.': 'Dieses kurze Video wird nur einmal abgespielt. Sehen Sie es bis zum Ende, um Ihren 90-Tage-Pfad freizuschalten.'
   };
 
   /* ------------------------------------------------ Kreyòl Ayisyen */
@@ -501,7 +510,10 @@
     'First 90 days': 'Premye 90 jou',
     'of 90-day path': 'nan wout 90 jou a',
     'Ask PCB': 'Mande PCB',
-    'Keep growing': 'Kontinye grandi'
+    'Keep growing': 'Kontinye grandi',
+    'Before you begin': 'Anvan ou kòmanse',
+    'A word before you set sail': 'Yon ti mo anvan ou leve lank',
+    'This short video plays once. Watch it to the end to unlock your 90-day path.': 'Ti videyo sa a jwe yon sèl fwa. Gade li jiska lafen pou debloke wout 90 jou ou a.'
   };
 
   /* ------------------------------------------------ 简体中文 */
@@ -620,7 +632,10 @@
     'First 90 days': '前 90 天',
     'of 90-day path': '90 天路径完成度',
     'Ask PCB': '咨询 PCB',
-    'Keep growing': '持续成长'
+    'Keep growing': '持续成长',
+    'Before you begin': '开始之前',
+    'A word before you set sail': '启航前的一段话',
+    'This short video plays once. Watch it to the end to unlock your 90-day path.': '这段短视频只播放一次。看完全部内容，即可解锁您的 90 天路径。'
   };
 
   /* ------------------------------------------------ 繁體中文 */
@@ -739,7 +754,10 @@
     'First 90 days': '前 90 天',
     'of 90-day path': '90 天路徑完成度',
     'Ask PCB': '諮詢 PCB',
-    'Keep growing': '持續成長'
+    'Keep growing': '持續成長',
+    'Before you begin': '開始之前',
+    'A word before you set sail': '啟航前的一段話',
+    'This short video plays once. Watch it to the end to unlock your 90-day path.': '這段短影片只播放一次。看完全部內容，即可解鎖您的 90 天路徑。'
   };
 
   var LANGS = ['en', 'es', 'fr', 'de', 'ht', 'zh-Hans', 'zh-Hant'];
@@ -817,6 +835,9 @@
     ['.footer a[data-nav="engage"]', 'Programs & Partnerships'],
     ['.footer a[href="mailto:hr@vanderbilt.edu"]', 'Ask PCB'],
     ['.footer__grid > div:nth-child(3) h4', 'Keep growing'],
+    ['#introEyebrow', 'Before you begin'],
+    ['#introTitle', 'A word before you set sail'],
+    ['#introLead', 'This short video plays once. Watch it to the end to unlock your 90-day path.'],
     ['.footer .brandline', 'Every journey, well begun.']
   ];
 

@@ -343,6 +343,21 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- 90-day intro video gate: blocks the dashboard until watched in full, once ever -->
+<div class="vmodal" id="introModal" hidden role="dialog" aria-modal="true" aria-labelledby="introTitle">
+  <div class="vmodal__box">
+    <p class="eyebrow" id="introEyebrow">Before you begin</p>
+    <h3 id="introTitle">A word before you set sail</h3>
+    <p class="vmodal__lead" id="introLead">This short video plays once. Watch it to the end to unlock your 90-day path.</p>
+    <div class="vmodal__stage">
+      <video id="introVideo" preload="auto" playsinline></video>
+      <span class="vmodal__mark" aria-hidden="true">EXAMPLE</span>
+      <button type="button" class="vmodal__play" id="introPlayBtn" aria-label="Play">▶</button>
+    </div>
+    <div class="vmodal__bar" aria-hidden="true"><i id="introBar"></i></div>
+  </div>
+</div>
+
 <script src="assets/js/i18n.js?v=4001ffa"></script>
 <script src="assets/js/scorm.js?v=4001ffa"></script>
 <script src="assets/js/sbja.js?v=4001ffa"></script>

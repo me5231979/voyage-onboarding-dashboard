@@ -1,0 +1,39 @@
+name: Fetch 90-day intro video
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: 'URL of the 90-day intro MP4'
+        required: false
+
+permissions:
+  contents: write
+
+env:
+  VIDEO_URL: ${{ github.event.inputs.video_url || 'https://d2ol7oe51mr4n9.cloudfront.net/user_3CCurpI0FW75YAnAl4Hbz3vPdBv/c46bfe3d-ce6a-4753-9285-43c76305c127.mp4' }}
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check whether intro video already committed
+        id: check
+        run: echo "exists=$([ -f assets/video/intro-90day.mp4 ] && echo yes || echo no)" >> "$GITHUB_OUTPUT"
+      - name: Download intro video
+        if: steps.check.outputs.exists == 'no'
+        run: |
+          mkdir -p assets/video
+          curl -fsSL -o assets/video/intro-90day.mp4 "$VIDEO_URL"
+          ls -la assets/video/
+      - name: Commit asset
+        if: steps.check.outputs.exists == 'no'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/video/intro-90day.mp4
+          git diff --cached --quiet || git commit -m "Add 90-day intro video"
+          git push

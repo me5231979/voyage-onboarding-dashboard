@@ -22,7 +22,7 @@
     try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {}
     var sc = window.VoyageSCORM;
     if (sc && sc.connected && sc.setData) {
-      sc.setData({ s: state.start, p: state.profile, st: state.status, n: state.name, o: state.optout, dn: state.scoDone, dt: state.doneTs });
+      sc.setData({ s: state.start, p: state.profile, st: state.status, n: state.name, o: state.optout, dn: state.scoDone, dt: state.doneTs, iv: state.introSeen ? 1 : 0 });
     }
   }
   function $(s, c) { return (c || document).querySelector(s); }
@@ -78,8 +78,58 @@
     if (view === 'dashboard') renderDashboard();
     if (view === 'returning') renderReturning();
     if (view === 'engage') renderEngage();
+    introGate(view === 'dashboard');
     window.scrollTo(0, 0);
     reveal();
+  }
+
+  /* ---------- 90-day intro video gate ----------
+     Blocks the dashboard until the intro video has been watched to the
+     end, exactly once per learner (persisted locally and in SCORM
+     suspend_data). Seeking ahead is prevented; pausing is allowed.
+     Fails open: if the video file is absent (e.g., the lean SCORM
+     package excludes assets/video) the dashboard is never blocked. */
+  var introUnavailable = false;
+  var introWired = false;
+  var introMax = 0;
+  function introGate(active) {
+    var m = $('#introModal');
+    if (!m) return;
+    var v = $('#introVideo');
+    if (!active || state.introSeen || introUnavailable) {
+      m.hidden = true;
+      document.body.classList.remove('vmodal-open');
+      if (v && !v.paused) v.pause();
+      return;
+    }
+    if (!introWired) {
+      introWired = true;
+      var playBtn = $('#introPlayBtn');
+      v.addEventListener('error', function () { introUnavailable = true; introGate(false); });
+      v.addEventListener('timeupdate', function () {
+        if (v.currentTime > introMax) introMax = v.currentTime;
+        if (v.duration) $('#introBar').style.width = Math.min(100, (v.currentTime / v.duration) * 100) + '%';
+      });
+      v.addEventListener('seeking', function () {
+        if (v.currentTime > introMax + 0.5) v.currentTime = introMax;
+      });
+      v.addEventListener('ended', function () {
+        state.introSeen = true;
+        save();
+        introGate(false);
+      });
+      v.addEventListener('click', function () {
+        if (!v.paused) { v.pause(); playBtn.classList.remove('hide'); }
+      });
+      playBtn.addEventListener('click', function () {
+        v.play();
+        playBtn.classList.add('hide');
+      });
+      v.src = 'assets/video/intro-90day.mp4';
+    }
+    m.hidden = false;
+    document.body.classList.add('vmodal-open');
+    $('#introPlayBtn').focus();
   }
 
   /* ---------- start date: anchored at first launch ---------- */
@@ -94,6 +144,7 @@
         if (d.o) state.optout = d.o;
         if (d.dn) state.scoDone = true;
         if (d.dt) state.doneTs = d.dt;
+        if (d.iv) state.introSeen = true;
         if (d.n && !state.name) state.name = d.n;
         save(); return;
       }

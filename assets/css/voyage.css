@@ -675,3 +675,28 @@ body.view-light .nav { background: rgba(20,20,20,.96); }
   border-radius: 4px; padding: .78rem 1rem; font: 600 .92rem var(--font-sans); cursor: pointer; }
 .herolang select:hover, .herolang select:focus { border-color: var(--vu-gold-flat); }
 .herolang option { color: #1C1C1C; }
+
+/* 90-day intro video gate */
+.vmodal { position: fixed; inset: 0; z-index: 200; background: rgba(15,15,15,.88);
+  display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+  backdrop-filter: blur(6px); }
+.vmodal[hidden] { display: none; }
+.vmodal__box { background: #1C1C1C; border: 1px solid rgba(207,174,112,.4); border-radius: 8px;
+  max-width: 720px; width: 100%; padding: 2rem 2.2rem 1.6rem; color: #fff;
+  box-shadow: 0 30px 80px rgba(0,0,0,.55); }
+.vmodal__box .eyebrow { color: var(--vu-gold-flat); }
+.vmodal__box h3 { font-family: var(--font-display); font-size: 1.6rem; margin: .3rem 0 .5rem; color: #fff; }
+.vmodal__lead { color: rgba(255,255,255,.75); font-size: .95rem; margin-bottom: 1.2rem; }
+.vmodal__stage { position: relative; border-radius: 6px; overflow: hidden; background: #000; }
+.vmodal__stage video { display: block; width: 100%; max-height: 60vh; }
+.vmodal__mark { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font: 800 clamp(2rem, 8vw, 4.2rem)/1 var(--font-sans); letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(255,255,255,.22); transform: rotate(-18deg); pointer-events: none; }
+.vmodal__play { position: absolute; inset: 0; margin: auto; width: 84px; height: 84px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.8); background: rgba(28,28,28,.6); color: #fff; font-size: 1.5rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s var(--ease); }
+.vmodal__play:hover, .vmodal__play:focus { border-color: var(--vu-gold-flat); color: var(--vu-gold-flat); }
+.vmodal__play.hide { display: none; }
+.vmodal__bar { height: 4px; background: rgba(255,255,255,.15); border-radius: 2px; margin-top: 1rem; overflow: hidden; }
+.vmodal__bar i { display: block; height: 100%; width: 0; background: var(--vu-gold-flat); transition: width .3s linear; }
+body.vmodal-open { overflow: hidden; }
