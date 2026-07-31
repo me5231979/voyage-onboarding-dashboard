@@ -19,7 +19,7 @@
     try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {}
     var sc = window.VoyageSCORM;
     if (sc && sc.connected && sc.setData) {
-      sc.setData({ s: state.start, p: state.profile, st: state.status, n: state.name, o: state.optout });
+      sc.setData({ s: state.start, p: state.profile, st: state.status, n: state.name, o: state.optout, dn: state.scoDone });
     }
   }
   function $(s, c) { return (c || document).querySelector(s); }
@@ -87,6 +87,7 @@
         if (d.p && !state.profile) state.profile = d.p;
         if (d.st) state.status = d.st;
         if (d.o) state.optout = d.o;
+        if (d.dn) state.scoDone = true;
         if (d.n && !state.name) state.name = d.n;
         save(); return;
       }
@@ -198,7 +199,6 @@
     $('#gateFinish').addEventListener('click', function () {
       state.profile = { loc: draft.loc, family: draft.family, sub: draft.sub, role: draft.role, student: draft.student };
       save();
-      if (window.VoyageSCORM && window.VoyageSCORM.connected) window.VoyageSCORM.complete();
       show('dashboard');
       toast('Your path is ready, ' + firstName() + '. Welcome aboard.');
     });
@@ -324,6 +324,7 @@
       if (window.VoyageSCORM && window.VoyageSCORM.connected) window.VoyageSCORM.recordOptOut(oid, reason);
       rerenderActive();
       toast('Opted out — justification recorded.');
+      maybeReportPathComplete();
       return;
     }
     var reBtn = e.target.closest('[data-reinstate]');
@@ -374,6 +375,17 @@
     }
   }
 
+  function maybeReportPathComplete() {
+    if (state.scoDone || !state.profile) return;
+    var counted = myItems().filter(function (it) { return !isOut(it.id); });
+    if (!counted.length || !counted.every(function (it) { return isDone(it.id); })) return;
+    state.scoDone = true;
+    save();
+    if (window.VoyageSCORM && window.VoyageSCORM.connected) window.VoyageSCORM.complete();
+    confetti();
+    toast('Your first 90 days are complete — recorded in Oracle Learning. Well sailed.');
+  }
+
   function complete(id, manual) {
     var it = itemById(id); if (!it) return;
     state.status[id] = 'done';
@@ -381,6 +393,7 @@
     if (manual && !it.api && window.VoyageSCORM && window.VoyageSCORM.connected) {
       window.VoyageSCORM.recordAttestation(id, 'Self-attested complete on ' + new Date().toISOString().slice(0, 10) + ' — course delivered outside Oracle Learning');
     }
+    maybeReportPathComplete();
     save(); rerenderActive();
     if (it.mins > 30) confetti();
     toast('“' + it.title + '” complete.');
