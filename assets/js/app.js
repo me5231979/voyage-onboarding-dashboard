@@ -296,35 +296,6 @@
         (it.info ? '<a class="item__minor" href="' + esc(it.info) + '" target="_blank" rel="noopener" title="' + T('About') + '" aria-label="' + T('About') + '">ⓘ</a>' : '') +
       '</div></article>';
   }
-  function cardHTML(it) {
-    var cat = VOYAGE.cats[it.cat];
-    var due = it.due ? '<span class="item__due ' + it.due + '">' + (it.due === 'hard' ? '● ' : '') + esc(it.dueLabel) + '</span>' : '';
-    var legal = it.legal ? '<span class="lawchip lawchip--' + it.legal.toLowerCase() + '" title="' + esc(it.cite || '') + '">' + it.legal + '</span>' : '';
-    var cad = it.cadence ? '<span>' + esc(it.cadence) + '</span>' : '';
-    var cond = it.cond ? '<p class="item__prereq">⚠ ' + esc(it.cond) + '</p>' : '';
-    var prereq = '';
-    if (it.prereq) {
-      var p = itemById(it.prereq);
-      prereq = '<p class="item__prereq">Prerequisite: <b>' + esc(p ? p.title : it.prereq) + '</b>' + (isDone(it.prereq) ? ' ✓' : '') + '</p>';
-    }
-    var saved = state.saved.indexOf(it.id) > -1;
-    var done = isDone(it.id);
-    var rec = it.rec ? '<span class="recbadge">★ Recommended</span>' : '';
-    return '<article class="item item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
-      '<div class="item__top">' + typeChip(it) + mvBadge(it) + rec + pillFor(it.id, it) + '</div>' +
-      '<h4>' + esc(it.title) + '</h4>' +
-      '<div class="item__meta"><span>' + it.mins + ' min</span><span class="srcbadge">' + esc(it.src) + '</span>' + legal + due + cad + '</div>' +
-      cond + prereq +
-      '<div class="item__actions">' +
-        '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + ctaFor(it, done) + '</a>' +
-        (done ? '' : '<button type="button" class="item__minor" data-done="' + it.id + '">' + (it.lane === 'pre' ? 'Confirm complete' : 'Mark as done') + '</button>') +
-        '<button type="button" class="item__minor" data-save="' + it.id + '">' + (saved ? 'Saved ✓' : 'Save for later') + '</button>' +
-        (done ? '<button type="button" class="item__minor" data-reopen="' + it.id + '">Reopen</button>' : '') +
-        '<button type="button" class="item__minor" data-optout="' + it.id + '">Opt out</button>' +
-        (it.info ? '<a class="item__minor" href="' + esc(it.info) + '" target="_blank" rel="noopener">About ↗</a>' : '') +
-      '</div></article>';
-  }
-
   /* Delegated card actions (works in every view) */
   document.addEventListener('click', function (e) {
     var go = e.target.closest('[data-go]');
@@ -526,6 +497,9 @@
       if (!it.dueLabel) return 99;
       var m = /Day (\d+)/.exec(it.dueLabel);
       if (m) return parseInt(m[1], 10);
+      var w = /Within (\d+) (day|month)/.exec(it.dueLabel);
+      if (w) return parseInt(w[1], 10) * (w[2] === 'month' ? 30 : 1);
+      if (/On hire/.test(it.dueLabel)) return 7;
       if (/Week 1/.test(it.dueLabel)) return 7;
       if (/Verify/.test(it.dueLabel)) return 1;
       return 60;
