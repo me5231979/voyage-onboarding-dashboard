@@ -442,20 +442,21 @@
 
     $('#returnGreeting').textContent = 'Welcome back, ' + firstName();
     $('#returnMeta').textContent = roleName(p.role) + ' · ' + (p.sub || '') + ' (' + (p.family || '') + ') · ' + locName(p.loc);
-    $('#shelfForYouTitle').innerHTML = 'Because you’re a <em>' + esc(roleName(p.role)) + '</em> in <em>' + esc(p.sub || 'your sub-family') + '</em>';
+    var rn = roleName(p.role);
+    $('#shelfForYouTitle').innerHTML = 'Because you’re ' + (/^[aeiou]/i.test(rn) ? 'an' : 'a') + ' <em>' + esc(rn) + '</em> in <em>' + esc(p.sub || 'your sub-family') + '</em>';
     var chips = skillChips(p.family, p.sub, 10);
     $('#shelfSkills').innerHTML = chips ? '<p class="skillchips__label">Skills that matter in ' + esc(p.sub || 'your sub-family') + ' — from the Skills-Based Job Architecture</p>' + chips : '';
 
     /* resume: opened but not complete */
     var resume = items.filter(function (it) { return statusOf(it.id) === 'opened'; }).slice(0, 3);
-    $('#shelfResume').innerHTML = resume.length ? resume.map(cardHTML).join('')
-      : '<div class="lane__empty" style="grid-column:1/-1">Nothing in progress — everything you opened is complete.</div>';
+    $('#shelfResume').innerHTML = resume.length ? resume.map(rowHTML).join('')
+      : '<div class="lane__empty">Nothing in progress — everything you opened is complete.</div>';
 
     /* for you: role/dept-tuned items not yet done, then refreshers */
     var forYou = items.filter(function (it) { return it.aud && !isDone(it.id); }).slice(0, 3);
     if (forYou.length < 3) forYou = forYou.concat(items.filter(function (it) { return it.cat === 'courses' && forYou.indexOf(it) === -1; })).slice(0, 3);
-    $('#shelfForYou').innerHTML = forYou.length ? forYou.map(cardHTML).join('')
-      : '<div class="lane__empty" style="grid-column:1/-1">You’re fully current. New items land here as they publish.</div>';
+    $('#shelfForYou').innerHTML = forYou.length ? forYou.map(rowHTML).join('')
+      : '<div class="lane__empty">You’re fully current. New items land here as they publish.</div>';
 
     /* renewals */
     $('#shelfRenewals').innerHTML = VOYAGE.renewals.map(function (r) {
