@@ -622,3 +622,7 @@ body.view-light .nav { background: rgba(20,20,20,.96); }
 .optform__actions .btn { padding: .5rem 1rem; font-size: .82rem; }
 .optreason { font-size: .85rem; font-style: italic; color: var(--ink-soft); margin-top: .3rem; max-width: 70ch; }
 .item--out .optreason { color: #8a8a8a; }
+/* mobile: Deadlines badge sits inline instead of overlapping the title */
+@media (max-width: 900px) {
+  .cattile__badge { position: static; display: inline-block; margin-bottom: .45rem; }
+}
