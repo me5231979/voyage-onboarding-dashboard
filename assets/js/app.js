@@ -10,7 +10,8 @@
   'use strict';
 
   var LS = 'voyage_v1';
-  var state = load() || { profile: null, status: {}, saved: [], events: [], filter: null };
+  var state = load() || { profile: null, status: {}, saved: [], events: [], filter: null, optout: {} };
+  if (!state.optout) state.optout = {};
 
   function load() { try { return JSON.parse(localStorage.getItem(LS)); } catch (e) { return null; } }
   function firstName() { return (state.name && state.name.split(' ')[0]) || VOYAGE.user.first; }
@@ -18,7 +19,7 @@
     try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {}
     var sc = window.VoyageSCORM;
     if (sc && sc.connected && sc.setData) {
-      sc.setData({ s: state.start, p: state.profile, st: state.status, n: state.name });
+      sc.setData({ s: state.start, p: state.profile, st: state.status, n: state.name, o: state.optout });
     }
   }
   function $(s, c) { return (c || document).querySelector(s); }
@@ -46,6 +47,7 @@
   }
   function statusOf(id) { return state.status[id] || 'todo'; }
   function isDone(id) { var s = statusOf(id); return s === 'done' || s === 'verified'; }
+  function isOut(id) { return Object.prototype.hasOwnProperty.call(state.optout, id); }
   function itemById(id) {
     for (var i = 0; i < VOYAGE.items.length; i++) if (VOYAGE.items[i].id === id) return VOYAGE.items[i];
     if (id.indexOf('meet-') === 0) { var m = meetItems(); for (var j = 0; j < m.length; j++) if (m[j].id === id) return m[j]; }
@@ -84,6 +86,7 @@
         state.start = d.s || d.start;
         if (d.p && !state.profile) state.profile = d.p;
         if (d.st) state.status = d.st;
+        if (d.o) state.optout = d.o;
         if (d.n && !state.name) state.name = d.n;
         save(); return;
       }
@@ -245,6 +248,14 @@
     }
     var rec = it.rec ? '<span class="recbadge">★ Recommended</span>' : '';
     var cond = it.cond ? '<span class="item__prereq">⚠ ' + esc(it.cond) + '</span>' : '';
+    if (isOut(it.id)) {
+      return '<article class="item item--row item--out item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
+        typeChip(it) +
+        '<div class="row__main"><h4>' + esc(it.title) + '</h4>' +
+          '<div class="item__meta"><span class="pill pill--out" title="' + esc(state.optout[it.id] || '') + '">Opted out</span><span>Justification on file</span></div></div>' +
+        '<span></span>' +
+        '<div class="item__actions"><button type="button" class="item__minor item__minor--text" data-reinstate="' + it.id + '">Reinstate</button></div></article>';
+    }
     return '<article class="item item--row item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
       typeChip(it) +
       '<div class="row__main"><h4>' + esc(it.title) + rec + '</h4>' +
@@ -253,8 +264,10 @@
       pillFor(it.id, it) +
       '<div class="item__actions">' +
         '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + ctaFor(it, done) + '</a>' +
-        (done ? '' : '<button type="button" class="item__minor" data-done="' + it.id + '" title="' + (it.lane === 'pre' ? 'Confirm complete' : 'Mark as done') + '">✓</button>') +
+        (done ? '<button type="button" class="item__minor item__minor--text" data-reopen="' + it.id + '" title="Marked by mistake? Reopen it">Reopen</button>'
+              : '<button type="button" class="item__minor" data-done="' + it.id + '" title="' + (it.lane === 'pre' ? 'Confirm complete' : 'Mark as done') + '">✓</button>') +
         '<button type="button" class="item__minor" data-save="' + it.id + '" title="Save for later">' + (saved ? '♥' : '♡') + '</button>' +
+        '<button type="button" class="item__minor item__minor--text" data-optout="' + it.id + '" title="Opt out with a written justification">Opt out</button>' +
         (it.info ? '<a class="item__minor" href="' + esc(it.info) + '" target="_blank" rel="noopener" title="About">ⓘ</a>' : '') +
       '</div></article>';
   }
@@ -281,6 +294,8 @@
         '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + ctaFor(it, done) + '</a>' +
         (done ? '' : '<button type="button" class="item__minor" data-done="' + it.id + '">' + (it.lane === 'pre' ? 'Confirm complete' : 'Mark as done') + '</button>') +
         '<button type="button" class="item__minor" data-save="' + it.id + '">' + (saved ? 'Saved ✓' : 'Save for later') + '</button>' +
+        (done ? '<button type="button" class="item__minor" data-reopen="' + it.id + '">Reopen</button>' : '') +
+        '<button type="button" class="item__minor" data-optout="' + it.id + '">Opt out</button>' +
         (it.info ? '<a class="item__minor" href="' + esc(it.info) + '" target="_blank" rel="noopener">About ↗</a>' : '') +
       '</div></article>';
   }
@@ -295,6 +310,37 @@
     }
     var doneBtn = e.target.closest('[data-done]');
     if (doneBtn) { complete(doneBtn.getAttribute('data-done'), true); return; }
+    var outBtn = e.target.closest('[data-optout]');
+    if (outBtn) {
+      var oid = outBtn.getAttribute('data-optout');
+      var oit = itemById(oid);
+      var reason = window.prompt('Opt out of “' + (oit ? oit.title : oid) + '”?\n\nPlease write a brief justification — it is recorded and reportable, like a quiz response.');
+      if (reason === null) return;
+      reason = reason.trim();
+      if (!reason) { toast('Opt-out needs a written justification.'); return; }
+      state.optout[oid] = reason;
+      delete state.status[oid];
+      save();
+      if (window.VoyageSCORM && window.VoyageSCORM.connected) window.VoyageSCORM.recordOptOut(oid, reason);
+      rerenderActive();
+      toast('Opted out — justification recorded.');
+      return;
+    }
+    var reBtn = e.target.closest('[data-reinstate]');
+    if (reBtn) {
+      delete state.optout[reBtn.getAttribute('data-reinstate')];
+      save(); rerenderActive();
+      toast('Reinstated — back on your path.');
+      return;
+    }
+    var roBtn = e.target.closest('[data-reopen]');
+    if (roBtn) {
+      var rid = roBtn.getAttribute('data-reopen');
+      delete state.status[rid];
+      save(); rerenderActive();
+      toast('Reopened — status reset to Not started.');
+      return;
+    }
     var saveBtn = e.target.closest('[data-save]');
     if (saveBtn) {
       var sid = saveBtn.getAttribute('data-save');
@@ -355,8 +401,9 @@
     $('#dashGreeting').textContent = greeting() + ', ' + firstName();
     $('#dashDay').textContent = 'Day ' + dayOfPath() + ' of your first 90 · ' + (p.sub || '') + ' · ' + locName(p.loc);
 
-    var totalMins = items.reduce(function (acc, it) { return acc + it.mins; }, 0);
-    var doneMins = items.reduce(function (acc, it) { return acc + (isDone(it.id) ? it.mins : 0); }, 0);
+    var counted = items.filter(function (it) { return !isOut(it.id); });
+    var totalMins = counted.reduce(function (acc, it) { return acc + it.mins; }, 0);
+    var doneMins = counted.reduce(function (acc, it) { return acc + (isDone(it.id) ? it.mins : 0); }, 0);
     var pct = totalMins ? Math.round(doneMins / totalMins * 100) : 0;
     if (doneMins > 0 && pct === 0) pct = 1;
     $('#ringPct').textContent = pct + '%';
@@ -404,8 +451,9 @@
 
     $('#lanes').innerHTML = VOYAGE.lanes.map(function (lane) {
       var mine = visible.filter(function (it) { return it.lane === lane.id; });
-      var laneDone = mine.filter(function (it) { return isDone(it.id); }).length;
-      var count = mine.length ? '<span class="lane__count">' + laneDone + ' of ' + mine.length + ' complete</span>' : '';
+      var laneIn = mine.filter(function (it) { return !isOut(it.id); });
+      var laneDone = laneIn.filter(function (it) { return isDone(it.id); }).length;
+      var count = mine.length ? '<span class="lane__count">' + laneDone + ' of ' + laneIn.length + ' complete</span>' : '';
       var cards = mine.length ? '<div class="lane__rows">' + mine.map(rowHTML).join('') + '</div>'
         : '<div class="lane__empty">Nothing in this lane' + (tile ? ' for ' + esc(tile.label) : '') + '.</div>';
       var note = lane.note ? '<p class="lane__note">' + esc(lane.note) + '</p>' : '';
@@ -423,7 +471,7 @@
       return 60;
     }
     var next = items.filter(function (it) {
-      if (isDone(it.id)) return false;
+      if (isDone(it.id) || isOut(it.id)) return false;
       if (it.prereq && !isDone(it.prereq)) return false;
       return true;
     }).sort(function (a, b) {

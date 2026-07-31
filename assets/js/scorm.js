@@ -72,6 +72,29 @@
     } catch (e) { /* keep local copy only */ }
   };
 
+  /* Opt-outs are reportable records: each one is written as a SCORM
+     interaction (the same channel quiz answers use), carrying the item id
+     and the written justification, so Oracle can report on them. */
+  scorm.recordOptOut = function (itemId, reason) {
+    try {
+      if (scorm.version === '2004') {
+        var n = parseInt(api2004.GetValue('cmi.interactions._count'), 10) || 0;
+        api2004.SetValue('cmi.interactions.' + n + '.id', 'optout-' + itemId);
+        api2004.SetValue('cmi.interactions.' + n + '.type', 'fill-in');
+        api2004.SetValue('cmi.interactions.' + n + '.learner_response', String(reason).slice(0, 250));
+        api2004.SetValue('cmi.interactions.' + n + '.result', 'neutral');
+        api2004.Commit('');
+      } else if (scorm.version === '1.2') {
+        var m = parseInt(api12.LMSGetValue('cmi.interactions._count'), 10) || 0;
+        api12.LMSSetValue('cmi.interactions.' + m + '.id', 'optout-' + itemId);
+        api12.LMSSetValue('cmi.interactions.' + m + '.type', 'fill-in');
+        api12.LMSSetValue('cmi.interactions.' + m + '.student_response', String(reason).slice(0, 250));
+        api12.LMSSetValue('cmi.interactions.' + m + '.result', 'neutral');
+        api12.LMSCommit('');
+      }
+    } catch (e) { /* justification still lives in suspend_data */ }
+  };
+
   scorm.complete = function () {
     try {
       if (scorm.version === '2004') {
