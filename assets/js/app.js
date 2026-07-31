@@ -73,7 +73,7 @@
     var hasProfile = !!state.profile;
     $('#navDash').hidden = !hasProfile;
     $('#navReturn').hidden = !hasProfile;
-    $('#navCta').textContent = hasProfile ? 'My path' : 'Begin onboarding';
+    $('#navCta').textContent = hasProfile ? T('My path') : T('Begin onboarding');
     document.body.classList.toggle('view-light', view === 'dashboard' || view === 'returning' || view === 'engage');
     if (view === 'dashboard') renderDashboard();
     if (view === 'returning') renderReturning();
@@ -440,6 +440,8 @@
     var name = v.getAttribute('data-view');
     if (name === 'dashboard') renderDashboard();
     if (name === 'returning') renderReturning();
+    if (name === 'engage') renderEngage();
+    $('#navCta').textContent = state.profile ? T('My path') : T('Begin onboarding');
   }
 
   /* =====================================================================
@@ -450,8 +452,8 @@
     var p = state.profile || {};
 
     $('#dashGreeting').textContent = greeting() + ', ' + firstName();
-    $('#dashDay').textContent = (VoyageLang.get() === 'es' ? 'Día ' + dayOfPath() + ' de tus primeros 90 · ' : 'Day ' + dayOfPath() + ' of your first 90 · ') + (p.sub || '') + ' · ' + locName(p.loc);
-    $('.ring').setAttribute('aria-label', (VoyageLang.get() === 'es' ? 'Progreso de incorporación' : 'Onboarding progress'));
+    $('#dashDay').textContent = T('DAY_LINE').replace('{n}', dayOfPath()) + ' · ' + (p.sub || '') + ' · ' + locName(p.loc);
+    $('.ring').setAttribute('aria-label', T('Onboarding progress'));
 
     var counted = items.filter(function (it) { return !isOut(it.id); });
     var totalMins = counted.reduce(function (acc, it) { return acc + it.mins; }, 0);
@@ -478,8 +480,8 @@
         return '<i class="cattile__dot" style="background:' + VOYAGE.typeDefs[k].edge + '" title="' + VOYAGE.typeDefs[k].label + ' · ' + typeCounts[k] + '"></i>';
       }).join('');
       return '<button type="button" aria-pressed="' + on + '" class="cattile' + (on ? ' on' : '') + '" data-tile="' + t.id + '" style="border-top-color:' + edge + '">' +
-        (t.hard ? '<span class="cattile__badge">Deadlines</span>' : '') +
-        '<h3>' + esc(t.label) + '</h3><span class="cattile__count">' + (open ? open + ' to go · ' : '') + mine.length + ' items</span>' +
+        (t.hard ? '<span class="cattile__badge">' + T('Deadlines') + '</span>' : '') +
+        '<h3>' + esc(t.label) + '</h3><span class="cattile__count">' + (open ? open + ' ' + T('to go') + ' · ' : '') + mine.length + ' ' + T('items') + '</span>' +
         '<span class="cattile__dots" aria-hidden="true">' + dots + '</span></button>';
     }).join('');
     $$('#catTiles [data-tile]').forEach(function (b) {
@@ -511,12 +513,12 @@
       var mine = visible.filter(function (it) { return it.lane === lane.id; });
       var laneIn = mine.filter(function (it) { return !isOut(it.id); });
       var laneDone = laneIn.filter(function (it) { return isDone(it.id); }).length;
-      var count = mine.length ? '<span class="lane__count">' + laneDone + (VoyageLang.get() === 'es' ? ' de ' : ' of ') + laneIn.length + (VoyageLang.get() === 'es' ? ' completados' : ' complete') + '</span>' : '';
+      var count = mine.length ? '<span class="lane__count">' + T('LANE_COUNT').replace('{done}', laneDone).replace('{total}', laneIn.length) + '</span>' : '';
       var cards = mine.length ? '<div class="lane__rows">' + mine.map(rowHTML).join('') + '</div>'
-        : '<div class="lane__empty">Nothing in this lane' + (tile ? ' for ' + esc(tile.label) : '') + '.</div>';
+        : '<div class="lane__empty">' + (tile ? T('LANE_EMPTY_FOR').replace('{cat}', esc(tile.label)) : T('LANE_EMPTY')) + '</div>';
       var note = lane.note ? '<p class="lane__note">' + esc(T(lane.note)) + '</p>' : '';
       return '<div class="lane"><div class="lane__title"><h3>' + esc(T(lane.title)) + '</h3><span>' + esc(T(lane.kicker)) + '</span>' + count + '</div>' + note + cards + '</div>';
-    }).join('') + '<div class="daybeyond"><div><b>Day 31 and beyond: your home base.</b> When the path is behind you, Voyage becomes the place to find anything — search every active course, track renewals, and keep growing through Programs, Events & Partnerships.</div><button type="button" class="btn btn--ghost-dark" data-nav="returning">Preview it now →</button></div>';
+    }).join('') + '<div class="daybeyond"><div>' + T('DAY_BEYOND') + '</div><button type="button" class="btn btn--ghost-dark" data-nav="returning">' + T('Preview it now →') + '</button></div>';
 
     /* up next: hard-dated first, prereqs met, not done */
     var today = dayOfPath();
@@ -613,11 +615,11 @@
     var ren = myRenewals();
     $('#shelfRenewals').innerHTML = ren.length ? ren.map(function (r) {
       var tone = r.days > 60 ? 'green' : r.days >= 30 ? 'amber' : 'red';
-      return '<div class="renewal"><div class="renewal__days renewal__days--' + tone + '"><b>' + Math.max(0, r.days) + '</b><span>days</span></div>' +
+      return '<div class="renewal"><div class="renewal__days renewal__days--' + tone + '"><b>' + Math.max(0, r.days) + '</b><span>' + T('days') + '</span></div>' +
         '<div class="renewal__main"><b>' + esc(r.it.title) + '</b><small>' + esc(r.it.cadence) + ' · ' + esc(r.it.src) + '</small></div>' +
         '<a class="btn" data-go="' + r.it.id + '" href="' + esc(r.it.href) + '" target="_blank" rel="noopener">' + T('Renew') + '</a></div>';
     }).join('') :
-    '<div class="renewempty"><b>' + T('Nothing to renew yet.') + '</b> ' + (VoyageLang.get() === 'es' ? T('RENEW_EMPTY_BODY') : 'Annual and biennial requirements — harassment prevention, cybersecurity, emergency preparedness — reappear here automatically after you complete them, counting down from your completion date. In production, Oracle Learning renewal assignments sync here too.') + '</div>';
+    '<div class="renewempty"><b>' + T('Nothing to renew yet.') + '</b> ' + T('RENEW_EMPTY_BODY') + '</div>';
 
     /* quick rails */
     $('#quickSystems').innerHTML = VOYAGE.quickSystems.map(function (s) {
@@ -694,7 +696,7 @@
       if (!catalog) loadCatalog(function () { input.dispatchEvent(new Event('input')); });
       var pool = myItems().map(function (it) { return { title: it.title, sub: it.src + ' · ' + it.mins + ' min' + (isDone(it.id) ? ' · completed' : ''), href: it.href, id: it.id }; })
         .concat(VOYAGE.programs.map(function (x) { return { title: x.name, sub: 'FLH Program · ' + x.who, href: x.href || 'https://www.vanderbilt.edu/pcb/' }; }))
-        .concat(myRenewals().map(function (r) { return { title: r.it.title, sub: 'Renews in ' + Math.max(0, r.days) + ' days · ' + r.it.src, href: r.it.href, id: r.it.id }; }));
+        .concat(myRenewals().map(function (r) { return { title: r.it.title, sub: T('RENEWS_IN').replace('{n}', Math.max(0, r.days)) + ' · ' + r.it.src, href: r.it.href, id: r.it.id }; }));
       var hits = pool.filter(function (r) { return (r.title + ' ' + r.sub).toLowerCase().indexOf(q) > -1; }).slice(0, 6);
       if (catalog && hits.length < 8) {
         var seen = {};
@@ -782,22 +784,23 @@
   window.addEventListener('scroll', function () { nav.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
   function setLanguage(next) {
     VoyageLang.set(next);
+    next = VoyageLang.get();
     state.lang = next; save();
-    $('#langBtn').textContent = next === 'es' ? 'EN' : 'ES';
+    $('#navLang').value = next;
     $('#heroLang').value = next;
     rerenderActive();
   }
-  if (state.lang) setLanguage(state.lang); else $('#heroLang').value = 'en';
-  $('#langBtn').addEventListener('click', function () {
-    setLanguage(VoyageLang.get() === 'es' ? 'en' : 'es');
-  });
+  if (state.lang) setLanguage(state.lang);
+  else { $('#navLang').value = 'en'; $('#heroLang').value = 'en'; }
+  $('#navLang').addEventListener('change', function () { setLanguage(this.value); });
   $('#heroLang').addEventListener('change', function () { setLanguage(this.value); });
   var burger = $('#navBurger');
   burger.addEventListener('click', function () {
     var open = nav.classList.toggle('nav--open');
     burger.setAttribute('aria-expanded', String(open));
   });
-  $('#navLinks').addEventListener('click', function () {
+  $('#navLinks').addEventListener('click', function (e) {
+    if (e.target.closest('.nav__lang')) return; /* choosing a language keeps the menu open */
     nav.classList.remove('nav--open');
     burger.setAttribute('aria-expanded', 'false');
   });

@@ -25,13 +25,21 @@
     <img class="nav__lockup" src="assets/img/vu-lockup-white.png" alt="Vanderbilt University" width="250" height="65">
     <img class="nav__vicon" src="assets/img/vu-v-icon-nav.png" alt="Vanderbilt University" width="34" height="25">
   </a>
-  <button type="button" class="nav__lang" id="langBtn" aria-label="Cambiar idioma / Switch language">ES</button>
   <button type="button" class="nav__burger" id="navBurger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <nav class="nav__links" aria-label="Sections" id="navLinks">
     <a href="#" data-nav="dashboard" hidden id="navDash">My first 90 days</a>
     <a href="#" data-nav="returning" hidden id="navReturn">Beyond 90 Days</a>
     <a href="#" data-nav="engage" id="navEngage">Programs &amp; Partnerships</a>
     <a class="btn" href="#" id="navCta">Begin onboarding</a>
+    <select class="nav__lang" id="navLang" aria-label="Language">
+      <option value="en">English</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+      <option value="de">Deutsch</option>
+      <option value="ht">Kreyòl Ayisyen</option>
+      <option value="zh-Hans">简体中文</option>
+      <option value="zh-Hant">繁體中文</option>
+    </select>
   </nav>
 </header>
 
@@ -51,10 +59,15 @@
       <p class="lead" data-reveal>You've finished Vanderbilt Voyage (Classroom) — this is what comes next. A few quick questions tune your first 90 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you.</p>
       <div class="hero__cta" data-reveal>
         <a class="btn" href="#" id="beginBtn">Let's tailor your first weeks</a>
-        <label class="herolang"><span class="sr-only">Language / Idioma</span>
-          <select id="heroLang" aria-label="Language / Idioma">
+        <label class="herolang"><span class="sr-only">Language</span>
+          <select id="heroLang" aria-label="Language">
             <option value="en">English</option>
             <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="ht">Kreyòl Ayisyen</option>
+            <option value="zh-Hans">简体中文</option>
+            <option value="zh-Hant">繁體中文</option>
           </select></label>
       </div>
       <div class="hero__idcard" data-reveal>

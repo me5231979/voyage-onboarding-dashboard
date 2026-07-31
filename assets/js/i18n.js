@@ -1,15 +1,34 @@
 /* =====================================================================
-   VOYAGE — i18n (EN / ES)
-   Spanish covers the interface chrome: navigation, gate, lane titles,
-   pills, actions, labels, and empty states. Course and program titles
-   remain in English — they are the actual Oracle Learning item names.
+   VOYAGE — i18n
+   Languages: English, Español, Français, Deutsch, Kreyòl Ayisyen,
+   简体中文 (zh-Hans), 繁體中文 (zh-Hant).
+   Translations cover the interface chrome: navigation, gate, lane
+   titles, pills, actions, labels, and empty states. Course and program
+   titles remain in English — they are the actual Oracle Learning item
+   names.
+   Each language is a map of { English string → translation }. Keys with
+   {placeholders} (DAY_LINE, LANE_COUNT, RENEWS_IN…) are templates the
+   renderers fill in; their English defaults live in D.en.
    ===================================================================== */
 
 (function () {
   'use strict';
 
-  /* dynamic strings used by the renderers */
-  var TS = {
+  var D = {};
+
+  /* English defaults for template / special keys only */
+  D.en = {
+    'DAY_LINE': 'Day {n} of your first 90',
+    'LANE_COUNT': '{done} of {total} complete',
+    'LANE_EMPTY': 'Nothing in this lane.',
+    'LANE_EMPTY_FOR': 'Nothing in this lane for {cat}.',
+    'RENEWS_IN': 'Renews in {n} days',
+    'RENEW_EMPTY_BODY': 'Annual and biennial requirements — harassment prevention, cybersecurity, emergency preparedness — reappear here automatically after you complete them, counting down from your completion date. In production, Oracle Learning renewal assignments sync here too.',
+    'DAY_BEYOND': '<b>Day 91 and beyond: Beyond 90 Days.</b> When the path is behind you, Voyage becomes the place to find any course, track renewals, and keep growing through Programs, Events & Partnerships.'
+  };
+
+  /* ------------------------------------------------ Español */
+  D.es = {
     'Not started': 'Sin iniciar', 'Opened': 'Abierto', 'Complete': 'Completado',
     '✓ Verified': '✓ Verificado', 'Opted out': 'Exento',
     'Start': 'Iniciar', 'Open': 'Abrir', 'Revisit': 'Repasar', 'Verify': 'Verificar',
@@ -30,7 +49,7 @@
     'Days 46–90': 'Días 46–90', 'Grow into the role': 'Crece en tu puesto',
     'Good morning': 'Buenos días', 'Good afternoon': 'Buenas tardes', 'Good evening': 'Buenas noches',
     'Welcome back': 'Bienvenido de nuevo',
-    'min': 'min',
+    'min': 'min', 'days': 'días',
     'All caught up. Well sailed.': 'Todo al día. ¡Buen viaje!',
     'Nothing saved yet.': 'Aún no hay nada guardado.',
     'Nothing viewed yet.': 'Aún no has visto nada.',
@@ -56,7 +75,12 @@
     'Skills that matter in your sub-family': 'Habilidades clave en tu subfamilia',
     'Skills that matter here': 'Habilidades clave aquí',
     'items': 'elementos', 'to go': 'pendientes',
-    'Renews in': 'Se renueva en', 'days': 'días',
+    'Onboarding progress': 'Progreso de incorporación',
+    'DAY_LINE': 'Día {n} de tus primeros 90',
+    'LANE_COUNT': '{done} de {total} completados',
+    'LANE_EMPTY': 'Nada en esta etapa.',
+    'LANE_EMPTY_FOR': 'Nada en esta etapa para {cat}.',
+    'RENEWS_IN': 'Se renueva en {n} días',
     'Guide opened — schedule the meeting, then mark it complete with the ✓.':
       'Guía abierta: agenda la reunión y márcala como completada con ✓.',
     'Your first 90 days are complete — recorded in Oracle Learning. Well sailed.':
@@ -65,73 +89,746 @@
     'RENEW_EMPTY_BODY': 'Los requisitos anuales y bienales (prevención del acoso, ciberseguridad, preparación para emergencias) reaparecerán aquí automáticamente después de completarlos, contando desde tu fecha de finalización. En producción, las asignaciones de renovación de Oracle Learning también se sincronizan aquí.',
     'DAY_BEYOND': '<b>Del día 91 en adelante: Más allá de los 90 días.</b> Cuando termines la ruta, Voyage será el lugar para encontrar cualquier curso, seguir tus renovaciones y continuar creciendo con Programas, Eventos y Alianzas.',
     'Preview it now →': 'Ver ahora →',
-    'Renew': 'Renovar'
+    'Renew': 'Renovar',
+    /* static chrome */
+    'My first 90 days': 'Mis primeros 90 días',
+    'Beyond 90 Days': 'Más allá de los 90 días',
+    'Programs & Partnerships': 'Programas y alianzas',
+    'Vanderbilt · Voyage · Staff Onboarding': 'Vanderbilt · Voyage · Incorporación del personal',
+    'Welcome. Your path is <em class="gold-text">already&nbsp;built</em>.': 'Bienvenido. Tu ruta <em class="gold-text">ya está&nbsp;lista</em>.',
+    "You've finished Vanderbilt Voyage (Classroom) — this is what comes next. A few quick questions tune your first 90 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you.":
+      'Terminaste Vanderbilt Voyage (Presencial); esto es lo que sigue. Unas preguntas rápidas ajustan tus primeros 90 días a tu campus, tu área y tu puesto, y cada tarea, curso y contacto vive en un solo tablero. Te conocemos. Estamos listos para ti.',
+    "Let's tailor your first weeks": 'Personalicemos tus primeras semanas',
+    'Demo profile — at launch this card is pre-populated from your Oracle HCM record via single sign-on':
+      'Perfil de demostración: en producción esta tarjeta se completa desde tu registro de Oracle HCM mediante inicio de sesión único',
+    'Not Alex? Use your name': '¿No eres Alex? Usa tu nombre',
+    'Step 1 of 3 · Location': 'Paso 1 de 3 · Ubicación',
+    'Where will you <em class="gold-text">anchor</em>?': '¿Dónde vas a <em class="gold-text">anclar</em>?',
+    'Your campus sets your parking vendor, safety contacts, state compliance track, and local benefits.':
+      'Tu campus define el estacionamiento, los contactos de seguridad, el cumplimiento estatal y los beneficios locales.',
+    'Step 2 of 3 · Job family': 'Paso 2 de 3 · Familia laboral',
+    'Find your <em class="gold-text">job family</em>.': 'Encuentra tu <em class="gold-text">familia laboral</em>.',
+    "From Vanderbilt's Skills-Based Job Architecture — 18 families, 95 sub-families. Start typing, or browse by family.":
+      'De la Arquitectura de Puestos por Habilidades de Vanderbilt: 18 familias, 95 subfamilias. Escribe para buscar o navega por familia.',
+    'Step 3 of 3 · Role': 'Paso 3 de 3 · Puesto',
+    'What kind of <em class="gold-text">work</em>?': '¿Qué tipo de <em class="gold-text">trabajo</em>?',
+    'Auto-suggested from your Oracle job code — confirm or change it. This sets the depth of your path.':
+      'Sugerido según tu código de puesto en Oracle: confírmalo o cámbialo. Esto define la profundidad de tu ruta.',
+    '<b>I have the potential to work with students or minors.</b> A yes — or an unsure — adds Protection of Minors 101 and Clery Act training to your path. This stacks with any role.':
+      '<b>Podría trabajar con estudiantes o menores.</b> Un sí —o un no estoy seguro— añade Protection of Minors 101 y la capacitación de la Ley Clery a tu ruta. Aplica a cualquier puesto.',
+    'Yes': 'Sí', 'No': 'No', 'Unsure': 'No estoy seguro',
+    'Your custom path': 'Tu ruta personalizada',
+    'Here\'s your <em class="gold-text">voyage</em>.': 'Este es tu <em class="gold-text">viaje</em>.',
+    "Let's begin": 'Comencemos', 'Continue': 'Continuar',
+    'Voyage · Your first 90 days': 'Voyage · Tus primeros 90 días',
+    'This dashboard continues where <b>Vanderbilt Voyage (Classroom)</b> left off. Every card links straight into its source system — <b>the click is your completion signal</b>. Systems with an API verify true completion overnight and upgrade the card to <b>✓ Verified</b>.':
+      'Este tablero continúa donde terminó <b>Vanderbilt Voyage (Presencial)</b>. Cada tarjeta enlaza directamente con su sistema de origen: <b>el clic es tu señal de avance</b>. Los sistemas con API verifican la finalización real cada noche y actualizan la tarjeta a <b>✓ Verificado</b>.',
+    'Change role / campus': 'Cambiar puesto / campus',
+    'Benefits window': 'Plazo de beneficios',
+    'days left to enroll': 'días para inscribirte',
+    'Go to enrollment →': 'Ir a la inscripción →',
+    'Saved for later': 'Guardado para después',
+    'Announcements': 'Avisos',
+    'Voyage · Beyond 90 Days': 'Voyage · Más allá de los 90 días',
+    'Grow my <em>career</em>': 'Impulsa mi <em>carrera</em>',
+    '<b>Not sure where to start?</b> Build your path with the Skill Matrix — map your sub-family’s skills to courses.':
+      '<b>¿No sabes por dónde empezar?</b> Construye tu ruta con la Matriz de Habilidades: conecta las habilidades de tu subfamilia con cursos.',
+    'Build your path →': 'Construye tu ruta →',
+    'Programs, Events & Partnerships': 'Programas, eventos y alianzas',
+    'Ways to <em class="gold-text">engage</em>.': 'Formas de <em class="gold-text">participar</em>.',
+    "Onboarding ends; belonging doesn't. These are the programs, councils, and communities open to you as a Vanderbilt staff member — from day one and for your whole career.":
+      'La incorporación termina; la pertenencia no. Estos son los programas, consejos y comunidades abiertos para ti como miembro del personal de Vanderbilt, desde el primer día y durante toda tu carrera.',
+    'Every journey, well begun.': 'Todo viaje, bien comenzado.',
+    'My path': 'Mi ruta',
+    'Begin onboarding': 'Comenzar incorporación',
+    'First 90 days': 'Primeros 90 días',
+    'of 90-day path': 'de la ruta de 90 días',
+    'Ask PCB': 'Pregunta a PCB',
+    'Keep growing': 'Sigue creciendo'
   };
 
+  /* ------------------------------------------------ Français */
+  D.fr = {
+    'Not started': 'Non commencé', 'Opened': 'Ouvert', 'Complete': 'Terminé',
+    '✓ Verified': '✓ Vérifié', 'Opted out': 'Exempté',
+    'Start': 'Commencer', 'Open': 'Ouvrir', 'Revisit': 'Revoir', 'Verify': 'Vérifier',
+    'Take survey': 'Répondre au sondage', 'How-to guide (PDF)': 'Guide pratique (PDF)',
+    'Mark as done': 'Marquer comme terminé', 'Confirm complete': 'Confirmer l’achèvement',
+    'Save for later': 'Garder pour plus tard', 'Opt out': 'Demander une exemption',
+    'Reopen': 'Rouvrir', 'Reinstate': 'Rétablir', 'Cancel': 'Annuler',
+    'Record opt-out': 'Enregistrer l’exemption', 'About': 'En savoir plus',
+    '★ Recommended': '★ Recommandé',
+    'Compliance': 'Conformité', 'Course': 'Cours', 'Setup task': 'Tâche initiale',
+    'Meeting': 'Réunion', 'Survey': 'Sondage', 'Read & watch': 'Lire et regarder',
+    'Verify & Validate': 'Vérifier et valider', 'Covered in Voyage Classroom': 'Vu pendant Voyage (Présentiel)',
+    'You completed these during Vanderbilt Voyage (Classroom). Open each one to verify it carried over, then confirm it here.':
+      'Vous avez terminé ces éléments pendant Vanderbilt Voyage (Présentiel). Ouvrez chacun pour vérifier qu’il a bien été enregistré, puis confirmez-le ici.',
+    'Week 1': 'Semaine 1', 'Land well': 'Bien arriver',
+    'Weeks 2–4': 'Semaines 2–4', 'Build momentum': 'Prendre de l’élan',
+    'Weeks 5–6': 'Semaines 5–6', 'Through Day 45': 'Jusqu’au jour 45',
+    'Days 46–90': 'Jours 46–90', 'Grow into the role': 'Grandir dans le poste',
+    'Good morning': 'Bonjour', 'Good afternoon': 'Bon après-midi', 'Good evening': 'Bonsoir',
+    'Welcome back': 'Bon retour',
+    'min': 'min', 'days': 'jours',
+    'All caught up. Well sailed.': 'Tout est à jour. Bonne navigation !',
+    'Nothing saved yet.': 'Rien d’enregistré pour l’instant.',
+    'Nothing viewed yet.': 'Rien de consulté pour l’instant.',
+    'Nothing completed yet.': 'Rien de terminé pour l’instant.',
+    'Nothing in progress — everything you opened is complete.': 'Rien en cours — tout ce que vous avez ouvert est terminé.',
+    'You’re fully current. New items land here as they publish.': 'Vous êtes à jour. Les nouveaux éléments apparaîtront ici dès leur publication.',
+    'Opt out — write a brief justification. It is recorded and reportable, like a quiz response.':
+      'Exemption — rédigez une brève justification. Elle est enregistrée et traçable, comme une réponse de questionnaire.',
+    'e.g., Completed equivalent training at my previous employer in May 2026.':
+      'p. ex. : formation équivalente suivie chez mon employeur précédent en mai 2026.',
+    'Opt-out needs a written justification.': 'L’exemption exige une justification écrite.',
+    'Opted out — justification recorded.': 'Exempté — justification enregistrée.',
+    'Reopened — status reset to Not started.': 'Rouvert — statut remis à Non commencé.',
+    'Reinstated — back on your path.': 'Rétabli — de retour sur votre parcours.',
+    'Filter your path by category': 'Filtrer votre parcours par catégorie',
+    '✕ Show everything': '✕ Tout afficher',
+    '⚓ Manager’s Voyage only': '⚓ Manager’s Voyage uniquement',
+    '⚓ Manager’s Voyage': '⚓ Manager’s Voyage',
+    'Deadlines': 'Échéances',
+    'Up next': 'À suivre',
+    'AI — deeper dive': 'IA — approfondissement',
+    'Manager development': 'Développement des managers', 'Professional development': 'Développement professionnel',
+    'Skills that matter in your sub-family': 'Compétences clés de votre sous-famille',
+    'Skills that matter here': 'Compétences clés ici',
+    'items': 'éléments', 'to go': 'restants',
+    'Onboarding progress': 'Progression de l’intégration',
+    'DAY_LINE': 'Jour {n} de vos 90 premiers jours',
+    'LANE_COUNT': '{done} sur {total} terminés',
+    'LANE_EMPTY': 'Rien dans cette étape.',
+    'LANE_EMPTY_FOR': 'Rien dans cette étape pour {cat}.',
+    'RENEWS_IN': 'À renouveler dans {n} jours',
+    'Guide opened — schedule the meeting, then mark it complete with the ✓.':
+      'Guide ouvert — planifiez la réunion, puis marquez-la terminée avec le ✓.',
+    'Your first 90 days are complete — recorded in Oracle Learning. Well sailed.':
+      'Vos 90 premiers jours sont terminés — enregistrés dans Oracle Learning. Bonne navigation !',
+    'Nothing to renew yet.': 'Aucun renouvellement pour l’instant.',
+    'RENEW_EMPTY_BODY': 'Les exigences annuelles et bisannuelles — prévention du harcèlement, cybersécurité, préparation aux urgences — réapparaissent ici automatiquement après leur achèvement, à compter de votre date de fin. En production, les assignations de renouvellement d’Oracle Learning se synchronisent ici aussi.',
+    'DAY_BEYOND': '<b>À partir du jour 91 : Au-delà des 90 jours.</b> Une fois le parcours terminé, Voyage devient l’endroit où trouver n’importe quel cours, suivre vos renouvellements et continuer à progresser avec Programmes, Événements et Partenariats.',
+    'Preview it now →': 'Aperçu →',
+    'Renew': 'Renouveler',
+    'My first 90 days': 'Mes 90 premiers jours',
+    'Beyond 90 Days': 'Au-delà des 90 jours',
+    'Programs & Partnerships': 'Programmes et partenariats',
+    'Vanderbilt · Voyage · Staff Onboarding': 'Vanderbilt · Voyage · Intégration du personnel',
+    'Welcome. Your path is <em class="gold-text">already&nbsp;built</em>.': 'Bienvenue. Votre parcours est <em class="gold-text">déjà&nbsp;prêt</em>.',
+    "You've finished Vanderbilt Voyage (Classroom) — this is what comes next. A few quick questions tune your first 90 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you.":
+      'Vous avez terminé Vanderbilt Voyage (Présentiel) — voici la suite. Quelques questions rapides adaptent vos 90 premiers jours à votre campus, votre service et votre poste ; ensuite chaque tâche, cours et contact vit sur un seul tableau de bord. Nous vous connaissons. Nous sommes prêts pour vous.',
+    "Let's tailor your first weeks": 'Personnalisons vos premières semaines',
+    'Demo profile — at launch this card is pre-populated from your Oracle HCM record via single sign-on':
+      'Profil de démonstration — en production, cette carte est préremplie depuis votre dossier Oracle HCM via l’authentification unique',
+    'Not Alex? Use your name': 'Pas Alex ? Mettez votre nom',
+    'Step 1 of 3 · Location': 'Étape 1 sur 3 · Lieu',
+    'Where will you <em class="gold-text">anchor</em>?': 'Où allez-vous <em class="gold-text">jeter l’ancre</em> ?',
+    'Your campus sets your parking vendor, safety contacts, state compliance track, and local benefits.':
+      'Votre campus détermine le prestataire de stationnement, les contacts de sécurité, le volet de conformité de l’État et les avantages locaux.',
+    'Step 2 of 3 · Job family': 'Étape 2 sur 3 · Famille de métiers',
+    'Find your <em class="gold-text">job family</em>.': 'Trouvez votre <em class="gold-text">famille de métiers</em>.',
+    "From Vanderbilt's Skills-Based Job Architecture — 18 families, 95 sub-families. Start typing, or browse by family.":
+      'Issu de l’architecture des métiers par compétences de Vanderbilt — 18 familles, 95 sous-familles. Tapez pour chercher ou parcourez par famille.',
+    'Step 3 of 3 · Role': 'Étape 3 sur 3 · Poste',
+    'What kind of <em class="gold-text">work</em>?': 'Quel type de <em class="gold-text">travail</em> ?',
+    'Auto-suggested from your Oracle job code — confirm or change it. This sets the depth of your path.':
+      'Suggéré à partir de votre code de poste Oracle — confirmez ou modifiez. Cela définit la profondeur de votre parcours.',
+    '<b>I have the potential to work with students or minors.</b> A yes — or an unsure — adds Protection of Minors 101 and Clery Act training to your path. This stacks with any role.':
+      '<b>Je pourrais travailler avec des étudiants ou des mineurs.</b> Un oui — ou un incertain — ajoute Protection of Minors 101 et la formation Clery Act à votre parcours. Cumulable avec tout poste.',
+    'Yes': 'Oui', 'No': 'Non', 'Unsure': 'Incertain',
+    'Your custom path': 'Votre parcours personnalisé',
+    'Here\'s your <em class="gold-text">voyage</em>.': 'Voici votre <em class="gold-text">voyage</em>.',
+    "Let's begin": 'Commençons', 'Continue': 'Continuer',
+    'Voyage · Your first 90 days': 'Voyage · Vos 90 premiers jours',
+    'This dashboard continues where <b>Vanderbilt Voyage (Classroom)</b> left off. Every card links straight into its source system — <b>the click is your completion signal</b>. Systems with an API verify true completion overnight and upgrade the card to <b>✓ Verified</b>.':
+      'Ce tableau de bord prend le relais de <b>Vanderbilt Voyage (Présentiel)</b>. Chaque carte mène directement à son système source — <b>le clic est votre signal d’avancement</b>. Les systèmes dotés d’une API vérifient la vraie complétion pendant la nuit et passent la carte à <b>✓ Vérifié</b>.',
+    'Change role / campus': 'Changer de poste / campus',
+    'Benefits window': 'Période d’adhésion',
+    'days left to enroll': 'jours pour vous inscrire',
+    'Go to enrollment →': 'Aller à l’inscription →',
+    'Saved for later': 'Gardé pour plus tard',
+    'Announcements': 'Annonces',
+    'Voyage · Beyond 90 Days': 'Voyage · Au-delà des 90 jours',
+    'Grow my <em>career</em>': 'Faire grandir ma <em>carrière</em>',
+    '<b>Not sure where to start?</b> Build your path with the Skill Matrix — map your sub-family’s skills to courses.':
+      '<b>Vous ne savez pas par où commencer ?</b> Construisez votre parcours avec la Skill Matrix — reliez les compétences de votre sous-famille aux cours.',
+    'Build your path →': 'Construisez votre parcours →',
+    'Programs, Events & Partnerships': 'Programmes, événements et partenariats',
+    'Ways to <em class="gold-text">engage</em>.': 'Des façons de <em class="gold-text">s’engager</em>.',
+    "Onboarding ends; belonging doesn't. These are the programs, councils, and communities open to you as a Vanderbilt staff member — from day one and for your whole career.":
+      'L’intégration prend fin ; l’appartenance, non. Voici les programmes, conseils et communautés ouverts à vous en tant que membre du personnel de Vanderbilt — dès le premier jour et pour toute votre carrière.',
+    'Every journey, well begun.': 'Chaque voyage, bien commencé.',
+    'My path': 'Mon parcours',
+    'Begin onboarding': 'Commencer l’intégration',
+    'First 90 days': '90 premiers jours',
+    'of 90-day path': 'du parcours de 90 jours',
+    'Ask PCB': 'Contacter PCB',
+    'Keep growing': 'Continuer à progresser'
+  };
+
+  /* ------------------------------------------------ Deutsch */
+  D.de = {
+    'Not started': 'Nicht begonnen', 'Opened': 'Geöffnet', 'Complete': 'Abgeschlossen',
+    '✓ Verified': '✓ Verifiziert', 'Opted out': 'Befreit',
+    'Start': 'Starten', 'Open': 'Öffnen', 'Revisit': 'Erneut ansehen', 'Verify': 'Überprüfen',
+    'Take survey': 'Umfrage ausfüllen', 'How-to guide (PDF)': 'Anleitung (PDF)',
+    'Mark as done': 'Als erledigt markieren', 'Confirm complete': 'Abschluss bestätigen',
+    'Save for later': 'Für später speichern', 'Opt out': 'Befreiung beantragen',
+    'Reopen': 'Wieder öffnen', 'Reinstate': 'Wiederherstellen', 'Cancel': 'Abbrechen',
+    'Record opt-out': 'Befreiung erfassen', 'About': 'Mehr erfahren',
+    '★ Recommended': '★ Empfohlen',
+    'Compliance': 'Compliance', 'Course': 'Kurs', 'Setup task': 'Einrichtungsaufgabe',
+    'Meeting': 'Meeting', 'Survey': 'Umfrage', 'Read & watch': 'Lesen & ansehen',
+    'Verify & Validate': 'Prüfen & bestätigen', 'Covered in Voyage Classroom': 'In Voyage (Präsenz) behandelt',
+    'You completed these during Vanderbilt Voyage (Classroom). Open each one to verify it carried over, then confirm it here.':
+      'Diese Punkte haben Sie während Vanderbilt Voyage (Präsenz) abgeschlossen. Öffnen Sie jeden, um die Übernahme zu prüfen, und bestätigen Sie ihn hier.',
+    'Week 1': 'Woche 1', 'Land well': 'Gut ankommen',
+    'Weeks 2–4': 'Wochen 2–4', 'Build momentum': 'Schwung aufbauen',
+    'Weeks 5–6': 'Wochen 5–6', 'Through Day 45': 'Bis Tag 45',
+    'Days 46–90': 'Tage 46–90', 'Grow into the role': 'In die Rolle hineinwachsen',
+    'Good morning': 'Guten Morgen', 'Good afternoon': 'Guten Tag', 'Good evening': 'Guten Abend',
+    'Welcome back': 'Willkommen zurück',
+    'min': 'Min.', 'days': 'Tage',
+    'All caught up. Well sailed.': 'Alles erledigt. Gute Fahrt!',
+    'Nothing saved yet.': 'Noch nichts gespeichert.',
+    'Nothing viewed yet.': 'Noch nichts angesehen.',
+    'Nothing completed yet.': 'Noch nichts abgeschlossen.',
+    'Nothing in progress — everything you opened is complete.': 'Nichts in Bearbeitung — alles Geöffnete ist abgeschlossen.',
+    'You’re fully current. New items land here as they publish.': 'Sie sind auf dem neuesten Stand. Neue Punkte erscheinen hier nach Veröffentlichung.',
+    'Opt out — write a brief justification. It is recorded and reportable, like a quiz response.':
+      'Befreiung — schreiben Sie eine kurze Begründung. Sie wird erfasst und ist auswertbar, wie eine Quiz-Antwort.',
+    'e.g., Completed equivalent training at my previous employer in May 2026.':
+      'z. B.: Gleichwertige Schulung im Mai 2026 beim vorherigen Arbeitgeber abgeschlossen.',
+    'Opt-out needs a written justification.': 'Die Befreiung erfordert eine schriftliche Begründung.',
+    'Opted out — justification recorded.': 'Befreit — Begründung erfasst.',
+    'Reopened — status reset to Not started.': 'Wieder geöffnet — Status auf Nicht begonnen zurückgesetzt.',
+    'Reinstated — back on your path.': 'Wiederhergestellt — zurück auf Ihrem Pfad.',
+    'Filter your path by category': 'Pfad nach Kategorie filtern',
+    '✕ Show everything': '✕ Alles anzeigen',
+    '⚓ Manager’s Voyage only': '⚓ Nur Manager’s Voyage',
+    '⚓ Manager’s Voyage': '⚓ Manager’s Voyage',
+    'Deadlines': 'Fristen',
+    'Up next': 'Als Nächstes',
+    'AI — deeper dive': 'KI — Vertiefung',
+    'Manager development': 'Führungskräfteentwicklung', 'Professional development': 'Berufliche Weiterentwicklung',
+    'Skills that matter in your sub-family': 'Schlüsselkompetenzen Ihrer Unterfamilie',
+    'Skills that matter here': 'Schlüsselkompetenzen hier',
+    'items': 'Punkte', 'to go': 'offen',
+    'Onboarding progress': 'Onboarding-Fortschritt',
+    'DAY_LINE': 'Tag {n} Ihrer ersten 90',
+    'LANE_COUNT': '{done} von {total} abgeschlossen',
+    'LANE_EMPTY': 'Nichts in diesem Abschnitt.',
+    'LANE_EMPTY_FOR': 'Nichts in diesem Abschnitt für {cat}.',
+    'RENEWS_IN': 'Erneuerung in {n} Tagen',
+    'Guide opened — schedule the meeting, then mark it complete with the ✓.':
+      'Anleitung geöffnet — planen Sie das Meeting und markieren Sie es dann mit ✓ als erledigt.',
+    'Your first 90 days are complete — recorded in Oracle Learning. Well sailed.':
+      'Ihre ersten 90 Tage sind abgeschlossen — in Oracle Learning erfasst. Gute Fahrt!',
+    'Nothing to renew yet.': 'Noch nichts zu erneuern.',
+    'RENEW_EMPTY_BODY': 'Jährliche und zweijährliche Pflichten — Belästigungsprävention, Cybersicherheit, Notfallvorsorge — erscheinen hier nach Abschluss automatisch wieder, gerechnet ab Ihrem Abschlussdatum. In Produktion synchronisieren sich auch die Erneuerungszuweisungen aus Oracle Learning hierher.',
+    'DAY_BEYOND': '<b>Ab Tag 91: Jenseits der 90 Tage.</b> Ist der Pfad geschafft, wird Voyage zum Ort, um jeden Kurs zu finden, Erneuerungen zu verfolgen und über Programme, Events & Partnerschaften weiterzuwachsen.',
+    'Preview it now →': 'Jetzt ansehen →',
+    'Renew': 'Erneuern',
+    'My first 90 days': 'Meine ersten 90 Tage',
+    'Beyond 90 Days': 'Jenseits der 90 Tage',
+    'Programs & Partnerships': 'Programme & Partnerschaften',
+    'Vanderbilt · Voyage · Staff Onboarding': 'Vanderbilt · Voyage · Mitarbeiter-Onboarding',
+    'Welcome. Your path is <em class="gold-text">already&nbsp;built</em>.': 'Willkommen. Ihr Pfad ist <em class="gold-text">schon&nbsp;fertig</em>.',
+    "You've finished Vanderbilt Voyage (Classroom) — this is what comes next. A few quick questions tune your first 90 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you.":
+      'Sie haben Vanderbilt Voyage (Präsenz) abgeschlossen — hier geht es weiter. Ein paar kurze Fragen stimmen Ihre ersten 90 Tage auf Campus, Abteilung und Rolle ab; danach leben alle Aufgaben, Kurse und Kontakte auf einem Dashboard. Wir kennen Sie. Wir sind bereit für Sie.',
+    "Let's tailor your first weeks": 'Gestalten wir Ihre ersten Wochen',
+    'Demo profile — at launch this card is pre-populated from your Oracle HCM record via single sign-on':
+      'Demo-Profil — in Produktion wird diese Karte per Single Sign-on aus Ihrem Oracle-HCM-Datensatz vorbefüllt',
+    'Not Alex? Use your name': 'Nicht Alex? Ihren Namen verwenden',
+    'Step 1 of 3 · Location': 'Schritt 1 von 3 · Standort',
+    'Where will you <em class="gold-text">anchor</em>?': 'Wo werfen Sie den <em class="gold-text">Anker</em>?',
+    'Your campus sets your parking vendor, safety contacts, state compliance track, and local benefits.':
+      'Ihr Campus bestimmt Parkanbieter, Sicherheitskontakte, die Compliance-Vorgaben des Bundesstaats und lokale Benefits.',
+    'Step 2 of 3 · Job family': 'Schritt 2 von 3 · Jobfamilie',
+    'Find your <em class="gold-text">job family</em>.': 'Finden Sie Ihre <em class="gold-text">Jobfamilie</em>.',
+    "From Vanderbilt's Skills-Based Job Architecture — 18 families, 95 sub-families. Start typing, or browse by family.":
+      'Aus Vanderbilts kompetenzbasierter Jobarchitektur — 18 Familien, 95 Unterfamilien. Tippen Sie zum Suchen oder stöbern Sie nach Familie.',
+    'Step 3 of 3 · Role': 'Schritt 3 von 3 · Rolle',
+    'What kind of <em class="gold-text">work</em>?': 'Welche Art von <em class="gold-text">Arbeit</em>?',
+    'Auto-suggested from your Oracle job code — confirm or change it. This sets the depth of your path.':
+      'Aus Ihrem Oracle-Stellencode vorgeschlagen — bestätigen oder ändern. Das bestimmt die Tiefe Ihres Pfads.',
+    '<b>I have the potential to work with students or minors.</b> A yes — or an unsure — adds Protection of Minors 101 and Clery Act training to your path. This stacks with any role.':
+      '<b>Ich könnte mit Studierenden oder Minderjährigen arbeiten.</b> Ein Ja — oder ein Unsicher — fügt Protection of Minors 101 und das Clery-Act-Training zu Ihrem Pfad hinzu. Gilt zusätzlich zu jeder Rolle.',
+    'Yes': 'Ja', 'No': 'Nein', 'Unsure': 'Unsicher',
+    'Your custom path': 'Ihr individueller Pfad',
+    'Here\'s your <em class="gold-text">voyage</em>.': 'Hier ist Ihre <em class="gold-text">Reise</em>.',
+    "Let's begin": 'Los geht’s', 'Continue': 'Weiter',
+    'Voyage · Your first 90 days': 'Voyage · Ihre ersten 90 Tage',
+    'This dashboard continues where <b>Vanderbilt Voyage (Classroom)</b> left off. Every card links straight into its source system — <b>the click is your completion signal</b>. Systems with an API verify true completion overnight and upgrade the card to <b>✓ Verified</b>.':
+      'Dieses Dashboard setzt dort an, wo <b>Vanderbilt Voyage (Präsenz)</b> endete. Jede Karte führt direkt ins Quellsystem — <b>der Klick ist Ihr Abschluss-Signal</b>. Systeme mit API prüfen über Nacht den echten Abschluss und stufen die Karte auf <b>✓ Verifiziert</b> hoch.',
+    'Change role / campus': 'Rolle / Campus ändern',
+    'Benefits window': 'Benefits-Frist',
+    'days left to enroll': 'Tage bis Anmeldeschluss',
+    'Go to enrollment →': 'Zur Anmeldung →',
+    'Saved for later': 'Für später gespeichert',
+    'Announcements': 'Ankündigungen',
+    'Voyage · Beyond 90 Days': 'Voyage · Jenseits der 90 Tage',
+    'Grow my <em>career</em>': 'Meine <em>Karriere</em> entwickeln',
+    '<b>Not sure where to start?</b> Build your path with the Skill Matrix — map your sub-family’s skills to courses.':
+      '<b>Nicht sicher, wo Sie anfangen sollen?</b> Bauen Sie Ihren Pfad mit der Skill Matrix — verbinden Sie die Kompetenzen Ihrer Unterfamilie mit Kursen.',
+    'Build your path →': 'Pfad erstellen →',
+    'Programs, Events & Partnerships': 'Programme, Events & Partnerschaften',
+    'Ways to <em class="gold-text">engage</em>.': 'Wege, sich <em class="gold-text">einzubringen</em>.',
+    "Onboarding ends; belonging doesn't. These are the programs, councils, and communities open to you as a Vanderbilt staff member — from day one and for your whole career.":
+      'Das Onboarding endet; die Zugehörigkeit nicht. Dies sind die Programme, Gremien und Gemeinschaften, die Ihnen als Vanderbilt-Mitarbeiter offenstehen — vom ersten Tag an und für die gesamte Laufbahn.',
+    'Every journey, well begun.': 'Jede Reise, gut begonnen.',
+    'My path': 'Mein Pfad',
+    'Begin onboarding': 'Onboarding starten',
+    'First 90 days': 'Erste 90 Tage',
+    'of 90-day path': 'des 90-Tage-Pfads',
+    'Ask PCB': 'PCB fragen',
+    'Keep growing': 'Weiter wachsen'
+  };
+
+  /* ------------------------------------------------ Kreyòl Ayisyen */
+  D.ht = {
+    'Not started': 'Poko kòmanse', 'Opened': 'Louvri', 'Complete': 'Fini',
+    '✓ Verified': '✓ Verifye', 'Opted out': 'Egzante',
+    'Start': 'Kòmanse', 'Open': 'Louvri', 'Revisit': 'Revize', 'Verify': 'Verifye',
+    'Take survey': 'Reponn sondaj la', 'How-to guide (PDF)': 'Gid pratik (PDF)',
+    'Mark as done': 'Make kòm fini', 'Confirm complete': 'Konfime li fini',
+    'Save for later': 'Sere pou pita', 'Opt out': 'Mande egzansyon',
+    'Reopen': 'Relouvri', 'Reinstate': 'Remete', 'Cancel': 'Anile',
+    'Record opt-out': 'Anrejistre egzansyon an', 'About': 'Plis enfo',
+    '★ Recommended': '★ Rekòmande',
+    'Compliance': 'Konfòmite', 'Course': 'Kou', 'Setup task': 'Tach preparasyon',
+    'Meeting': 'Reyinyon', 'Survey': 'Sondaj', 'Read & watch': 'Li ak gade',
+    'Verify & Validate': 'Verifye ak valide', 'Covered in Voyage Classroom': 'Kouvri nan Voyage (Salklas)',
+    'You completed these during Vanderbilt Voyage (Classroom). Open each one to verify it carried over, then confirm it here.':
+      'Ou te fini bagay sa yo pandan Vanderbilt Voyage (Salklas). Louvri yo chak pou verifye yo anrejistre, epi konfime yo isit la.',
+    'Week 1': 'Semèn 1', 'Land well': 'Byen ateri',
+    'Weeks 2–4': 'Semèn 2–4', 'Build momentum': 'Pran elan',
+    'Weeks 5–6': 'Semèn 5–6', 'Through Day 45': 'Jiska jou 45',
+    'Days 46–90': 'Jou 46–90', 'Grow into the role': 'Grandi nan wòl la',
+    'Good morning': 'Bonjou', 'Good afternoon': 'Bon apremidi', 'Good evening': 'Bonswa',
+    'Welcome back': 'Byenveni ankò',
+    'min': 'min', 'days': 'jou',
+    'All caught up. Well sailed.': 'Tout bagay ajou. Bèl vwayaj!',
+    'Nothing saved yet.': 'Anyen poko sere.',
+    'Nothing viewed yet.': 'Ou poko gade anyen.',
+    'Nothing completed yet.': 'Anyen poko fini.',
+    'Nothing in progress — everything you opened is complete.': 'Anyen pa an kou — tout sa ou te louvri fini.',
+    'You’re fully current. New items land here as they publish.': 'Ou ajou nèt. Nouvo eleman yo ap parèt isit la lè yo pibliye.',
+    'Opt out — write a brief justification. It is recorded and reportable, like a quiz response.':
+      'Egzansyon — ekri yon ti jistifikasyon. Li anrejistre e li ka rapòte, menm jan ak yon repons egzamen.',
+    'e.g., Completed equivalent training at my previous employer in May 2026.':
+      'pa egz., Mwen te fini yon fòmasyon ekivalan nan ansyen travay mwen an me 2026.',
+    'Opt-out needs a written justification.': 'Egzansyon an mande yon jistifikasyon alekri.',
+    'Opted out — justification recorded.': 'Egzante — jistifikasyon anrejistre.',
+    'Reopened — status reset to Not started.': 'Relouvri — estati a tounen Poko kòmanse.',
+    'Reinstated — back on your path.': 'Remete — li tounen sou wout ou.',
+    'Filter your path by category': 'Filtre wout ou pa kategori',
+    '✕ Show everything': '✕ Montre tout',
+    '⚓ Manager’s Voyage only': '⚓ Sèlman Manager’s Voyage',
+    '⚓ Manager’s Voyage': '⚓ Manager’s Voyage',
+    'Deadlines': 'Dat limit',
+    'Up next': 'Sa k ap vini',
+    'AI — deeper dive': 'AI — pi fon',
+    'Manager development': 'Devlopman manadjè', 'Professional development': 'Devlopman pwofesyonèl',
+    'Skills that matter in your sub-family': 'Konpetans ki enpòtan nan sou-fanmi ou',
+    'Skills that matter here': 'Konpetans ki enpòtan isit la',
+    'items': 'eleman', 'to go': 'ki rete',
+    'Onboarding progress': 'Pwogrè entegrasyon',
+    'DAY_LINE': 'Jou {n} nan premye 90 jou ou yo',
+    'LANE_COUNT': '{done} sou {total} fini',
+    'LANE_EMPTY': 'Anyen nan etap sa a.',
+    'LANE_EMPTY_FOR': 'Anyen nan etap sa a pou {cat}.',
+    'RENEWS_IN': 'Pou renouvle nan {n} jou',
+    'Guide opened — schedule the meeting, then mark it complete with the ✓.':
+      'Gid la louvri — pwograme reyinyon an, epi make li fini ak ✓ la.',
+    'Your first 90 days are complete — recorded in Oracle Learning. Well sailed.':
+      'Premye 90 jou ou yo fini — anrejistre nan Oracle Learning. Bèl vwayaj!',
+    'Nothing to renew yet.': 'Poko gen anyen pou renouvle.',
+    'RENEW_EMPTY_BODY': 'Egzijans anyèl ak bianyèl yo — prevansyon arasman, sibèsekirite, preparasyon pou ijans — ap reparèt isit la otomatikman apre ou fini yo, apati dat ou te fini an. Nan pwodiksyon, asiyasyon renouvèlman Oracle Learning yo ap senkronize isit la tou.',
+    'DAY_BEYOND': '<b>Apati jou 91: Pi lwen pase 90 jou.</b> Lè wout la fini, Voyage vin kote pou jwenn nenpòt kou, swiv renouvèlman ou yo, epi kontinye grandi ak Pwogram, Evènman ak Patenarya.',
+    'Preview it now →': 'Gade li kounye a →',
+    'Renew': 'Renouvle',
+    'My first 90 days': 'Premye 90 jou mwen yo',
+    'Beyond 90 Days': 'Pi lwen pase 90 jou',
+    'Programs & Partnerships': 'Pwogram ak patenarya',
+    'Vanderbilt · Voyage · Staff Onboarding': 'Vanderbilt · Voyage · Entegrasyon anplwaye',
+    'Welcome. Your path is <em class="gold-text">already&nbsp;built</em>.': 'Byenveni. Wout ou <em class="gold-text">deja&nbsp;pare</em>.',
+    "You've finished Vanderbilt Voyage (Classroom) — this is what comes next. A few quick questions tune your first 90 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you.":
+      'Ou fini Vanderbilt Voyage (Salklas) — men sa k ap vini apre. Kèk kesyon rapid ajiste premye 90 jou ou yo selon kanpis ou, depatman ou ak wòl ou, epi chak tach, kou ak kontak ap viv sou yon sèl tablodbò. Nou konnen ou. Nou pare pou ou.',
+    "Let's tailor your first weeks": 'Ann pèsonalize premye semèn ou yo',
+    'Demo profile — at launch this card is pre-populated from your Oracle HCM record via single sign-on':
+      'Pwofil demo — nan pwodiksyon, kat sa a ranpli otomatikman apati dosye Oracle HCM ou atravè koneksyon inik',
+    'Not Alex? Use your name': 'Ou pa Alex? Mete non ou',
+    'Step 1 of 3 · Location': 'Etap 1 sou 3 · Kote',
+    'Where will you <em class="gold-text">anchor</em>?': 'Ki kote w ap <em class="gold-text">jete lank</em>?',
+    'Your campus sets your parking vendor, safety contacts, state compliance track, and local benefits.':
+      'Kanpis ou detèmine konpayi pakin lan, kontak sekirite yo, egzijans konfòmite eta a ak avantaj lokal yo.',
+    'Step 2 of 3 · Job family': 'Etap 2 sou 3 · Fanmi metye',
+    'Find your <em class="gold-text">job family</em>.': 'Jwenn <em class="gold-text">fanmi metye</em> ou.',
+    "From Vanderbilt's Skills-Based Job Architecture — 18 families, 95 sub-families. Start typing, or browse by family.":
+      'Soti nan Achitekti Djòb Baze sou Konpetans Vanderbilt la — 18 fanmi, 95 sou-fanmi. Kòmanse tape, oswa gade pa fanmi.',
+    'Step 3 of 3 · Role': 'Etap 3 sou 3 · Wòl',
+    'What kind of <em class="gold-text">work</em>?': 'Ki kalite <em class="gold-text">travay</em>?',
+    'Auto-suggested from your Oracle job code — confirm or change it. This sets the depth of your path.':
+      'Sijere otomatikman apati kòd djòb Oracle ou — konfime li oswa chanje li. Sa detèmine pwofondè wout ou.',
+    '<b>I have the potential to work with students or minors.</b> A yes — or an unsure — adds Protection of Minors 101 and Clery Act training to your path. This stacks with any role.':
+      '<b>Mwen gen posiblite pou m travay ak etidyan oswa minè.</b> Yon wi — oswa yon pa fin sèten — ajoute Protection of Minors 101 ak fòmasyon Clery Act sou wout ou. Sa mache ak nenpòt wòl.',
+    'Yes': 'Wi', 'No': 'Non', 'Unsure': 'Pa fin sèten',
+    'Your custom path': 'Wout pèsonalize ou',
+    'Here\'s your <em class="gold-text">voyage</em>.': 'Men <em class="gold-text">vwayaj</em> ou.',
+    "Let's begin": 'Ann kòmanse', 'Continue': 'Kontinye',
+    'Voyage · Your first 90 days': 'Voyage · Premye 90 jou ou yo',
+    'This dashboard continues where <b>Vanderbilt Voyage (Classroom)</b> left off. Every card links straight into its source system — <b>the click is your completion signal</b>. Systems with an API verify true completion overnight and upgrade the card to <b>✓ Verified</b>.':
+      'Tablodbò sa a kontinye kote <b>Vanderbilt Voyage (Salklas)</b> te kanpe a. Chak kat mennen dirèkteman nan sistèm sous li — <b>klik la se siyal pwogrè ou</b>. Sistèm ki gen API verifye vrè fini an pandan lannwit epi mete kat la <b>✓ Verifye</b>.',
+    'Change role / campus': 'Chanje wòl / kanpis',
+    'Benefits window': 'Peryòd benefis',
+    'days left to enroll': 'jou ki rete pou enskri',
+    'Go to enrollment →': 'Ale nan enskripsyon →',
+    'Saved for later': 'Sere pou pita',
+    'Announcements': 'Anons',
+    'Voyage · Beyond 90 Days': 'Voyage · Pi lwen pase 90 jou',
+    'Grow my <em>career</em>': 'Fè <em>karyè</em> mwen grandi',
+    '<b>Not sure where to start?</b> Build your path with the Skill Matrix — map your sub-family’s skills to courses.':
+      '<b>Ou pa fin konnen ki kote pou w kòmanse?</b> Bati wout ou ak Skill Matrix la — konekte konpetans sou-fanmi ou ak kou yo.',
+    'Build your path →': 'Bati wout ou →',
+    'Programs, Events & Partnerships': 'Pwogram, evènman ak patenarya',
+    'Ways to <em class="gold-text">engage</em>.': 'Fason pou w <em class="gold-text">patisipe</em>.',
+    "Onboarding ends; belonging doesn't. These are the programs, councils, and communities open to you as a Vanderbilt staff member — from day one and for your whole career.":
+      'Entegrasyon an fini; apatenans lan pa fini. Men pwogram, konsèy ak kominote ki ouvè pou ou kòm yon manm pèsonèl Vanderbilt — depi premye jou a e pou tout karyè ou.',
+    'Every journey, well begun.': 'Chak vwayaj, byen kòmanse.',
+    'My path': 'Wout mwen',
+    'Begin onboarding': 'Kòmanse entegrasyon',
+    'First 90 days': 'Premye 90 jou',
+    'of 90-day path': 'nan wout 90 jou a',
+    'Ask PCB': 'Mande PCB',
+    'Keep growing': 'Kontinye grandi'
+  };
+
+  /* ------------------------------------------------ 简体中文 */
+  D['zh-Hans'] = {
+    'Not started': '未开始', 'Opened': '已打开', 'Complete': '已完成',
+    '✓ Verified': '✓ 已验证', 'Opted out': '已豁免',
+    'Start': '开始', 'Open': '打开', 'Revisit': '重温', 'Verify': '验证',
+    'Take survey': '填写问卷', 'How-to guide (PDF)': '操作指南（PDF）',
+    'Mark as done': '标记为完成', 'Confirm complete': '确认完成',
+    'Save for later': '稍后再看', 'Opt out': '申请豁免',
+    'Reopen': '重新打开', 'Reinstate': '恢复', 'Cancel': '取消',
+    'Record opt-out': '记录豁免', 'About': '了解更多',
+    '★ Recommended': '★ 推荐',
+    'Compliance': '合规', 'Course': '课程', 'Setup task': '设置任务',
+    'Meeting': '会议', 'Survey': '问卷', 'Read & watch': '阅读与观看',
+    'Verify & Validate': '核实与确认', 'Covered in Voyage Classroom': '已在 Voyage（课堂）中完成',
+    'You completed these during Vanderbilt Voyage (Classroom). Open each one to verify it carried over, then confirm it here.':
+      '这些内容您已在 Vanderbilt Voyage（课堂）中完成。请打开每一项核实记录已同步，然后在此确认。',
+    'Week 1': '第 1 周', 'Land well': '顺利起步',
+    'Weeks 2–4': '第 2–4 周', 'Build momentum': '积蓄动力',
+    'Weeks 5–6': '第 5–6 周', 'Through Day 45': '截至第 45 天',
+    'Days 46–90': '第 46–90 天', 'Grow into the role': '胜任角色',
+    'Good morning': '早上好', 'Good afternoon': '下午好', 'Good evening': '晚上好',
+    'Welcome back': '欢迎回来',
+    'min': '分钟', 'days': '天',
+    'All caught up. Well sailed.': '全部完成，一帆风顺。',
+    'Nothing saved yet.': '尚未保存任何内容。',
+    'Nothing viewed yet.': '尚未查看任何内容。',
+    'Nothing completed yet.': '尚未完成任何内容。',
+    'Nothing in progress — everything you opened is complete.': '没有进行中的项目——您打开的内容均已完成。',
+    'You’re fully current. New items land here as they publish.': '您已全部完成。新内容发布后会显示在这里。',
+    'Opt out — write a brief justification. It is recorded and reportable, like a quiz response.':
+      '豁免——请写一段简短说明。它将被记录并可供报告，如同测验答案。',
+    'e.g., Completed equivalent training at my previous employer in May 2026.':
+      '例如：2026 年 5 月已在前雇主处完成同等培训。',
+    'Opt-out needs a written justification.': '豁免需要书面说明。',
+    'Opted out — justification recorded.': '已豁免——说明已记录。',
+    'Reopened — status reset to Not started.': '已重新打开——状态重置为未开始。',
+    'Reinstated — back on your path.': '已恢复——重新回到您的路径。',
+    'Filter your path by category': '按类别筛选路径',
+    '✕ Show everything': '✕ 显示全部',
+    '⚓ Manager’s Voyage only': '⚓ 仅 Manager’s Voyage',
+    '⚓ Manager’s Voyage': '⚓ Manager’s Voyage',
+    'Deadlines': '截止日期',
+    'Up next': '接下来',
+    'AI — deeper dive': 'AI 进阶',
+    'Manager development': '管理者发展', 'Professional development': '职业发展',
+    'Skills that matter in your sub-family': '您子职族的关键技能',
+    'Skills that matter here': '这里的关键技能',
+    'items': '项', 'to go': '待完成',
+    'Onboarding progress': '入职进度',
+    'DAY_LINE': '前 90 天中的第 {n} 天',
+    'LANE_COUNT': '已完成 {done} / {total}',
+    'LANE_EMPTY': '此阶段暂无内容。',
+    'LANE_EMPTY_FOR': '此阶段暂无「{cat}」内容。',
+    'RENEWS_IN': '{n} 天后续期',
+    'Guide opened — schedule the meeting, then mark it complete with the ✓.':
+      '指南已打开——请安排会议，然后用 ✓ 标记完成。',
+    'Your first 90 days are complete — recorded in Oracle Learning. Well sailed.':
+      '您的前 90 天已全部完成——已记录在 Oracle Learning。一帆风顺。',
+    'Nothing to renew yet.': '暂无需要续期的项目。',
+    'RENEW_EMPTY_BODY': '年度和两年一次的要求——防骚扰、网络安全、应急准备——在您完成后会自动重新出现在这里，并从完成日期开始倒计时。正式上线后，Oracle Learning 的续期任务也会同步到这里。',
+    'DAY_BEYOND': '<b>第 91 天起：90 天之后。</b>完成路径后，Voyage 将成为您查找任何课程、跟踪续期并通过项目、活动与合作持续成长的地方。',
+    'Preview it now →': '立即预览 →',
+    'Renew': '续期',
+    'My first 90 days': '我的前 90 天',
+    'Beyond 90 Days': '90 天之后',
+    'Programs & Partnerships': '项目与合作',
+    'Vanderbilt · Voyage · Staff Onboarding': 'Vanderbilt · Voyage · 员工入职',
+    'Welcome. Your path is <em class="gold-text">already&nbsp;built</em>.': '欢迎。您的路径<em class="gold-text">已经就绪</em>。',
+    "You've finished Vanderbilt Voyage (Classroom) — this is what comes next. A few quick questions tune your first 90 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you.":
+      '您已完成 Vanderbilt Voyage（课堂）——接下来是这里。几个简短的问题将根据您的校区、部门和角色定制您的前 90 天，之后所有任务、课程和联系人都汇集在一个仪表板上。我们了解您，也为您准备好了。',
+    "Let's tailor your first weeks": '定制您的最初几周',
+    'Demo profile — at launch this card is pre-populated from your Oracle HCM record via single sign-on':
+      '演示档案——正式上线后，此卡片将通过单点登录从您的 Oracle HCM 记录自动填充',
+    'Not Alex? Use your name': '不是 Alex？使用您的名字',
+    'Step 1 of 3 · Location': '第 1 步（共 3 步）· 地点',
+    'Where will you <em class="gold-text">anchor</em>?': '您将在哪里<em class="gold-text">停泊</em>？',
+    'Your campus sets your parking vendor, safety contacts, state compliance track, and local benefits.':
+      '您的校区决定停车服务商、安全联系人、州合规要求和本地福利。',
+    'Step 2 of 3 · Job family': '第 2 步（共 3 步）· 职族',
+    'Find your <em class="gold-text">job family</em>.': '找到您的<em class="gold-text">职族</em>。',
+    "From Vanderbilt's Skills-Based Job Architecture — 18 families, 95 sub-families. Start typing, or browse by family.":
+      '来自范德堡基于技能的职位架构——18 个职族、95 个子职族。输入搜索，或按职族浏览。',
+    'Step 3 of 3 · Role': '第 3 步（共 3 步）· 角色',
+    'What kind of <em class="gold-text">work</em>?': '哪种<em class="gold-text">工作</em>？',
+    'Auto-suggested from your Oracle job code — confirm or change it. This sets the depth of your path.':
+      '根据您的 Oracle 职位代码自动推荐——请确认或修改。这决定您路径的深度。',
+    '<b>I have the potential to work with students or minors.</b> A yes — or an unsure — adds Protection of Minors 101 and Clery Act training to your path. This stacks with any role.':
+      '<b>我有可能与学生或未成年人打交道。</b>选择"是"或"不确定"将为您的路径添加 Protection of Minors 101 和 Clery Act 培训。此项与任何角色叠加。',
+    'Yes': '是', 'No': '否', 'Unsure': '不确定',
+    'Your custom path': '您的定制路径',
+    'Here\'s your <em class="gold-text">voyage</em>.': '这是您的<em class="gold-text">航程</em>。',
+    "Let's begin": '开始吧', 'Continue': '继续',
+    'Voyage · Your first 90 days': 'Voyage · 您的前 90 天',
+    'This dashboard continues where <b>Vanderbilt Voyage (Classroom)</b> left off. Every card links straight into its source system — <b>the click is your completion signal</b>. Systems with an API verify true completion overnight and upgrade the card to <b>✓ Verified</b>.':
+      '此仪表板承接 <b>Vanderbilt Voyage（课堂）</b>的进度。每张卡片直接链接到其源系统——<b>点击即为您的进度信号</b>。具备 API 的系统会在夜间核实真实完成情况，并将卡片升级为 <b>✓ 已验证</b>。',
+    'Change role / campus': '更改角色 / 校区',
+    'Benefits window': '福利登记期',
+    'days left to enroll': '天内完成登记',
+    'Go to enrollment →': '前往登记 →',
+    'Saved for later': '稍后再看',
+    'Announcements': '公告',
+    'Voyage · Beyond 90 Days': 'Voyage · 90 天之后',
+    'Grow my <em>career</em>': '发展我的<em>职业</em>',
+    '<b>Not sure where to start?</b> Build your path with the Skill Matrix — map your sub-family’s skills to courses.':
+      '<b>不知从何开始？</b>用技能矩阵构建您的路径——将您子职族的技能对应到课程。',
+    'Build your path →': '构建路径 →',
+    'Programs, Events & Partnerships': '项目、活动与合作',
+    'Ways to <em class="gold-text">engage</em>.': '参与的<em class="gold-text">方式</em>。',
+    "Onboarding ends; belonging doesn't. These are the programs, councils, and communities open to you as a Vanderbilt staff member — from day one and for your whole career.":
+      '入职会结束，归属感不会。这些是您作为范德堡员工可以参与的项目、委员会和社区——从第一天起，贯穿整个职业生涯。',
+    'Every journey, well begun.': '每一段旅程，都有好的开始。',
+    'My path': '我的路径',
+    'Begin onboarding': '开始入职',
+    'First 90 days': '前 90 天',
+    'of 90-day path': '90 天路径完成度',
+    'Ask PCB': '咨询 PCB',
+    'Keep growing': '持续成长'
+  };
+
+  /* ------------------------------------------------ 繁體中文 */
+  D['zh-Hant'] = {
+    'Not started': '未開始', 'Opened': '已開啟', 'Complete': '已完成',
+    '✓ Verified': '✓ 已驗證', 'Opted out': '已豁免',
+    'Start': '開始', 'Open': '開啟', 'Revisit': '重溫', 'Verify': '驗證',
+    'Take survey': '填寫問卷', 'How-to guide (PDF)': '操作指南（PDF）',
+    'Mark as done': '標記為完成', 'Confirm complete': '確認完成',
+    'Save for later': '稍後再看', 'Opt out': '申請豁免',
+    'Reopen': '重新開啟', 'Reinstate': '恢復', 'Cancel': '取消',
+    'Record opt-out': '記錄豁免', 'About': '瞭解更多',
+    '★ Recommended': '★ 推薦',
+    'Compliance': '合規', 'Course': '課程', 'Setup task': '設定任務',
+    'Meeting': '會議', 'Survey': '問卷', 'Read & watch': '閱讀與觀看',
+    'Verify & Validate': '核實與確認', 'Covered in Voyage Classroom': '已在 Voyage（課堂）中完成',
+    'You completed these during Vanderbilt Voyage (Classroom). Open each one to verify it carried over, then confirm it here.':
+      '這些內容您已在 Vanderbilt Voyage（課堂）中完成。請開啟每一項核實紀錄已同步，然後在此確認。',
+    'Week 1': '第 1 週', 'Land well': '順利起步',
+    'Weeks 2–4': '第 2–4 週', 'Build momentum': '蓄積動力',
+    'Weeks 5–6': '第 5–6 週', 'Through Day 45': '截至第 45 天',
+    'Days 46–90': '第 46–90 天', 'Grow into the role': '勝任角色',
+    'Good morning': '早安', 'Good afternoon': '午安', 'Good evening': '晚安',
+    'Welcome back': '歡迎回來',
+    'min': '分鐘', 'days': '天',
+    'All caught up. Well sailed.': '全部完成，一帆風順。',
+    'Nothing saved yet.': '尚未儲存任何內容。',
+    'Nothing viewed yet.': '尚未查看任何內容。',
+    'Nothing completed yet.': '尚未完成任何內容。',
+    'Nothing in progress — everything you opened is complete.': '沒有進行中的項目——您開啟的內容均已完成。',
+    'You’re fully current. New items land here as they publish.': '您已全部完成。新內容發佈後會顯示在這裡。',
+    'Opt out — write a brief justification. It is recorded and reportable, like a quiz response.':
+      '豁免——請寫一段簡短說明。它將被記錄並可供報告，如同測驗答案。',
+    'e.g., Completed equivalent training at my previous employer in May 2026.':
+      '例如：2026 年 5 月已在前雇主處完成同等培訓。',
+    'Opt-out needs a written justification.': '豁免需要書面說明。',
+    'Opted out — justification recorded.': '已豁免——說明已記錄。',
+    'Reopened — status reset to Not started.': '已重新開啟——狀態重設為未開始。',
+    'Reinstated — back on your path.': '已恢復——重新回到您的路徑。',
+    'Filter your path by category': '按類別篩選路徑',
+    '✕ Show everything': '✕ 顯示全部',
+    '⚓ Manager’s Voyage only': '⚓ 僅 Manager’s Voyage',
+    '⚓ Manager’s Voyage': '⚓ Manager’s Voyage',
+    'Deadlines': '截止日期',
+    'Up next': '接下來',
+    'AI — deeper dive': 'AI 進階',
+    'Manager development': '管理者發展', 'Professional development': '職業發展',
+    'Skills that matter in your sub-family': '您子職族的關鍵技能',
+    'Skills that matter here': '這裡的關鍵技能',
+    'items': '項', 'to go': '待完成',
+    'Onboarding progress': '入職進度',
+    'DAY_LINE': '前 90 天中的第 {n} 天',
+    'LANE_COUNT': '已完成 {done} / {total}',
+    'LANE_EMPTY': '此階段暫無內容。',
+    'LANE_EMPTY_FOR': '此階段暫無「{cat}」內容。',
+    'RENEWS_IN': '{n} 天後續期',
+    'Guide opened — schedule the meeting, then mark it complete with the ✓.':
+      '指南已開啟——請安排會議，然後用 ✓ 標記完成。',
+    'Your first 90 days are complete — recorded in Oracle Learning. Well sailed.':
+      '您的前 90 天已全部完成——已記錄在 Oracle Learning。一帆風順。',
+    'Nothing to renew yet.': '暫無需要續期的項目。',
+    'RENEW_EMPTY_BODY': '年度和兩年一次的要求——防騷擾、網路安全、應急準備——在您完成後會自動重新出現在這裡，並從完成日期開始倒數。正式上線後，Oracle Learning 的續期任務也會同步到這裡。',
+    'DAY_BEYOND': '<b>第 91 天起：90 天之後。</b>完成路徑後，Voyage 將成為您查找任何課程、追蹤續期並透過項目、活動與合作持續成長的地方。',
+    'Preview it now →': '立即預覽 →',
+    'Renew': '續期',
+    'My first 90 days': '我的前 90 天',
+    'Beyond 90 Days': '90 天之後',
+    'Programs & Partnerships': '項目與合作',
+    'Vanderbilt · Voyage · Staff Onboarding': 'Vanderbilt · Voyage · 員工入職',
+    'Welcome. Your path is <em class="gold-text">already&nbsp;built</em>.': '歡迎。您的路徑<em class="gold-text">已經就緒</em>。',
+    "You've finished Vanderbilt Voyage (Classroom) — this is what comes next. A few quick questions tune your first 90 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you.":
+      '您已完成 Vanderbilt Voyage（課堂）——接下來是這裡。幾個簡短的問題將根據您的校區、部門和角色定制您的前 90 天，之後所有任務、課程和聯絡人都匯集在一個儀表板上。我們瞭解您，也為您準備好了。',
+    "Let's tailor your first weeks": '定制您的最初幾週',
+    'Demo profile — at launch this card is pre-populated from your Oracle HCM record via single sign-on':
+      '演示檔案——正式上線後，此卡片將透過單一登入從您的 Oracle HCM 紀錄自動填充',
+    'Not Alex? Use your name': '不是 Alex？使用您的名字',
+    'Step 1 of 3 · Location': '第 1 步（共 3 步）· 地點',
+    'Where will you <em class="gold-text">anchor</em>?': '您將在哪裡<em class="gold-text">停泊</em>？',
+    'Your campus sets your parking vendor, safety contacts, state compliance track, and local benefits.':
+      '您的校區決定停車服務商、安全聯絡人、州合規要求和本地福利。',
+    'Step 2 of 3 · Job family': '第 2 步（共 3 步）· 職族',
+    'Find your <em class="gold-text">job family</em>.': '找到您的<em class="gold-text">職族</em>。',
+    "From Vanderbilt's Skills-Based Job Architecture — 18 families, 95 sub-families. Start typing, or browse by family.":
+      '來自范德堡基於技能的職位架構——18 個職族、95 個子職族。輸入搜尋，或按職族瀏覽。',
+    'Step 3 of 3 · Role': '第 3 步（共 3 步）· 角色',
+    'What kind of <em class="gold-text">work</em>?': '哪種<em class="gold-text">工作</em>？',
+    'Auto-suggested from your Oracle job code — confirm or change it. This sets the depth of your path.':
+      '根據您的 Oracle 職位代碼自動推薦——請確認或修改。這決定您路徑的深度。',
+    '<b>I have the potential to work with students or minors.</b> A yes — or an unsure — adds Protection of Minors 101 and Clery Act training to your path. This stacks with any role.':
+      '<b>我有可能與學生或未成年人打交道。</b>選擇「是」或「不確定」將為您的路徑添加 Protection of Minors 101 和 Clery Act 培訓。此項與任何角色疊加。',
+    'Yes': '是', 'No': '否', 'Unsure': '不確定',
+    'Your custom path': '您的定制路徑',
+    'Here\'s your <em class="gold-text">voyage</em>.': '這是您的<em class="gold-text">航程</em>。',
+    "Let's begin": '開始吧', 'Continue': '繼續',
+    'Voyage · Your first 90 days': 'Voyage · 您的前 90 天',
+    'This dashboard continues where <b>Vanderbilt Voyage (Classroom)</b> left off. Every card links straight into its source system — <b>the click is your completion signal</b>. Systems with an API verify true completion overnight and upgrade the card to <b>✓ Verified</b>.':
+      '此儀表板承接 <b>Vanderbilt Voyage（課堂）</b>的進度。每張卡片直接連結到其源系統——<b>點擊即為您的進度信號</b>。具備 API 的系統會在夜間核實真實完成情況，並將卡片升級為 <b>✓ 已驗證</b>。',
+    'Change role / campus': '更改角色 / 校區',
+    'Benefits window': '福利登記期',
+    'days left to enroll': '天內完成登記',
+    'Go to enrollment →': '前往登記 →',
+    'Saved for later': '稍後再看',
+    'Announcements': '公告',
+    'Voyage · Beyond 90 Days': 'Voyage · 90 天之後',
+    'Grow my <em>career</em>': '發展我的<em>職業</em>',
+    '<b>Not sure where to start?</b> Build your path with the Skill Matrix — map your sub-family’s skills to courses.':
+      '<b>不知從何開始？</b>用技能矩陣構建您的路徑——將您子職族的技能對應到課程。',
+    'Build your path →': '構建路徑 →',
+    'Programs, Events & Partnerships': '項目、活動與合作',
+    'Ways to <em class="gold-text">engage</em>.': '參與的<em class="gold-text">方式</em>。',
+    "Onboarding ends; belonging doesn't. These are the programs, councils, and communities open to you as a Vanderbilt staff member — from day one and for your whole career.":
+      '入職會結束，歸屬感不會。這些是您作為范德堡員工可以參與的項目、委員會和社區——從第一天起，貫穿整個職業生涯。',
+    'Every journey, well begun.': '每一段旅程，都有好的開始。',
+    'My path': '我的路徑',
+    'Begin onboarding': '開始入職',
+    'First 90 days': '前 90 天',
+    'of 90-day path': '90 天路徑完成度',
+    'Ask PCB': '諮詢 PCB',
+    'Keep growing': '持續成長'
+  };
+
+  var LANGS = ['en', 'es', 'fr', 'de', 'ht', 'zh-Hans', 'zh-Hant'];
   var lang = 'en';
-  window.VoyageT = function (s) { return (lang === 'es' && TS[s]) || s; };
+
+  window.VoyageT = function (s) {
+    var d = D[lang];
+    if (d && d[s] != null) return d[s];
+    if (D.en[s] != null) return D.en[s];
+    return s;
+  };
   window.VoyageLang = {
     get: function () { return lang; },
-    set: function (l) { lang = l === 'es' ? 'es' : 'en'; document.documentElement.lang = lang; applyStatic(); }
+    set: function (l) {
+      lang = LANGS.indexOf(l) >= 0 ? l : 'en';
+      document.documentElement.lang = lang;
+      applyStatic();
+    }
   };
 
-  /* static chrome: [selector, en, es, isHTML] */
+  /* static chrome: [selector, english key, isHTML] — translation comes
+     from the same per-language dictionaries above */
   var S = [
-    ['#navDash', 'My first 90 days', 'Mis primeros 90 días'],
-    ['#navReturn', 'Beyond 90 Days', 'Más allá de los 90 días'],
-    ['#navEngage', 'Programs & Partnerships', 'Programas y alianzas'],
-    ['.hero--voyage .eyebrow', 'Vanderbilt · Voyage · Staff Onboarding', 'Vanderbilt · Voyage · Incorporación del personal'],
-    ['.hero--voyage h1', 'Welcome. Your path is <em class="gold-text">already&nbsp;built</em>.', 'Bienvenido. Tu ruta <em class="gold-text">ya está&nbsp;lista</em>.', 1],
-    ['.hero--voyage .lead', "You've finished Vanderbilt Voyage (Classroom) — this is what comes next. A few quick questions tune your first 90 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you.",
-      'Terminaste Vanderbilt Voyage (Presencial); esto es lo que sigue. Unas preguntas rápidas ajustan tus primeros 90 días a tu campus, tu área y tu puesto, y cada tarea, curso y contacto vive en un solo tablero. Te conocemos. Estamos listos para ti.'],
-    ['#beginBtn', "Let's tailor your first weeks", 'Personalicemos tus primeras semanas'],
-    ['#idMeta', 'Demo profile — at launch this card is pre-populated from your Oracle HCM record via single sign-on', 'Perfil de demostración: en producción esta tarjeta se completa desde tu registro de Oracle HCM mediante inicio de sesión único'],
-    ['#renameBtn', 'Not Alex? Use your name', '¿No eres Alex? Usa tu nombre'],
-    ['.gate__step[data-step="1"] .eyebrow', 'Step 1 of 3 · Location', 'Paso 1 de 3 · Ubicación'],
-    ['.gate__step[data-step="1"] h2', 'Where will you <em class="gold-text">anchor</em>?', '¿Dónde vas a <em class="gold-text">anclar</em>?', 1],
-    ['.gate__step[data-step="1"] .lead', 'Your campus sets your parking vendor, safety contacts, state compliance track, and local benefits.', 'Tu campus define el estacionamiento, los contactos de seguridad, el cumplimiento estatal y los beneficios locales.'],
-    ['.gate__step[data-step="2"] .eyebrow', 'Step 2 of 3 · Job family', 'Paso 2 de 3 · Familia laboral'],
-    ['.gate__step[data-step="2"] h2', 'Find your <em class="gold-text">job family</em>.', 'Encuentra tu <em class="gold-text">familia laboral</em>.', 1],
-    ['.gate__step[data-step="2"] .lead', "From Vanderbilt's Skills-Based Job Architecture — 18 families, 95 sub-families. Start typing, or browse by family.", 'De la Arquitectura de Puestos por Habilidades de Vanderbilt: 18 familias, 95 subfamilias. Escribe para buscar o navega por familia.'],
-    ['.gate__step[data-step="3"] .eyebrow', 'Step 3 of 3 · Role', 'Paso 3 de 3 · Puesto'],
-    ['.gate__step[data-step="3"] h2', 'What kind of <em class="gold-text">work</em>?', '¿Qué tipo de <em class="gold-text">trabajo</em>?', 1],
-    ['.gate__step[data-step="3"] .lead', 'Auto-suggested from your Oracle job code — confirm or change it. This sets the depth of your path.', 'Sugerido según tu código de puesto en Oracle: confírmalo o cámbialo. Esto define la profundidad de tu ruta.'],
-    ['#studentQ', '<b>I have the potential to work with students or minors.</b> A yes — or an unsure — adds Protection of Minors 101 and Clery Act training to your path. This stacks with any role.', '<b>Podría trabajar con estudiantes o menores.</b> Un sí —o un no estoy seguro— añade Protection of Minors 101 y la capacitación de la Ley Clery a tu ruta. Aplica a cualquier puesto.', 1],
-    ['.studentopts [data-student="yes"]', 'Yes', 'Sí'],
-    ['.studentopts [data-student="no"]', 'No', 'No'],
-    ['.studentopts [data-student="unsure"]', 'Unsure', 'No estoy seguro'],
-    ['.gate__step[data-step="4"] .eyebrow', 'Your custom path', 'Tu ruta personalizada'],
-    ['.gate__step[data-step="4"] h2', "Here's your <em class=\"gold-text\">voyage</em>.", 'Este es tu <em class="gold-text">viaje</em>.', 1],
-    ['#gateFinish', "Let's begin", 'Comencemos'],
-    ['#locNext', 'Continue', 'Continuar'], ['#deptNext', 'Continue', 'Continuar'], ['#roleNext', 'Continue', 'Continuar'],
-    ['#dashEyebrow', 'Voyage · Your first 90 days', 'Voyage · Tus primeros 90 días'],
-    ['#view-dashboard .howline', 'This dashboard continues where <b>Vanderbilt Voyage (Classroom)</b> left off. Every card links straight into its source system — <b>the click is your completion signal</b>. Systems with an API verify true completion overnight and upgrade the card to <b>✓ Verified</b>.', 'Este tablero continúa donde terminó <b>Vanderbilt Voyage (Presencial)</b>. Cada tarjeta enlaza directamente con su sistema de origen: <b>el clic es tu señal de avance</b>. Los sistemas con API verifican la finalización real cada noche y actualizan la tarjeta a <b>✓ Verificado</b>.', 1],
-    ['.filterlabel > span:first-child', 'Filter your path by category', 'Filtra tu ruta por categoría'],
-    ['#filterClear', '✕ Show everything', '✕ Mostrar todo'],
-    ['#mvFilter', '⚓ Manager’s Voyage only', '⚓ Solo Manager’s Voyage'],
-    ['#profileBtn', 'Change role / campus', 'Cambiar puesto / campus'],
-    ['#railBenefits h4', 'Benefits window', 'Plazo de beneficios'],
-    ['#railBenefits .countdown span', 'days left to enroll', 'días para inscribirte'],
-    ['#railBenefits a[data-open]', 'Go to enrollment →', 'Ir a la inscripción →'],
-    ['#view-dashboard .railbox:nth-of-type(2) h4', 'Up next', 'A continuación'],
-    ['#view-dashboard .railbox:nth-of-type(3) h4', 'Saved for later', 'Guardado para después'],
-    ['#view-dashboard .railbox:nth-of-type(4) h4', 'Announcements', 'Avisos'],
-    ['#view-returning .dashhead .eyebrow', 'Voyage · Beyond 90 Days', 'Voyage · Más allá de los 90 días'],
-    ['#growTitle', 'Grow my <em>career</em>', 'Impulsa mi <em>carrera</em>', 1],
-    ['.growmatrix div', '<b>Not sure where to start?</b> Build your path with the Skill Matrix — map your sub-family’s skills to courses.', '<b>¿No sabes por dónde empezar?</b> Construye tu ruta con la Matriz de Habilidades: conecta las habilidades de tu subfamilia con cursos.', 1],
-    ['.growmatrix a.btn', 'Build your path →', 'Construye tu ruta →'],
-    ['#view-engage .eyebrow', 'Programs, Events & Partnerships', 'Programas, eventos y alianzas'],
-    ['#view-engage h1', 'Ways to <em class="gold-text">engage</em>.', 'Formas de <em class="gold-text">participar</em>.', 1],
-    ['#view-engage .lead', "Onboarding ends; belonging doesn't. These are the programs, councils, and communities open to you as a Vanderbilt staff member — from day one and for your whole career.", 'La incorporación termina; la pertenencia no. Estos son los programas, consejos y comunidades abiertos para ti como miembro del personal de Vanderbilt, desde el primer día y durante toda tu carrera.'],
-    ['.footer .brandline', 'Every journey, well begun.', 'Todo viaje, bien comenzado.']
+    ['#navDash', 'My first 90 days'],
+    ['#navReturn', 'Beyond 90 Days'],
+    ['#navEngage', 'Programs & Partnerships'],
+    ['.hero--voyage .eyebrow', 'Vanderbilt · Voyage · Staff Onboarding'],
+    ['.hero--voyage h1', 'Welcome. Your path is <em class="gold-text">already&nbsp;built</em>.', 1],
+    ['.hero--voyage .lead', "You've finished Vanderbilt Voyage (Classroom) — this is what comes next. A few quick questions tune your first 90 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you."],
+    ['#beginBtn', "Let's tailor your first weeks"],
+    ['#idMeta', 'Demo profile — at launch this card is pre-populated from your Oracle HCM record via single sign-on'],
+    ['#renameBtn', 'Not Alex? Use your name'],
+    ['.gate__step[data-step="1"] .eyebrow', 'Step 1 of 3 · Location'],
+    ['.gate__step[data-step="1"] h2', 'Where will you <em class="gold-text">anchor</em>?', 1],
+    ['.gate__step[data-step="1"] .lead', 'Your campus sets your parking vendor, safety contacts, state compliance track, and local benefits.'],
+    ['.gate__step[data-step="2"] .eyebrow', 'Step 2 of 3 · Job family'],
+    ['.gate__step[data-step="2"] h2', 'Find your <em class="gold-text">job family</em>.', 1],
+    ['.gate__step[data-step="2"] .lead', "From Vanderbilt's Skills-Based Job Architecture — 18 families, 95 sub-families. Start typing, or browse by family."],
+    ['.gate__step[data-step="3"] .eyebrow', 'Step 3 of 3 · Role'],
+    ['.gate__step[data-step="3"] h2', 'What kind of <em class="gold-text">work</em>?', 1],
+    ['.gate__step[data-step="3"] .lead', 'Auto-suggested from your Oracle job code — confirm or change it. This sets the depth of your path.'],
+    ['#studentQ', '<b>I have the potential to work with students or minors.</b> A yes — or an unsure — adds Protection of Minors 101 and Clery Act training to your path. This stacks with any role.', 1],
+    ['.studentopts [data-student="yes"]', 'Yes'],
+    ['.studentopts [data-student="no"]', 'No'],
+    ['.studentopts [data-student="unsure"]', 'Unsure'],
+    ['.gate__step[data-step="4"] .eyebrow', 'Your custom path'],
+    ['.gate__step[data-step="4"] h2', 'Here\'s your <em class="gold-text">voyage</em>.', 1],
+    ['#gateFinish', "Let's begin"],
+    ['#locNext', 'Continue'], ['#deptNext', 'Continue'], ['#roleNext', 'Continue'],
+    ['#dashEyebrow', 'Voyage · Your first 90 days'],
+    ['#view-dashboard .howline', 'This dashboard continues where <b>Vanderbilt Voyage (Classroom)</b> left off. Every card links straight into its source system — <b>the click is your completion signal</b>. Systems with an API verify true completion overnight and upgrade the card to <b>✓ Verified</b>.', 1],
+    ['.filterlabel > span:first-child', 'Filter your path by category'],
+    ['#filterClear', '✕ Show everything'],
+    ['#mvFilter', '⚓ Manager’s Voyage only'],
+    ['#profileBtn', 'Change role / campus'],
+    ['#railBenefits h4', 'Benefits window'],
+    ['#railBenefits .countdown span', 'days left to enroll'],
+    ['#railBenefits a[data-open]', 'Go to enrollment →'],
+    ['#view-dashboard .railbox:nth-of-type(2) h4', 'Up next'],
+    ['#view-dashboard .railbox:nth-of-type(3) h4', 'Saved for later'],
+    ['#view-dashboard .railbox:nth-of-type(4) h4', 'Announcements'],
+    ['#view-returning .dashhead .eyebrow', 'Voyage · Beyond 90 Days'],
+    ['#growTitle', 'Grow my <em>career</em>', 1],
+    ['.growmatrix div', '<b>Not sure where to start?</b> Build your path with the Skill Matrix — map your sub-family’s skills to courses.', 1],
+    ['.growmatrix a.btn', 'Build your path →'],
+    ['#view-engage .eyebrow', 'Programs, Events & Partnerships'],
+    ['#view-engage h1', 'Ways to <em class="gold-text">engage</em>.', 1],
+    ['#view-engage .lead', "Onboarding ends; belonging doesn't. These are the programs, councils, and communities open to you as a Vanderbilt staff member — from day one and for your whole career."],
+    ['.viewtoggle [data-nav="dashboard"]', 'First 90 days'],
+    ['.viewtoggle [data-nav="returning"]', 'Beyond 90 Days'],
+    ['.ring__label b + span', 'of 90-day path'],
+    ['a.btn--ghost[href^="mailto:hr@vanderbilt.edu"]', 'Ask PCB'],
+    ['.footer a[data-nav="dashboard"]', 'My first 90 days'],
+    ['.footer a[data-nav="returning"]', 'Beyond 90 Days'],
+    ['.footer a[data-nav="engage"]', 'Programs & Partnerships'],
+    ['.footer a[href="mailto:hr@vanderbilt.edu"]', 'Ask PCB'],
+    ['.footer__grid > div:nth-child(3) h4', 'Keep growing'],
+    ['.footer .brandline', 'Every journey, well begun.']
   ];
 
   function applyStatic() {
+    var d = D[lang] || {};
     S.forEach(function (row) {
-      var el = document.querySelector(row[0]);
-      if (!el) return;
-      var val = lang === 'es' ? row[2] : row[1];
-      if (row[3]) el.innerHTML = val; else el.textContent = val;
+      var els = document.querySelectorAll(row[0]);
+      if (!els.length) return;
+      var val = d[row[1]] != null ? d[row[1]] : row[1];
+      els.forEach(function (el) {
+        if (row[2]) el.innerHTML = val; else el.textContent = val;
+      });
     });
   }
 })();
