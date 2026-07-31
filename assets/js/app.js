@@ -838,12 +838,22 @@
     $('#idName').textContent = full;
   }
   ensureStart();
-  var sc = window.VoyageSCORM;
-  if (sc && sc.connected) {
+  function adoptScorm() {
+    var sc = window.VoyageSCORM;
+    if (!sc || !sc.connected) return;
+    ensureStart();                         /* merge suspend_data (start date, profile, statuses, opt-outs) */
     if (sc.name && !state.name) { state.name = sc.name; save(); }
     $('#idMeta').textContent = 'Signed in via Oracle Learning' + (sc.id ? ' · Learner ID ' + sc.id : '') + ' — pulled live from the LMS';
     $('#renameBtn').hidden = true;
+    paintIdentity();
+    var av = $('.view.active');
+    if (av) {
+      rerenderActive();
+      introGate(av.getAttribute('data-view') === 'dashboard');
+    }
   }
+  adoptScorm();
+  window.addEventListener('voyage-scorm-connected', adoptScorm);
   paintIdentity();
   $('#renameBtn').addEventListener('click', function () {
     var n = window.prompt('What should we call you?', state.name || '');

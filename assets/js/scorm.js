@@ -15,21 +15,33 @@
 (function () {
   'use strict';
 
-  function findAPI(name) {
-    var win = window, hops = 0;
-    try {
-      while (win && hops < 12) {
-        if (win[name]) return win[name];
-        if (win.parent && win.parent !== win) { win = win.parent; hops++; continue; }
-        break;
-      }
-      if (window.opener && window.opener[name]) return window.opener[name];
-    } catch (e) { /* cross-origin ancestor — no API reachable */ }
+  /* ADL-standard API discovery: walk the parent chain of this window,
+     then the parent chain of the opener (players like SCORM Cloud can
+     launch content in a popup whose player frames hold the API). Each
+     hop is guarded individually so one cross-origin ancestor doesn't
+     abort the rest of the search. */
+  function scanChain(start, name) {
+    var win = start, hops = 0;
+    while (win && hops < 12) {
+      try { if (win[name]) return win[name]; } catch (e) { /* cross-origin hop */ }
+      var parent = null;
+      try { parent = (win.parent && win.parent !== win) ? win.parent : null; } catch (e2) { parent = null; }
+      if (!parent) break;
+      win = parent; hops++;
+    }
     return null;
   }
+  function findAPI(name) {
+    var api = scanChain(window, name);
+    if (api) return api;
+    var opener = null;
+    try { opener = window.opener; } catch (e) { opener = null; }
+    if (opener) api = scanChain(opener, name);
+    return api || null;
+  }
 
-  var api12 = findAPI('API');
-  var api2004 = findAPI('API_1484_11');
+  var api12 = null;
+  var api2004 = null;
   var scorm = { connected: false, version: null, name: null, id: null };
 
   function toFirstLast(n) {
@@ -42,17 +54,44 @@
     return n;
   }
 
-  try {
-    if (api2004 && api2004.Initialize('') === 'true') {
-      scorm.connected = true; scorm.version = '2004';
-      scorm.name = toFirstLast(api2004.GetValue('cmi.learner_name'));
-      scorm.id = api2004.GetValue('cmi.learner_id') || null;
-    } else if (api12 && api12.LMSInitialize('') === 'true') {
-      scorm.connected = true; scorm.version = '1.2';
-      scorm.name = toFirstLast(api12.LMSGetValue('cmi.core.student_name'));
-      scorm.id = api12.LMSGetValue('cmi.core.student_id') || null;
+  function tryConnect() {
+    if (scorm.connected) return true;
+    try {
+      var a2004 = findAPI('API_1484_11');
+      if (a2004 && a2004.Initialize('') === 'true') {
+        api2004 = a2004;
+        scorm.connected = true; scorm.version = '2004';
+        scorm.name = toFirstLast(a2004.GetValue('cmi.learner_name'));
+        scorm.id = a2004.GetValue('cmi.learner_id') || null;
+        return true;
+      }
+      var a12 = findAPI('API');
+      if (a12 && a12.LMSInitialize('') === 'true') {
+        api12 = a12;
+        scorm.connected = true; scorm.version = '1.2';
+        scorm.name = toFirstLast(a12.LMSGetValue('cmi.core.student_name'));
+        scorm.id = a12.LMSGetValue('cmi.core.student_id') || null;
+        return true;
+      }
+    } catch (e) { /* keep retrying */ }
+    return false;
+  }
+
+  /* The LMS is only required to expose the API before the SCO's load
+     event — trying once at parse time is too early for some players.
+     Retry for ~6 seconds, then settle into standalone mode. */
+  var attempts = 0;
+  function connectLoop() {
+    attempts++;
+    if (tryConnect()) {
+      try { console.info('[Voyage] SCORM ' + scorm.version + ' API connected (attempt ' + attempts + ') — learner: ' + (scorm.name || 'unnamed')); } catch (e) {}
+      window.dispatchEvent(new Event('voyage-scorm-connected'));
+      return;
     }
-  } catch (e) { scorm.connected = false; }
+    if (attempts < 24) setTimeout(connectLoop, 250);
+    else { try { console.info('[Voyage] no SCORM API found — running standalone with demo profile'); } catch (e) {} }
+  }
+  connectLoop();
 
   /* suspend_data: Oracle stores this per learner, server-side — we keep
      the first-launch timestamp there so the day counter follows the
