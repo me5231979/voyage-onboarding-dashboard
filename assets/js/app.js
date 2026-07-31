@@ -9,9 +9,12 @@
 (function () {
   'use strict';
 
+  var T = window.VoyageT;
+
   var LS = 'voyage_v1';
   var state = load() || { profile: null, status: {}, saved: [], events: [], filter: null, optout: {} };
   if (!state.optout) state.optout = {};
+  if (!state.doneTs) state.doneTs = {};
 
   function load() { try { return JSON.parse(localStorage.getItem(LS)); } catch (e) { return null; } }
   function firstName() { return (state.name && state.name.split(' ')[0]) || VOYAGE.user.first; }
@@ -19,7 +22,7 @@
     try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {}
     var sc = window.VoyageSCORM;
     if (sc && sc.connected && sc.setData) {
-      sc.setData({ s: state.start, p: state.profile, st: state.status, n: state.name, o: state.optout, dn: state.scoDone });
+      sc.setData({ s: state.start, p: state.profile, st: state.status, n: state.name, o: state.optout, dn: state.scoDone, dt: state.doneTs });
     }
   }
   function $(s, c) { return (c || document).querySelector(s); }
@@ -90,6 +93,7 @@
         if (d.st) state.status = d.st;
         if (d.o) state.optout = d.o;
         if (d.dn) state.scoDone = true;
+        if (d.dt) state.doneTs = d.dt;
         if (d.n && !state.name) state.name = d.n;
         save(); return;
       }
@@ -107,7 +111,7 @@
   /* ---------- greeting ---------- */
   function greeting() {
     var h = new Date().getHours();
-    return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+    return T(h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening');
   }
 
   /* =====================================================================
@@ -153,7 +157,7 @@
     lt.addEventListener('click', function (e) {
       var b = e.target.closest('[data-loc]'); if (!b) return;
       draft.loc = b.getAttribute('data-loc');
-      $$('[data-loc]', lt).forEach(function (t) { t.classList.toggle('on', t === b); });
+      $$('[data-loc]', lt).forEach(function (t) { t.classList.toggle('on', t === b); t.setAttribute('aria-pressed', String(t === b)); });
       $('#locNext').disabled = false;
     });
 
@@ -179,7 +183,7 @@
     rt.addEventListener('click', function (e) {
       var b = e.target.closest('[data-role]'); if (!b) return;
       draft.role = b.getAttribute('data-role');
-      $$('[data-role]', rt).forEach(function (t) { t.classList.toggle('on', t === b); });
+      $$('[data-role]', rt).forEach(function (t) { t.classList.toggle('on', t === b); t.setAttribute('aria-pressed', String(t === b)); });
       $('#roleNext').disabled = !(draft.role && draft.studentAns);
     });
     function gateRoleReady() { $('#roleNext').disabled = !(draft.role && draft.studentAns); }
@@ -187,7 +191,7 @@
       b.addEventListener('click', function () {
         draft.studentAns = b.getAttribute('data-student');
         draft.student = draft.studentAns !== 'no';   // unsure enrolls as a precaution
-        $$('.studentopts button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        $$('.studentopts button').forEach(function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
         gateRoleReady();
       });
     });
@@ -226,10 +230,10 @@
      ===================================================================== */
   function pillFor(id, it) {
     var s = statusOf(id);
-    if (s === 'verified') return '<span class="pill pill--verified" title="Verified in ' + esc(it.src) + '">✓ Verified</span>';
-    if (s === 'done') return '<span class="pill pill--done">Complete</span>';
-    if (s === 'opened') return '<span class="pill pill--opened">Opened</span>';
-    return '<span class="pill pill--todo">Not started</span>';
+    if (s === 'verified') return '<span class="pill pill--verified" title="' + esc(it.src) + '">' + T('✓ Verified') + '</span>';
+    if (s === 'done') return '<span class="pill pill--done">' + T('Complete') + '</span>';
+    if (s === 'opened') return '<span class="pill pill--opened">' + T('Opened') + '</span>';
+    return '<span class="pill pill--todo">' + T('Not started') + '</span>';
   }
 
   var CTA_BY_TYPE = { meet: 'How-to guide (PDF)', survey: 'Take survey', read: 'Open', task: 'Start', course: 'Start', compliance: 'Start' };
@@ -237,16 +241,16 @@
     return !!(it.aud && it.aud.role && it.aud.role.length === 1 && it.aud.role[0] === 'manager');
   }
   function mvBadge(it) {
-    return isManagerOnly(it) ? '<span class="mvbadge" title="Part of the Manager Voyage — manager-only development">⚓ Manager’s Voyage</span>' : '';
+    return isManagerOnly(it) ? '<span class="mvbadge">' + T('⚓ Manager’s Voyage') + '</span>' : '';
   }
   function ctaFor(it, done) {
-    if (done) return 'Revisit';
-    if (it.lane === 'pre') return 'Verify';
-    return CTA_BY_TYPE[it.type] || 'Start';
+    if (done) return T('Revisit');
+    if (it.lane === 'pre') return T('Verify');
+    return T(CTA_BY_TYPE[it.type] || 'Start');
   }
   function typeChip(it) {
     var t = VOYAGE.typeDefs[it.type] || VOYAGE.typeDefs.task;
-    return '<span class="typechip typechip--' + (it.type || 'task') + '">' + t.label + '</span>';
+    return '<span class="typechip typechip--' + (it.type || 'task') + '">' + T(t.label) + '</span>';
   }
   function rowHTML(it) {
     var done = isDone(it.id);
@@ -257,25 +261,25 @@
       var pr = itemById(it.prereq);
       prereq = '<span class="item__prereq">needs: ' + esc(pr ? pr.title : it.prereq) + '</span>';
     }
-    var rec = it.rec ? '<span class="recbadge">★ Recommended</span>' : '';
+    var rec = it.rec ? '<span class="recbadge">' + T('★ Recommended') + '</span>' : '';
     var cond = it.cond ? '<span class="item__prereq">⚠ ' + esc(it.cond) + '</span>' : '';
     if (isOut(it.id)) {
       return '<article class="item item--row item--out item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
         typeChip(it) +
         '<div class="row__main"><h4>' + esc(it.title) + '</h4>' +
-          '<div class="item__meta"><span class="pill pill--out">Opted out</span></div>' +
+          '<div class="item__meta"><span class="pill pill--out">' + T('Opted out') + '</span></div>' +
           '<p class="optreason">“' + esc(state.optout[it.id] || '') + '”</p></div>' +
         '<span></span>' +
-        '<div class="item__actions"><button type="button" class="item__minor item__minor--text" data-reinstate="' + it.id + '">Reinstate</button></div></article>';
+        '<div class="item__actions"><button type="button" class="item__minor item__minor--text" data-reinstate="' + it.id + '">' + T('Reinstate') + '</button></div></article>';
     }
     if (optDraftId === it.id) {
       return '<article class="item item--row item--optform item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
         typeChip(it) +
         '<div class="row__main"><h4>' + esc(it.title) + '</h4>' +
-          '<div class="optform"><label for="optText">Opt out — write a brief justification. It is recorded and reportable, like a quiz response.</label>' +
-          '<textarea id="optText" rows="2" maxlength="250" placeholder="e.g., Completed equivalent training at my previous employer in May 2026."></textarea>' +
-          '<div class="optform__actions"><button type="button" class="btn" data-optconfirm="' + it.id + '">Record opt-out</button>' +
-          '<button type="button" class="item__minor item__minor--text" data-optcancel="' + it.id + '">Cancel</button></div></div></div></article>';
+          '<div class="optform"><label for="optText">' + T('Opt out — write a brief justification. It is recorded and reportable, like a quiz response.') + '</label>' +
+          '<textarea id="optText" rows="2" maxlength="250" placeholder="' + T('e.g., Completed equivalent training at my previous employer in May 2026.') + '"></textarea>' +
+          '<div class="optform__actions"><button type="button" class="btn" data-optconfirm="' + it.id + '">' + T('Record opt-out') + '</button>' +
+          '<button type="button" class="item__minor item__minor--text" data-optcancel="' + it.id + '">' + T('Cancel') + '</button></div></div></div></article>';
     }
     return '<article class="item item--row item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
       '<div class="row__chips">' + typeChip(it) + mvBadge(it) + rec + '</div>' +
@@ -285,11 +289,11 @@
       pillFor(it.id, it) +
       '<div class="item__actions">' +
         '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + ctaFor(it, done) + '</a>' +
-        (done ? '<button type="button" class="item__minor item__minor--text" data-reopen="' + it.id + '" title="Marked by mistake? Reopen it">Reopen</button>'
-              : '<button type="button" class="item__minor" data-done="' + it.id + '" title="' + (it.lane === 'pre' ? 'Confirm complete' : 'Mark as done') + '">✓</button>') +
-        '<button type="button" class="item__minor" data-save="' + it.id + '" title="Save for later">' + (saved ? '♥' : '♡') + '</button>' +
-        '<button type="button" class="item__minor item__minor--text" data-optout="' + it.id + '" title="Opt out with a written justification">Opt out</button>' +
-        (it.info ? '<a class="item__minor" href="' + esc(it.info) + '" target="_blank" rel="noopener" title="About">ⓘ</a>' : '') +
+        (done ? '<button type="button" class="item__minor item__minor--text" data-reopen="' + it.id + '">' + T('Reopen') + '</button>'
+              : '<button type="button" class="item__minor" data-done="' + it.id + '" title="' + T(it.lane === 'pre' ? 'Confirm complete' : 'Mark as done') + '" aria-label="' + T(it.lane === 'pre' ? 'Confirm complete' : 'Mark as done') + '">✓</button>') +
+        '<button type="button" class="item__minor" data-save="' + it.id + '" title="' + T('Save for later') + '" aria-label="' + T('Save for later') + '">' + (saved ? '♥' : '♡') + '</button>' +
+        '<button type="button" class="item__minor item__minor--text" data-optout="' + it.id + '">' + T('Opt out') + '</button>' +
+        (it.info ? '<a class="item__minor" href="' + esc(it.info) + '" target="_blank" rel="noopener" title="' + T('About') + '" aria-label="' + T('About') + '">ⓘ</a>' : '') +
       '</div></article>';
   }
   function cardHTML(it) {
@@ -343,14 +347,14 @@
       var oid = confirmBtn.getAttribute('data-optconfirm');
       var ta2 = $('#optText');
       var reason = (ta2 ? ta2.value : '').trim();
-      if (!reason) { toast('Opt-out needs a written justification.'); if (ta2) ta2.focus(); return; }
+      if (!reason) { toast(T('Opt-out needs a written justification.')); if (ta2) ta2.focus(); return; }
       optDraftId = null;
       state.optout[oid] = reason;
       delete state.status[oid];
       save();
       if (window.VoyageSCORM && window.VoyageSCORM.connected) window.VoyageSCORM.recordOptOut(oid, reason);
       rerenderActive();
-      toast('Opted out — justification recorded.');
+      toast(T('Opted out — justification recorded.'));
       maybeReportPathComplete();
       return;
     }
@@ -360,15 +364,16 @@
     if (reBtn) {
       delete state.optout[reBtn.getAttribute('data-reinstate')];
       save(); rerenderActive();
-      toast('Reinstated — back on your path.');
+      toast(T('Reinstated — back on your path.'));
       return;
     }
     var roBtn = e.target.closest('[data-reopen]');
     if (roBtn) {
       var rid = roBtn.getAttribute('data-reopen');
       delete state.status[rid];
+      delete state.doneTs[rid];
       save(); rerenderActive();
-      toast('Reopened — status reset to Not started.');
+      toast(T('Reopened — status reset to Not started.'));
       return;
     }
     var saveBtn = e.target.closest('[data-save]');
@@ -394,7 +399,7 @@
     if (isDone(id)) { save(); return; }
     if (it.type === 'meet') {
       if (statusOf(id) === 'todo') { state.status[id] = 'opened'; save(); rerenderActive(); }
-      toast('Guide opened — schedule the meeting, then mark it complete with the ✓.');
+      toast(T('Guide opened — schedule the meeting, then mark it complete with the ✓.'));
     } else if (it.api) {
       state.status[id] = 'opened';
       save(); rerenderActive();
@@ -412,12 +417,13 @@
     save();
     if (window.VoyageSCORM && window.VoyageSCORM.connected) window.VoyageSCORM.complete();
     confetti();
-    toast('Your first 90 days are complete — recorded in Oracle Learning. Well sailed.');
+    toast(T('Your first 90 days are complete — recorded in Oracle Learning. Well sailed.'));
   }
 
   function complete(id, manual) {
     var it = itemById(id); if (!it) return;
     state.status[id] = 'done';
+    state.doneTs[id] = Date.now();
     if (manual) state.events.push({ id: id, ts: Date.now() });
     if (manual && !it.api && window.VoyageSCORM && window.VoyageSCORM.connected) {
       window.VoyageSCORM.recordAttestation(id, 'Self-attested complete on ' + new Date().toISOString().slice(0, 10) + ' — course delivered outside Oracle Learning');
@@ -444,7 +450,8 @@
     var p = state.profile || {};
 
     $('#dashGreeting').textContent = greeting() + ', ' + firstName();
-    $('#dashDay').textContent = 'Day ' + dayOfPath() + ' of your first 90 · ' + (p.sub || '') + ' · ' + locName(p.loc);
+    $('#dashDay').textContent = (VoyageLang.get() === 'es' ? 'Día ' + dayOfPath() + ' de tus primeros 90 · ' : 'Day ' + dayOfPath() + ' of your first 90 · ') + (p.sub || '') + ' · ' + locName(p.loc);
+    $('.ring').setAttribute('aria-label', (VoyageLang.get() === 'es' ? 'Progreso de incorporación' : 'Onboarding progress'));
 
     var counted = items.filter(function (it) { return !isOut(it.id); });
     var totalMins = counted.reduce(function (acc, it) { return acc + it.mins; }, 0);
@@ -483,7 +490,7 @@
       });
     });
     $('#typeLegend').innerHTML = Object.keys(VOYAGE.typeDefs).map(function (k) {
-      return '<span class="legend__key legend__key--' + k + '">' + VOYAGE.typeDefs[k].label + '</span>';
+      return '<span class="legend__key legend__key--' + k + '">' + T(VOYAGE.typeDefs[k].label) + '</span>';
     }).join('');
     var fc = $('#filterClear');
     fc.classList.toggle('show', !!(state.filter || state.mvOnly));
@@ -504,11 +511,11 @@
       var mine = visible.filter(function (it) { return it.lane === lane.id; });
       var laneIn = mine.filter(function (it) { return !isOut(it.id); });
       var laneDone = laneIn.filter(function (it) { return isDone(it.id); }).length;
-      var count = mine.length ? '<span class="lane__count">' + laneDone + ' of ' + laneIn.length + ' complete</span>' : '';
+      var count = mine.length ? '<span class="lane__count">' + laneDone + (VoyageLang.get() === 'es' ? ' de ' : ' of ') + laneIn.length + (VoyageLang.get() === 'es' ? ' completados' : ' complete') + '</span>' : '';
       var cards = mine.length ? '<div class="lane__rows">' + mine.map(rowHTML).join('') + '</div>'
         : '<div class="lane__empty">Nothing in this lane' + (tile ? ' for ' + esc(tile.label) : '') + '.</div>';
-      var note = lane.note ? '<p class="lane__note">' + esc(lane.note) + '</p>' : '';
-      return '<div class="lane"><div class="lane__title"><h3>' + esc(lane.title) + '</h3><span>' + esc(lane.kicker) + '</span>' + count + '</div>' + note + cards + '</div>';
+      var note = lane.note ? '<p class="lane__note">' + esc(T(lane.note)) + '</p>' : '';
+      return '<div class="lane"><div class="lane__title"><h3>' + esc(T(lane.title)) + '</h3><span>' + esc(T(lane.kicker)) + '</span>' + count + '</div>' + note + cards + '</div>';
     }).join('') + '<div class="daybeyond"><div><b>Day 31 and beyond: your home base.</b> When the path is behind you, Voyage becomes the place to find anything — search every active course, track renewals, and keep growing through Programs, Events & Partnerships.</div><button type="button" class="btn btn--ghost-dark" data-nav="returning">Preview it now →</button></div>';
 
     /* up next: hard-dated first, prereqs met, not done */
@@ -532,13 +539,13 @@
     }).slice(0, 3);
     $('#upNext').innerHTML = next.length ? next.map(function (it) {
       return '<li><a data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + esc(it.title) + '<small>' + it.mins + ' min · ' + esc(it.src) + (it.dueLabel ? ' · due ' + esc(it.dueLabel) : '') + '</small></a></li>';
-    }).join('') : '<li class="empty">All caught up. Well sailed.</li>';
+    }).join('') : '<li class="empty">' + T('All caught up. Well sailed.') + '</li>';
 
     /* saved */
     var savedItems = state.saved.map(itemById).filter(Boolean);
     $('#savedList').innerHTML = savedItems.length ? savedItems.map(function (it) {
       return '<li><a data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + esc(it.title) + '<small>' + it.mins + ' min · ' + esc(it.src) + '</small></a></li>';
-    }).join('') : '<li class="empty">Nothing saved yet.</li>';
+    }).join('') : '<li class="empty">' + T('Nothing saved yet.') + '</li>';
 
     $('#announceList').innerHTML = VOYAGE.announcements.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('');
   }
@@ -546,6 +553,23 @@
   /* =====================================================================
      RETURNING — day 31+
      ===================================================================== */
+  function cadenceDays(c) {
+    if (!c) return 0;
+    if (/every 2 years|biennial/i.test(c)) return 730;
+    if (/annual/i.test(c)) return 365;
+    return 0;
+  }
+  function myRenewals() {
+    var out = [];
+    myItems().forEach(function (it) {
+      if (isOut(it.id) || !isDone(it.id)) return;
+      var period = cadenceDays(it.cadence);
+      if (!period || !state.doneTs[it.id]) return;
+      var daysLeft = Math.ceil(period - (Date.now() - state.doneTs[it.id]) / 86400000);
+      out.push({ it: it, days: daysLeft });
+    });
+    return out.sort(function (x, y) { return x.days - y.days; });
+  }
   function growRow(g, label, mv) {
     return '<article class="item item--row item--course">' +
       '<div class="row__chips"><span class="typechip typechip--course">' + esc(label) + '</span>' +
@@ -571,27 +595,29 @@
     var dev = (p.role === 'manager') ? VOYAGE.growth.manager : VOYAGE.growth.staff;
     $('#growShelf').innerHTML =
       '<div class="growgroup">' + VOYAGE.growth.marketplace.map(function (g) { return growRow(g, 'Talent Marketplace'); }).join('') + '</div>' +
-      '<div class="growgroup">' + VOYAGE.growth.ai.map(function (g) { return growRow(g, 'AI — deeper dive'); }).join('') + '</div>' +
-      '<div class="growgroup">' + dev.map(function (g) { return growRow(g, p.role === 'manager' ? 'Manager development' : 'Professional development', p.role === 'manager'); }).join('') + '</div>';
+      '<div class="growgroup">' + VOYAGE.growth.ai.map(function (g) { return growRow(g, T('AI — deeper dive')); }).join('') + '</div>' +
+      '<div class="growgroup">' + dev.map(function (g) { return growRow(g, T(p.role === 'manager' ? 'Manager development' : 'Professional development'), p.role === 'manager'); }).join('') + '</div>';
 
     /* resume: opened but not complete */
     var resume = items.filter(function (it) { return statusOf(it.id) === 'opened'; }).slice(0, 3);
     $('#shelfResume').innerHTML = resume.length ? resume.map(rowHTML).join('')
-      : '<div class="lane__empty">Nothing in progress — everything you opened is complete.</div>';
+      : '<div class="lane__empty">' + T('Nothing in progress — everything you opened is complete.') + '</div>';
 
     /* for you: role/dept-tuned items not yet done, then refreshers */
     var forYou = items.filter(function (it) { return it.aud && !isDone(it.id); }).slice(0, 3);
     if (forYou.length < 3) forYou = forYou.concat(items.filter(function (it) { return it.cat === 'courses' && forYou.indexOf(it) === -1; })).slice(0, 3);
     $('#shelfForYou').innerHTML = forYou.length ? forYou.map(rowHTML).join('')
-      : '<div class="lane__empty">You’re fully current. New items land here as they publish.</div>';
+      : '<div class="lane__empty">' + T('You’re fully current. New items land here as they publish.') + '</div>';
 
-    /* renewals */
-    $('#shelfRenewals').innerHTML = VOYAGE.renewals.map(function (r) {
+    /* renewals — derived from completed items with a recurring cadence */
+    var ren = myRenewals();
+    $('#shelfRenewals').innerHTML = ren.length ? ren.map(function (r) {
       var tone = r.days > 60 ? 'green' : r.days >= 30 ? 'amber' : 'red';
-      return '<div class="renewal"><div class="renewal__days renewal__days--' + tone + '"><b>' + r.days + '</b><span>days</span></div>' +
-        '<div class="renewal__main"><b>' + esc(r.title) + '</b><small>' + esc(r.src) + '</small></div>' +
-        '<a class="btn" href="' + esc(r.href) + '" target="_blank" rel="noopener">Renew</a></div>';
-    }).join('');
+      return '<div class="renewal"><div class="renewal__days renewal__days--' + tone + '"><b>' + Math.max(0, r.days) + '</b><span>days</span></div>' +
+        '<div class="renewal__main"><b>' + esc(r.it.title) + '</b><small>' + esc(r.it.cadence) + ' · ' + esc(r.it.src) + '</small></div>' +
+        '<a class="btn" data-go="' + r.it.id + '" href="' + esc(r.it.href) + '" target="_blank" rel="noopener">' + T('Renew') + '</a></div>';
+    }).join('') :
+    '<div class="renewempty"><b>' + T('Nothing to renew yet.') + '</b> ' + (VoyageLang.get() === 'es' ? T('RENEW_EMPTY_BODY') : 'Annual and biennial requirements — harassment prevention, cybersecurity, emergency preparedness — reappear here automatically after you complete them, counting down from your completion date. In production, Oracle Learning renewal assignments sync here too.') + '</div>';
 
     /* quick rails */
     $('#quickSystems').innerHTML = VOYAGE.quickSystems.map(function (s) {
@@ -612,12 +638,12 @@
     $('#recentList').innerHTML = recent.length ? recent.slice(0, 6).map(function (r) {
       var d = new Date(r.ts);
       return '<li><a data-go="' + r.it.id + '" href="' + esc(r.it.href) + '" target="_blank" rel="noopener">' + esc(r.it.title) + '<small>Viewed ' + d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + '</small></a></li>';
-    }).join('') : '<li class="empty">Nothing viewed yet.</li>';
+    }).join('') : '<li class="empty">' + T('Nothing viewed yet.') + '</li>';
 
     var completed = items.filter(function (it) { return isDone(it.id); });
     $('#completedList').innerHTML = completed.length ? completed.slice(0, 6).map(function (it) {
       return '<li><a data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + esc(it.title) + '<small>' + (statusOf(it.id) === 'verified' ? 'Verified in ' + esc(it.src) : 'Complete') + '</small></a></li>';
-    }).join('') : '<li class="empty">Nothing completed yet.</li>';
+    }).join('') : '<li class="empty">' + T('Nothing completed yet.') + '</li>';
 
     $('#reProfile').onclick = startReprofile;
   }
@@ -668,7 +694,7 @@
       if (!catalog) loadCatalog(function () { input.dispatchEvent(new Event('input')); });
       var pool = myItems().map(function (it) { return { title: it.title, sub: it.src + ' · ' + it.mins + ' min' + (isDone(it.id) ? ' · completed' : ''), href: it.href, id: it.id }; })
         .concat(VOYAGE.programs.map(function (x) { return { title: x.name, sub: 'FLH Program · ' + x.who, href: x.href || 'https://www.vanderbilt.edu/pcb/' }; }))
-        .concat(VOYAGE.renewals.map(function (r) { return { title: r.title, sub: r.src + ' · renews in ' + r.days + ' days', href: r.href }; }));
+        .concat(myRenewals().map(function (r) { return { title: r.it.title, sub: 'Renews in ' + Math.max(0, r.days) + ' days · ' + r.it.src, href: r.it.href, id: r.it.id }; }));
       var hits = pool.filter(function (r) { return (r.title + ' ' + r.sub).toLowerCase().indexOf(q) > -1; }).slice(0, 6);
       if (catalog && hits.length < 8) {
         var seen = {};
@@ -754,6 +780,27 @@
 
   var nav = $('.nav');
   window.addEventListener('scroll', function () { nav.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+  function setLanguage(next) {
+    VoyageLang.set(next);
+    state.lang = next; save();
+    $('#langBtn').textContent = next === 'es' ? 'EN' : 'ES';
+    $('#heroLang').value = next;
+    rerenderActive();
+  }
+  if (state.lang) setLanguage(state.lang); else $('#heroLang').value = 'en';
+  $('#langBtn').addEventListener('click', function () {
+    setLanguage(VoyageLang.get() === 'es' ? 'en' : 'es');
+  });
+  $('#heroLang').addEventListener('change', function () { setLanguage(this.value); });
+  var burger = $('#navBurger');
+  burger.addEventListener('click', function () {
+    var open = nav.classList.toggle('nav--open');
+    burger.setAttribute('aria-expanded', String(open));
+  });
+  $('#navLinks').addEventListener('click', function () {
+    nav.classList.remove('nav--open');
+    burger.setAttribute('aria-expanded', 'false');
+  });
   var y = $('#year'); if (y) y.textContent = new Date().getFullYear();
 
   function paintIdentity() {

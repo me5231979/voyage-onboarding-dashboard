@@ -208,12 +208,6 @@ const VOYAGE = {
     'Building Brave Teams workshop enrollment opens next month.'
   ],
 
-  renewals: [
-    { title: 'Annual HIPAA refresher', src: 'Oracle Learn', days: 21, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300001863994802' },
-    { title: 'Harassment prevention recertification', src: 'Oracle Learn', days: 48, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300003032113079' },
-    { title: 'Benefits open enrollment window', src: 'Oracle HCM', days: 76, href: 'https://hr.vanderbilt.edu/benefits/' }
-  ],
-
   explore: [
     { title: 'Futures Learning Hub — leadership development', desc: 'Programs that grow leaders at every level.', src: 'FLH', href: 'https://www.vanderbilt.edu/pcb/' },
     { title: 'AI upskilling — start with AI Basics', desc: 'From first prompt to governed workflows.', src: 'Oracle Learn', href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300003100146415' },
