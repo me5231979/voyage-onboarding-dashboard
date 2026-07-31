@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 env:
-  VIDEO_URL: ${{ github.event.inputs.video_url || 'https://d8j0ntlcm91z4.cloudfront.net/user_3CCurpI0FW75YAnAl4Hbz3vPdBv/hf_20260730_182339_881ab076-6ebd-4cce-8220-4f469dd263b3.mp4' }}
+  VIDEO_URL: ${{ github.event.inputs.video_url || 'https://d8j0ntlcm91z4.cloudfront.net/user_3CCurpI0FW75YAnAl4Hbz3vPdBv/hf_20260731_030006_63174712-1f9c-413b-97d1-98a658857559.mp4' }}
 
 jobs:
   fetch:
