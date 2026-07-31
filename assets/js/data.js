@@ -85,7 +85,6 @@ const VOYAGE = {
     { id: 'oraclehcm', type: 'task', title: 'Oracle HCM self-service tour — pay, W-4, direct deposit', cat: 'systems', lane: 'w1', mins: 15, src: 'Oracle HCM', api: true, due: 'soft', dueLabel: 'Day 5', href: 'https://hr.vanderbilt.edu/oracle/' },
     { id: 'badge', type: 'task',     title: 'Campus ID badge & building access', cat: 'systems', lane: 'w1', mins: 15, src: 'IT Portal', api: false, due: 'soft', dueLabel: 'Day 2', href: 'https://cardservices.vanderbilt.edu/' },
     { id: 'handbook', type: 'read',  title: 'Policies for review — staff handbook & key policies', cat: 'policies', lane: 'w1', mins: 30, src: 'SharePoint', api: false, due: 'soft', dueLabel: 'Day 14', href: 'https://hr.vanderbilt.edu/policies/' },
-    { id: 'neo', type: 'course',       title: 'New Employee Orientation (live or on-demand)', cat: 'courses', lane: 'w1', mins: 120, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: 'Day 14', href: 'https://hr.vanderbilt.edu/onboarding/' },
     { id: 'pulse7', type: 'survey',    title: 'Day-7 onboarding pulse survey', cat: 'mission', lane: 'w1', mins: 4, src: 'Culture Amp', api: true, due: 'soft', dueLabel: 'Day 7', href: 'https://www.cultureamp.com/' },
     { id: 'pulse30', type: 'survey',   title: 'Day-30 onboarding pulse survey', cat: 'mission', lane: 'w24', mins: 5, src: 'Culture Amp', api: true, due: 'soft', dueLabel: 'Day 30', href: 'https://www.cultureamp.com/' },
 
@@ -155,7 +154,7 @@ const VOYAGE = {
     /* ---- Department-driven ---- */
     { id: 'deptsop', type: 'read',   title: 'Your department’s SOPs & mission', cat: 'policies', lane: 'w1', mins: 25, src: 'SharePoint', api: false, due: 'soft', dueLabel: 'Day 10', href: '#dept' },
     { id: 'depttools', type: 'task', title: 'Department tools & systems checklist', cat: 'systems', lane: 'w1', mins: 20, src: 'SharePoint', api: false, due: 'soft', dueLabel: 'Day 10', href: '#dept', prereq: 'vunetid' },
-    { id: 'deptcur', type: 'course',   title: 'Department learning track — first courses', cat: 'courses', lane: 'w24', mins: 90, src: 'Oracle Learn', api: true, due: 'soft', dueLabel: 'Day 30', href: '#dept', prereq: 'neo' }
+    { id: 'deptcur', type: 'course',   title: 'Department learning track — first courses', cat: 'courses', lane: 'w24', mins: 90, src: 'Oracle Learn', api: true, due: 'soft', dueLabel: 'Day 30', href: '#dept' }
   ],
 
   cats: {
@@ -210,7 +209,6 @@ const VOYAGE = {
 
   announcements: [
     'Benefits open enrollment closes at the end of your first 30 days.',
-    'New Employee Orientation runs live every other Tuesday — on-demand anytime.',
     'Building Brave Teams workshop enrollment opens next month.'
   ],
 
