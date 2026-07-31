@@ -258,7 +258,7 @@
     }
     return '<article class="item item--row item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
       typeChip(it) +
-      '<div class="row__main"><h4>' + esc(it.title) + rec + '</h4>' +
+      '<div class="row__main"><h4>' + esc(it.title) + rec + mvBadge(it) + '</h4>' +
         '<div class="item__meta"><span>' + it.mins + ' min</span><span class="srcbadge">' + esc(it.src) + '</span>' + due +
         (it.cadence ? '<span>' + esc(it.cadence) + '</span>' : '') + prereq + cond + '</div></div>' +
       pillFor(it.id, it) +
@@ -286,7 +286,7 @@
     var done = isDone(it.id);
     var rec = it.rec ? '<span class="recbadge">★ Recommended</span>' : '';
     return '<article class="item item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
-      '<div class="item__top">' + typeChip(it) + rec + pillFor(it.id, it) + '</div>' +
+      '<div class="item__top">' + typeChip(it) + mvBadge(it) + rec + pillFor(it.id, it) + '</div>' +
       '<h4>' + esc(it.title) + '</h4>' +
       '<div class="item__meta"><span>' + it.mins + ' min</span><span class="srcbadge">' + esc(it.src) + '</span>' + legal + due + cad + '</div>' +
       cond + prereq +
@@ -511,10 +511,10 @@
   /* =====================================================================
      RETURNING — day 31+
      ===================================================================== */
-  function growRow(g, label) {
+  function growRow(g, label, mv) {
     return '<article class="item item--row item--course">' +
       '<span class="typechip typechip--course">' + esc(label) + '</span>' +
-      '<div class="row__main"><h4>' + esc(g.name) + '</h4>' +
+      '<div class="row__main"><h4>' + esc(g.name) + (mv ? '<span class="mvbadge" title="Part of the Manager Voyage — manager-only development">⚓ Manager’s Voyage</span>' : '') + '</h4>' +
       '<div class="item__meta"><span>' + g.mins + ' min</span><span class="srcbadge">Oracle Learn</span></div></div>' +
       '<span></span>' +
       '<div class="item__actions"><a class="btn" href="' + esc(g.href) + '" target="_blank" rel="noopener">Start</a>' +
@@ -536,7 +536,7 @@
     $('#growShelf').innerHTML =
       '<div class="growgroup">' + VOYAGE.growth.marketplace.map(function (g) { return growRow(g, 'Talent Marketplace'); }).join('') + '</div>' +
       '<div class="growgroup">' + VOYAGE.growth.ai.map(function (g) { return growRow(g, 'AI — deeper dive'); }).join('') + '</div>' +
-      '<div class="growgroup">' + dev.map(function (g) { return growRow(g, p.role === 'manager' ? 'Manager development' : 'Professional development'); }).join('') + '</div>';
+      '<div class="growgroup">' + dev.map(function (g) { return growRow(g, p.role === 'manager' ? 'Manager development' : 'Professional development', p.role === 'manager'); }).join('') + '</div>';
 
     /* resume: opened but not complete */
     var resume = items.filter(function (it) { return statusOf(it.id) === 'opened'; }).slice(0, 3);

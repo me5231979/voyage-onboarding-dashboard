@@ -596,3 +596,8 @@ body.view-light .nav { background: rgba(20,20,20,.96); }
 .pill--out { color: #8a8a8a; border: 1px solid #b5b5b5; background: rgba(0,0,0,.03); }
 .item--out { opacity: .62; border-left-color: #b5b5b5 !important; }
 .item__minor--text { font-size: .8rem; text-decoration: underline; text-underline-offset: 2px; }
+
+/* Manager's Voyage badge — engraved black & gold */
+.mvbadge { display: inline-block; font: 700 .72rem var(--font-sans); letter-spacing: .02em;
+  color: var(--vu-gold-flat); background: var(--vu-black); border: 1px solid var(--vu-black);
+  border-radius: 999px; padding: .2rem .7rem; margin-left: .55rem; vertical-align: .12em; white-space: nowrap; }
