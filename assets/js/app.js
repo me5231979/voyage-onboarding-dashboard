@@ -114,6 +114,7 @@
      GATE — three-question personalization
      ===================================================================== */
   var draft = { loc: null, family: null, sub: null, role: null, student: false, studentAns: null };
+  var optDraftId = null;
 
   function skillsFor(family, sub) {
     return (typeof SBJA !== 'undefined' && SBJA.skills[family + '|' + sub]) || [];
@@ -262,9 +263,19 @@
       return '<article class="item item--row item--out item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
         typeChip(it) +
         '<div class="row__main"><h4>' + esc(it.title) + '</h4>' +
-          '<div class="item__meta"><span class="pill pill--out" title="' + esc(state.optout[it.id] || '') + '">Opted out</span><span>Justification on file</span></div></div>' +
+          '<div class="item__meta"><span class="pill pill--out">Opted out</span></div>' +
+          '<p class="optreason">“' + esc(state.optout[it.id] || '') + '”</p></div>' +
         '<span></span>' +
         '<div class="item__actions"><button type="button" class="item__minor item__minor--text" data-reinstate="' + it.id + '">Reinstate</button></div></article>';
+    }
+    if (optDraftId === it.id) {
+      return '<article class="item item--row item--optform item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
+        typeChip(it) +
+        '<div class="row__main"><h4>' + esc(it.title) + '</h4>' +
+          '<div class="optform"><label for="optText">Opt out — write a brief justification. It is recorded and reportable, like a quiz response.</label>' +
+          '<textarea id="optText" rows="2" maxlength="250" placeholder="e.g., Completed equivalent training at my previous employer in May 2026."></textarea>' +
+          '<div class="optform__actions"><button type="button" class="btn" data-optconfirm="' + it.id + '">Record opt-out</button>' +
+          '<button type="button" class="item__minor item__minor--text" data-optcancel="' + it.id + '">Cancel</button></div></div></div></article>';
     }
     return '<article class="item item--row item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
       typeChip(it) +
@@ -322,12 +333,18 @@
     if (doneBtn) { complete(doneBtn.getAttribute('data-done'), true); return; }
     var outBtn = e.target.closest('[data-optout]');
     if (outBtn) {
-      var oid = outBtn.getAttribute('data-optout');
-      var oit = itemById(oid);
-      var reason = window.prompt('Opt out of “' + (oit ? oit.title : oid) + '”?\n\nPlease write a brief justification — it is recorded and reportable, like a quiz response.');
-      if (reason === null) return;
-      reason = reason.trim();
-      if (!reason) { toast('Opt-out needs a written justification.'); return; }
+      optDraftId = outBtn.getAttribute('data-optout');
+      rerenderActive();
+      var ta = $('#optText'); if (ta) ta.focus();
+      return;
+    }
+    var confirmBtn = e.target.closest('[data-optconfirm]');
+    if (confirmBtn) {
+      var oid = confirmBtn.getAttribute('data-optconfirm');
+      var ta2 = $('#optText');
+      var reason = (ta2 ? ta2.value : '').trim();
+      if (!reason) { toast('Opt-out needs a written justification.'); if (ta2) ta2.focus(); return; }
+      optDraftId = null;
       state.optout[oid] = reason;
       delete state.status[oid];
       save();
@@ -337,6 +354,8 @@
       maybeReportPathComplete();
       return;
     }
+    var cancelBtn = e.target.closest('[data-optcancel]');
+    if (cancelBtn) { optDraftId = null; rerenderActive(); return; }
     var reBtn = e.target.closest('[data-reinstate]');
     if (reBtn) {
       delete state.optout[reBtn.getAttribute('data-reinstate')];
