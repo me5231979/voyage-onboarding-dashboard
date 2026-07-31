@@ -821,13 +821,11 @@
     next = VoyageLang.get();
     state.lang = next; save();
     $('#navLang').value = next;
-    $('#heroLang').value = next;
     rerenderActive();
   }
   if (state.lang) setLanguage(state.lang);
-  else { $('#navLang').value = 'en'; $('#heroLang').value = 'en'; }
+  else $('#navLang').value = 'en';
   $('#navLang').addEventListener('change', function () { setLanguage(this.value); });
-  $('#heroLang').addEventListener('change', function () { setLanguage(this.value); });
   var burger = $('#navBurger');
   burger.addEventListener('click', function () {
     var open = nav.classList.toggle('nav--open');

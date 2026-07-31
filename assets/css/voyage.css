@@ -670,12 +670,6 @@ body.view-light .nav { background: rgba(20,20,20,.96); }
   .nav .nav__links .nav__lang { margin: .8rem var(--pad-x) 0; align-self: flex-start; }
 }
 
-/* hero language dropdown */
-.herolang select { background: rgba(28,28,28,.7); border: 1px solid rgba(255,255,255,.45); color: #fff;
-  border-radius: 4px; padding: .78rem 1rem; font: 600 .92rem var(--font-sans); cursor: pointer; }
-.herolang select:hover, .herolang select:focus { border-color: var(--vu-gold-flat); }
-.herolang option { color: #1C1C1C; }
-
 /* 90-day intro video gate */
 .vmodal { position: fixed; inset: 0; z-index: 200; background: rgba(15,15,15,.88);
   display: flex; align-items: center; justify-content: center; padding: 1.5rem;
