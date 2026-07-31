@@ -40,6 +40,8 @@
     return VOYAGE.items.filter(function (it) {
       if (!it.aud) return true;
       if (it.aud.loc && it.aud.loc.indexOf(p.loc) === -1) return false;
+      if (it.aud.family && it.aud.family.indexOf(p.family) === -1) return false;
+      if (it.aud.sub && it.aud.sub.indexOf(p.sub) === -1) return false;
       if (it.aud.student) return !!p.student;
       if (it.aud.role && it.aud.role.indexOf(p.role) === -1) return false;
       return true;
@@ -130,6 +132,8 @@
       var mins = VOYAGE.items.filter(function (it) {
         if (!it.aud) return true;
         if (it.aud.loc && it.aud.loc.indexOf(draft.loc) === -1) return false;
+        if (it.aud.family && it.aud.family.indexOf(draft.family) === -1) return false;
+        if (it.aud.sub && it.aud.sub.indexOf(draft.sub) === -1) return false;
         if (it.aud.student) return draft.student;
         if (it.aud.role && it.aud.role.indexOf(draft.role) === -1) return false;
         return true;
