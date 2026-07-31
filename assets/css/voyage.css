@@ -601,3 +601,12 @@ body.view-light .nav { background: rgba(20,20,20,.96); }
 .mvbadge { display: inline-block; font: 700 .72rem var(--font-sans); letter-spacing: .02em;
   color: var(--vu-gold-flat); background: var(--vu-black); border: 1px solid var(--vu-black);
   border-radius: 999px; padding: .2rem .7rem; margin-left: .55rem; vertical-align: .12em; white-space: nowrap; }
+
+/* quiet the row actions: small Inter, no standing underline, gold on hover */
+.item--row .item__actions { gap: .15rem; }
+.item--row .item__minor { font-family: var(--font-sans); font-weight: 600; color: #9a9a9a; }
+.item--row .item__minor:hover { color: var(--vu-oak); }
+.item__minor--text, .item--row .item__minor--text { font-size: .74rem; text-decoration: none;
+  letter-spacing: .01em; padding: .35rem .5rem; }
+.item__minor--text:hover { text-decoration: underline; text-underline-offset: 2px; }
+.item--row .item__minor:not(.item__minor--text) { font-size: .95rem; }
