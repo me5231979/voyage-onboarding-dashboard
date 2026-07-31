@@ -378,6 +378,9 @@
     var it = itemById(id); if (!it) return;
     state.status[id] = 'done';
     if (manual) state.events.push({ id: id, ts: Date.now() });
+    if (manual && !it.api && window.VoyageSCORM && window.VoyageSCORM.connected) {
+      window.VoyageSCORM.recordAttestation(id, 'Self-attested complete on ' + new Date().toISOString().slice(0, 10) + ' — course delivered outside Oracle Learning');
+    }
     save(); rerenderActive();
     if (it.mins > 30) confetti();
     toast('“' + it.title + '” complete.');

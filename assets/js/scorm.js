@@ -95,6 +95,30 @@
     } catch (e) { /* justification still lives in suspend_data */ }
   };
 
+  /* Manual completions of courses that live OUTSIDE Oracle (external cyber
+     vendor, SharePoint reads, meetings) are recorded as attestations on the
+     same reportable interactions channel as opt-outs. */
+  scorm.recordAttestation = function (itemId, note) {
+    try {
+      if (scorm.version === '2004') {
+        var n = parseInt(api2004.GetValue('cmi.interactions._count'), 10) || 0;
+        api2004.SetValue('cmi.interactions.' + n + '.id', 'attest-' + itemId);
+        api2004.SetValue('cmi.interactions.' + n + '.type', 'true-false');
+        api2004.SetValue('cmi.interactions.' + n + '.learner_response', 'true');
+        api2004.SetValue('cmi.interactions.' + n + '.result', 'correct');
+        api2004.SetValue('cmi.interactions.' + n + '.description', String(note || '').slice(0, 250));
+        api2004.Commit('');
+      } else if (scorm.version === '1.2') {
+        var m = parseInt(api12.LMSGetValue('cmi.interactions._count'), 10) || 0;
+        api12.LMSSetValue('cmi.interactions.' + m + '.id', 'attest-' + itemId);
+        api12.LMSSetValue('cmi.interactions.' + m + '.type', 'true-false');
+        api12.LMSSetValue('cmi.interactions.' + m + '.student_response', 't');
+        api12.LMSSetValue('cmi.interactions.' + m + '.result', 'correct');
+        api12.LMSCommit('');
+      }
+    } catch (e) { /* completion still recorded in suspend_data */ }
+  };
+
   scorm.complete = function () {
     try {
       if (scorm.version === '2004') {
