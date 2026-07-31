@@ -194,6 +194,30 @@
     var t = VOYAGE.typeDefs[it.type] || VOYAGE.typeDefs.task;
     return '<span class="typechip typechip--' + (it.type || 'task') + '">' + t.label + '</span>';
   }
+  function rowHTML(it) {
+    var done = isDone(it.id);
+    var saved = state.saved.indexOf(it.id) > -1;
+    var due = it.due ? '<span class="item__due ' + it.due + '">' + (it.due === 'hard' ? '● ' : '') + esc(it.dueLabel) + '</span>' : '';
+    var prereq = '';
+    if (it.prereq && !isDone(it.prereq)) {
+      var pr = itemById(it.prereq);
+      prereq = '<span class="item__prereq">needs: ' + esc(pr ? pr.title : it.prereq) + '</span>';
+    }
+    var rec = it.rec ? '<span class="recbadge">★ Recommended</span>' : '';
+    var cond = it.cond ? '<span class="item__prereq">⚠ ' + esc(it.cond) + '</span>' : '';
+    return '<article class="item item--row item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
+      typeChip(it) +
+      '<div class="row__main"><h4>' + esc(it.title) + rec + '</h4>' +
+        '<div class="item__meta"><span>' + it.mins + ' min</span><span class="srcbadge">' + esc(it.src) + '</span>' + due +
+        (it.cadence ? '<span>' + esc(it.cadence) + '</span>' : '') + prereq + cond + '</div></div>' +
+      pillFor(it.id, it) +
+      '<div class="item__actions">' +
+        '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + ctaFor(it, done) + '</a>' +
+        (done ? '' : '<button type="button" class="item__minor" data-done="' + it.id + '" title="' + (it.lane === 'pre' ? 'Confirm complete' : 'Mark as done') + '">✓</button>') +
+        '<button type="button" class="item__minor" data-save="' + it.id + '" title="Save for later">' + (saved ? '♥' : '♡') + '</button>' +
+        (it.info ? '<a class="item__minor" href="' + esc(it.info) + '" target="_blank" rel="noopener" title="About">ⓘ</a>' : '') +
+      '</div></article>';
+  }
   function cardHTML(it) {
     var cat = VOYAGE.cats[it.cat];
     var due = it.due ? '<span class="item__due ' + it.due + '">' + (it.due === 'hard' ? '● ' : '') + esc(it.dueLabel) + '</span>' : '';
@@ -207,8 +231,9 @@
     }
     var saved = state.saved.indexOf(it.id) > -1;
     var done = isDone(it.id);
+    var rec = it.rec ? '<span class="recbadge">★ Recommended</span>' : '';
     return '<article class="item item--' + (it.type || 'task') + '" data-item="' + it.id + '">' +
-      '<div class="item__top">' + typeChip(it) + pillFor(it.id, it) + '</div>' +
+      '<div class="item__top">' + typeChip(it) + rec + pillFor(it.id, it) + '</div>' +
       '<h4>' + esc(it.title) + '</h4>' +
       '<div class="item__meta"><span>' + it.mins + ' min</span><span class="srcbadge">' + esc(it.src) + '</span>' + legal + due + cad + '</div>' +
       cond + prereq +
@@ -216,6 +241,7 @@
         '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + ctaFor(it, done) + '</a>' +
         (done ? '' : '<button type="button" class="item__minor" data-done="' + it.id + '">' + (it.lane === 'pre' ? 'Confirm complete' : 'Mark as done') + '</button>') +
         '<button type="button" class="item__minor" data-save="' + it.id + '">' + (saved ? 'Saved ✓' : 'Save for later') + '</button>' +
+        (it.info ? '<a class="item__minor" href="' + esc(it.info) + '" target="_blank" rel="noopener">About ↗</a>' : '') +
       '</div></article>';
   }
 
@@ -342,7 +368,7 @@
       var mine = visible.filter(function (it) { return it.lane === lane.id; });
       var laneDone = mine.filter(function (it) { return isDone(it.id); }).length;
       var count = mine.length ? '<span class="lane__count">' + laneDone + ' of ' + mine.length + ' complete</span>' : '';
-      var cards = mine.length ? '<div class="lane__cards">' + mine.map(cardHTML).join('') + '</div>'
+      var cards = mine.length ? '<div class="lane__rows">' + mine.map(rowHTML).join('') + '</div>'
         : '<div class="lane__empty">Nothing in this lane' + (tile ? ' for ' + esc(tile.label) : '') + '.</div>';
       var note = lane.note ? '<p class="lane__note">' + esc(lane.note) + '</p>' : '';
       return '<div class="lane"><div class="lane__title"><h3>' + esc(lane.title) + '</h3><span>' + esc(lane.kicker) + '</span>' + count + '</div>' + note + cards + '</div>';

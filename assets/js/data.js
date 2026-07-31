@@ -85,7 +85,7 @@ const VOYAGE = {
     { id: 'ms365', type: 'task',     title: 'Set up Microsoft 365, Teams & OneDrive', cat: 'systems', lane: 'w1', mins: 20, src: 'Microsoft 365', api: true, due: 'soft', dueLabel: 'Day 3', href: 'https://www.office.com/' },
     { id: 'oraclehcm', type: 'task', title: 'Oracle HCM self-service tour — pay, W-4, direct deposit', cat: 'systems', lane: 'w1', mins: 15, src: 'Oracle HCM', api: true, due: 'soft', dueLabel: 'Day 5', href: 'https://hr.vanderbilt.edu/oracle/' },
     { id: 'badge', type: 'task',     title: 'Campus ID badge & building access', cat: 'systems', lane: 'w1', mins: 15, src: 'IT Portal', api: false, due: 'soft', dueLabel: 'Day 2', href: 'https://cardservices.vanderbilt.edu/' },
-    { id: 'handbook', type: 'read',  title: 'Staff handbook — the essentials', cat: 'policies', lane: 'w1', mins: 30, src: 'SharePoint', api: false, due: 'soft', dueLabel: 'Day 14', href: 'https://hr.vanderbilt.edu/policies/' },
+    { id: 'handbook', type: 'read',  title: 'Policies for review — staff handbook & key policies', cat: 'policies', lane: 'w1', mins: 30, src: 'SharePoint', api: false, due: 'soft', dueLabel: 'Day 14', href: 'https://hr.vanderbilt.edu/policies/' },
     { id: 'neo', type: 'course',       title: 'New Employee Orientation (live or on-demand)', cat: 'courses', lane: 'w1', mins: 120, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: 'Day 14', href: 'https://hr.vanderbilt.edu/onboarding/' },
     { id: 'pulse7', type: 'survey',    title: 'Day-7 onboarding pulse survey', cat: 'mission', lane: 'w1', mins: 4, src: 'Culture Amp', api: true, due: 'soft', dueLabel: 'Day 7', href: 'https://www.cultureamp.com/' },
     { id: 'pulse30', type: 'survey',   title: 'Day-30 onboarding pulse survey', cat: 'mission', lane: 'w24', mins: 5, src: 'Culture Amp', api: true, due: 'soft', dueLabel: 'Day 30', href: 'https://www.cultureamp.com/' },
@@ -105,12 +105,17 @@ const VOYAGE = {
     { id: 'R-012', type: 'compliance', title: "FL Harassment Prevention \u2014 Supervisors (Advisory)", course: "Avoiding Discrimination, Harassment, & Retaliation Risks for Managers", cat: 'compliance', lane: 'w24', mins: 45, src: 'Oracle Learn', api: true, due: 'soft', dueLabel: "Within 60 days of hire/promo", cadence: "Annual (policy)", legal: 'Advisory', cite: "Title VII; EEOC supervisor liability", aud: { loc: ["fl"], role: ["manager"] }, href: "https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300003038039435" },
     { id: 'R-013', type: 'compliance', title: "TN Harassment Prevention \u2014 Employees (Advisory)", course: "Addressing Harassment and Discrimination at Vanderbilt", cat: 'compliance', lane: 'w24', mins: 45, src: 'Oracle Learn', api: true, due: 'soft', dueLabel: "Within 60 days of hire", cadence: "Annual (policy)", legal: 'Advisory', cite: "THRA / Title VII baseline", aud: { loc: ["tn"], role: ["ic", "faculty", "clinical", "research", "student"] }, href: "https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300003032113079" },
     { id: 'R-014', type: 'compliance', title: "TN Harassment Prevention \u2014 Supervisors (Advisory)", course: "Avoiding Discrimination, Harassment, & Retaliation Risks for Managers", cat: 'compliance', lane: 'w24', mins: 45, src: 'Oracle Learn', api: true, due: 'soft', dueLabel: "Within 60 days of hire/promo", cadence: "Annual (policy)", legal: 'Advisory', cite: "THRA / Title VII", aud: { loc: ["tn"], role: ["manager"] }, href: "https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300003038039435" },
-    { id: 'R-015', type: 'compliance', title: "Code of Conduct \u2014 Vanderbilt", course: "Code of Conduct Awareness", cat: 'compliance', lane: 'w24', mins: 20, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: "Within 30 days of hire", cadence: "Annual", legal: 'Advisory', cite: "Vanderbilt HR Policy", aud: { role: ["ic", "faculty", "clinical", "research", "student"] }, href: "https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002733138981" },
-    { id: 'R-016', type: 'compliance', title: "Code of Conduct \u2014 Vanderbilt (Managers)", course: "Code of Conduct Awareness", cat: 'compliance', lane: 'w24', mins: 20, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: "Within 30 days of hire/promo", cadence: "Annual", legal: 'Advisory', cite: "Vanderbilt HR Policy", aud: { role: ["manager"] }, href: "https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002733138981" },
     { id: 'R-017', type: 'compliance', title: "Cybersecurity Awareness", course: "Enhanced Cybersecurity Training for VU employees", cat: 'compliance', lane: 'w24', mins: 30, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: "Within 30 days of hire", cadence: "Annual", legal: 'Advisory', cite: "VU IT Policy; cyber-insurance requirement", href: "https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300001966018198" },
     { id: 'R-018', type: 'compliance', title: "HIPAA Privacy & Security (Workforce)", course: "HIPAA - Privacy Rule for Covered Entities", cat: 'compliance', lane: 'w24', mins: 60, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: "Within 30 days of hire", cadence: "Annual", legal: 'Legal', cite: "45 CFR \u00a7164.530(b) / \u00a7164.308(a)(5)", aud: { role: ["clinical", "research"] }, cond: "Triggered by PHI access (role/job code), not by state", href: "https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300001863994802" },
     { id: 'R-019', type: 'compliance', title: "Title IX / Clery / VAWA", course: "Foundations of Title IX", cat: 'compliance', lane: 'w24', mins: 35, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: "Within 30 days of hire", cadence: "Annual", legal: 'Legal', cite: "20 USC \u00a71681 (Title IX); \u00a71092(f) (Clery)", href: "https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002866731145" },
     { id: 'R-020', type: 'compliance', title: "Reasonable Accommodations & Disability Awareness (Mgr)", course: "Disability Readiness for Leaders and Managers", cat: 'compliance', lane: 'w24', mins: 45, src: 'Oracle Learn', api: true, due: 'soft', dueLabel: "Within 60 days of hire/promo", cadence: "Every 2 years", legal: 'Advisory', cite: "ADA / state parallel statutes", aud: { role: ["manager"] }, href: "https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857231652" },
+
+    { id: 'talentmp', type: 'course', title: 'Talent Marketplace — get started', cat: 'systems', lane: 'w24', mins: 30, src: 'Oracle Learn', api: true, due: 'soft', dueLabel: 'Day 30', href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemId=300003063355987&learningItemType=ORA_CLASS', info: 'https://www.vanderbilt.edu/pcb/talent-marketplace/' },
+
+    /* ---- AI Enablement ---- */
+    { id: 'chart', type: 'course', rec: true, title: 'CHART — AI fluency for every Vanderbilt role', cat: 'ai', lane: 'w1', mins: 60, src: 'Oracle Learn', api: true, due: null, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemId=300003133195222&learningItemType=ORA_CLASS' },
+    { id: 'aibasics', type: 'course', rec: true, title: 'AI Basics — Vanderbilt Learning Series', cat: 'ai', lane: 'w24', mins: 90, src: 'Learning Series', api: false, due: null, href: 'https://me5231979.github.io/AI_Classroom/' },
+    { id: 'ai201', type: 'course', rec: true, title: 'AI 201: Beyond the Basics', cat: 'ai', lane: 'w24', mins: 90, src: 'Learning Series', api: false, due: null, href: 'https://me5231979.github.io/AI-Advanced/', prereq: 'aibasics' },
 
     /* ---- Location-driven ---- */
     { id: 'vupd', type: 'read',      title: 'VUPD, evacuation routes & campus safety', cat: 'safety', lane: 'w1', mins: 12, src: 'SharePoint', api: false, due: 'soft', dueLabel: 'Day 3', aud: { loc: ['tn'] }, href: 'https://police.vanderbilt.edu/' },
@@ -161,10 +166,10 @@ const VOYAGE = {
   /* Six primary dashboard tiles — filter keys map onto item cats */
   tiles: [
     { id: 'safetycomp', label: 'Safety & Compliance', cats: ['safety', 'compliance'], hard: true },
-    { id: 'benefits', type: 'task',   label: 'Benefits', cats: ['benefits'] },
+    { id: 'benefits',   label: 'Benefits, Parking & Workplace', cats: ['benefits', 'parking'] },
     { id: 'mission',    label: 'Mission, Values & Culture', cats: ['mission'] },
     { id: 'systems',    label: 'Systems & Access', cats: ['systems'] },
-    { id: 'parking',    label: 'Parking, Commute & Workplace', cats: ['parking'] },
+    { id: 'aienable',   label: 'AI Enablement', cats: ['ai'] },
     { id: 'roledept',   label: 'Your Role, Team & Department', cats: ['policies', 'courses', 'people'] }
   ],
 
@@ -217,6 +222,7 @@ const VOYAGE = {
   quickSystems: [
     { name: 'Oracle HCM', href: 'https://hr.vanderbilt.edu/oracle/' },
     { name: 'Oracle Learn', href: 'https://hr.vanderbilt.edu/onboarding/' },
+    { name: 'Talent Marketplace', href: 'https://www.vanderbilt.edu/pcb/talent-marketplace/' },
     { name: 'Microsoft 365', href: 'https://www.office.com/' },
     { name: 'Culture Amp', href: 'https://www.cultureamp.com/' },
     { name: 'VU Email & Zoom', href: 'https://it.vanderbilt.edu/' }
