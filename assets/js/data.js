@@ -241,6 +241,32 @@ const VOYAGE = {
       href: 'https://events.vanderbilt.edu/' }
   ],
 
+  /* Beyond 90 Days — Grow My Career (courses selected per request; Oracle links only) */
+  growth: {
+    skillMatrix: 'https://me5231979.github.io/skill_matrix/',
+    marketplace: [
+      { name: 'Talent Marketplace — get started', mins: 30, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemId=300003063355987&learningItemType=ORA_CLASS', info: 'https://www.vanderbilt.edu/pcb/talent-marketplace/' }
+    ],
+    ai: [
+      { name: 'Generative AI: Introduction to Large Language Models', mins: 60, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857349970' },
+      { name: 'Advanced Prompt Engineering Techniques', mins: 45, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857179267' }
+    ],
+    staff: [
+      { name: 'Communication Foundations', mins: 60, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857348820' },
+      { name: 'Critical Thinking', mins: 60, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857213040' },
+      { name: 'Time Management Fundamentals', mins: 90, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002856551070' },
+      { name: 'Developing Your Emotional Intelligence', mins: 60, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857072604' },
+      { name: 'Managing Up', mins: 45, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857443385' }
+    ],
+    manager: [
+      { name: 'Coaching and Developing Employees', mins: 60, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857289611' },
+      { name: 'Giving and Receiving Feedback', mins: 45, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857240584' },
+      { name: 'Delegating Tasks', mins: 45, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857593011' },
+      { name: 'Conflict Resolution Foundations', mins: 60, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857627948' },
+      { name: 'Leading with Emotional Intelligence', mins: 60, href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300002857333623' }
+    ]
+  },
+
   quickSystems: [
     { name: 'Oracle HCM', href: 'https://hr.vanderbilt.edu/oracle/' },
     { name: 'Oracle Learn', href: 'https://hr.vanderbilt.edu/onboarding/' },

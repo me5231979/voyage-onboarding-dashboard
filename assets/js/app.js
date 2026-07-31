@@ -447,6 +447,15 @@
   /* =====================================================================
      RETURNING — day 31+
      ===================================================================== */
+  function growRow(g, label) {
+    return '<article class="item item--row item--course">' +
+      '<span class="typechip typechip--course">' + esc(label) + '</span>' +
+      '<div class="row__main"><h4>' + esc(g.name) + '</h4>' +
+      '<div class="item__meta"><span>' + g.mins + ' min</span><span class="srcbadge">Oracle Learn</span></div></div>' +
+      '<span></span>' +
+      '<div class="item__actions"><a class="btn" href="' + esc(g.href) + '" target="_blank" rel="noopener">Start</a>' +
+      (g.info ? '<a class="item__minor" href="' + esc(g.info) + '" target="_blank" rel="noopener" title="About">ⓘ</a>' : '') + '</div></article>';
+  }
   function renderReturning() {
     var p = state.profile || {};
     var items = myItems();
@@ -457,6 +466,13 @@
     $('#shelfForYouTitle').innerHTML = 'Because you’re ' + (/^[aeiou]/i.test(rn) ? 'an' : 'a') + ' <em>' + esc(rn) + '</em> in <em>' + esc(p.sub || 'your sub-family') + '</em>';
     var chips = skillChips(p.family, p.sub, 10);
     $('#shelfSkills').innerHTML = chips ? '<p class="skillchips__label">Skills that matter in ' + esc(p.sub || 'your sub-family') + ' — from the Skills-Based Job Architecture</p>' + chips : '';
+
+    /* grow my career: marketplace + deeper AI + role-tuned development */
+    var dev = (p.role === 'manager') ? VOYAGE.growth.manager : VOYAGE.growth.staff;
+    $('#growShelf').innerHTML =
+      '<div class="growgroup">' + VOYAGE.growth.marketplace.map(function (g) { return growRow(g, 'Talent Marketplace'); }).join('') + '</div>' +
+      '<div class="growgroup">' + VOYAGE.growth.ai.map(function (g) { return growRow(g, 'AI — deeper dive'); }).join('') + '</div>' +
+      '<div class="growgroup">' + dev.map(function (g) { return growRow(g, p.role === 'manager' ? 'Manager development' : 'Professional development'); }).join('') + '</div>';
 
     /* resume: opened but not complete */
     var resume = items.filter(function (it) { return statusOf(it.id) === 'opened'; }).slice(0, 3);
