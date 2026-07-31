@@ -14,7 +14,13 @@
 
   function load() { try { return JSON.parse(localStorage.getItem(LS)); } catch (e) { return null; } }
   function firstName() { return (state.name && state.name.split(' ')[0]) || VOYAGE.user.first; }
-  function save() { try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {} }
+  function save() {
+    try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {}
+    var sc = window.VoyageSCORM;
+    if (sc && sc.connected && sc.setData) {
+      sc.setData({ s: state.start, p: state.profile, st: state.status, n: state.name });
+    }
+  }
   function $(s, c) { return (c || document).querySelector(s); }
   function $$(s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -22,11 +28,10 @@
   /* ---------- audience filter ---------- */
   function meetItems() {
     return VOYAGE.people.map(function (pp, i) {
-      return { id: 'meet-' + i, type: 'meet', title: 'Meet ' + pp.name + ' — ' + pp.role.toLowerCase(),
-        cat: 'people', lane: VOYAGE.peopleLanes[i] || 'w1', mins: 30, src: 'Outlook', api: false,
+      return { id: 'meet-' + i, type: 'meet', rec: !!pp.rec, title: 'Meet ' + pp.who + ' — 30-minute introduction',
+        cat: 'people', lane: VOYAGE.peopleLanes[i] || 'w1', mins: 30, src: 'You + Outlook', api: false,
         due: 'soft', dueLabel: (VOYAGE.peopleLanes[i] === 'w24' ? 'Day 21' : 'Week 1'),
-        href: 'mailto:?subject=' + encodeURIComponent('Intro: ' + pp.name + ' + ' + firstName()) +
-          '&body=' + encodeURIComponent('Scheduling a 30-minute introduction during my first weeks.') };
+        href: 'assets/docs/intro-meetings-guide.pdf' };
     });
   }
   function myItems() {
@@ -73,10 +78,15 @@
     var sc = window.VoyageSCORM;
     if (sc && sc.connected) {
       var d = sc.getData();
-      if (d.start) { state.start = d.start; save(); return; }
+      if (d.s || d.start) {
+        state.start = d.s || d.start;
+        if (d.p && !state.profile) state.profile = d.p;
+        if (d.st) state.status = d.st;
+        if (d.n && !state.name) state.name = d.n;
+        save(); return;
+      }
       if (!state.start) state.start = Date.now();
-      d.start = state.start;
-      sc.setData(d); save(); return;
+      save(); return;
     }
     if (!state.start) { state.start = Date.now(); save(); }
   }
@@ -145,7 +155,7 @@
       var pv = $('#deptPreview');
       pv.hidden = false;
       var chips = skillChips(draft.family, draft.sub, 6);
-      pv.innerHTML = 'You’ll be joining <b>' + esc(draft.sub) + '</b> in the <b>' + esc(draft.family) + '</b> family. Your area lead is <b>' + esc(VOYAGE.deptStats.lead) + '</b>, and <b>' + VOYAGE.deptStats.recentJoiners + ' colleagues</b> joined in the last 90 days.' +
+      pv.innerHTML = 'You’ll be joining <b>' + esc(draft.sub) + '</b> in the <b>' + esc(draft.family) + '</b> family.' +
         (chips ? '<div class="skillchips"><p class="skillchips__label">Skills that matter here</p>' + chips + '</div>' : '');
       $('#deptNext').disabled = false;
     });
@@ -202,7 +212,7 @@
     return '<span class="pill pill--todo">Not started</span>';
   }
 
-  var CTA_BY_TYPE = { meet: 'Schedule intro', survey: 'Take survey', read: 'Open', task: 'Start', course: 'Start', compliance: 'Start' };
+  var CTA_BY_TYPE = { meet: 'How-to guide (PDF)', survey: 'Take survey', read: 'Open', task: 'Start', course: 'Start', compliance: 'Start' };
   function ctaFor(it, done) {
     if (done) return 'Revisit';
     if (it.lane === 'pre') return 'Verify';
@@ -294,17 +304,13 @@
     var it = itemById(id); if (!it) return;
     state.events.push({ id: id, ts: Date.now() });
     if (isDone(id)) { save(); return; }
-    if (it.api) {
+    if (it.type === 'meet') {
+      if (statusOf(id) === 'todo') { state.status[id] = 'opened'; save(); rerenderActive(); }
+      toast('Guide opened — schedule the meeting, then mark it complete with the ✓.');
+    } else if (it.api) {
       state.status[id] = 'opened';
       save(); rerenderActive();
-      setTimeout(function () {
-        if (statusOf(id) === 'opened') {
-          state.status[id] = 'verified';
-          save(); rerenderActive();
-          toast('“' + it.title + '” verified in ' + it.src + '.');
-          if (it.mins > 30) confetti();
-        }
-      }, 6000);
+      toast('Opened in ' + it.src + ' — completion syncs overnight in production. Mark it done here when you finish.');
     } else {
       complete(id, false);
     }
@@ -337,8 +343,10 @@
     $('#dashGreeting').textContent = greeting() + ', ' + firstName();
     $('#dashDay').textContent = 'Day ' + dayOfPath() + ' of your first 30 · ' + (p.sub || '') + ' · ' + locName(p.loc);
 
-    var doneCount = items.filter(function (it) { return isDone(it.id); }).length;
-    var pct = items.length ? Math.round(doneCount / items.length * 100) : 0;
+    var totalMins = items.reduce(function (acc, it) { return acc + it.mins; }, 0);
+    var doneMins = items.reduce(function (acc, it) { return acc + (isDone(it.id) ? it.mins : 0); }, 0);
+    var pct = totalMins ? Math.round(doneMins / totalMins * 100) : 0;
+    if (doneMins > 0 && pct === 0) pct = 1;
     $('#ringPct').textContent = pct + '%';
     var C = 295.3;
     $('#ringBar').style.strokeDashoffset = String(C - C * pct / 100);
@@ -390,29 +398,26 @@
         : '<div class="lane__empty">Nothing in this lane' + (tile ? ' for ' + esc(tile.label) : '') + '.</div>';
       var note = lane.note ? '<p class="lane__note">' + esc(lane.note) + '</p>' : '';
       return '<div class="lane"><div class="lane__title"><h3>' + esc(lane.title) + '</h3><span>' + esc(lane.kicker) + '</span>' + count + '</div>' + note + cards + '</div>';
-    }).join('');
-
-    /* compliance center */
-    var comp = items.filter(function (it) { return it.cite; });
-    $('#compRows').innerHTML = comp.map(function (it) {
-      return '<div class="comprow">' +
-        '<div class="comprow__main"><b>' + esc(it.title) + '</b><small>' + esc(it.course || '') + (it.cond ? ' · ⚠ ' + esc(it.cond) : '') + '</small></div>' +
-        '<div><span class="lawchip lawchip--' + it.legal.toLowerCase() + '">' + it.legal + '</span><small class="comprow__cite">' + esc(it.cite) + '</small></div>' +
-        '<div class="comprow__when"><b>' + esc(it.dueLabel) + '</b><small>' + esc(it.cadence) + '</small></div>' +
-        '<div>' + pillFor(it.id, it) + '</div>' +
-        '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + (isDone(it.id) ? 'Revisit' : 'Start') + '</a></div>';
-    }).join('');
-    $('#compMeta').textContent = comp.filter(function (it) { return it.legal === 'Legal'; }).length + ' legally required · ' +
-      comp.filter(function (it) { return it.legal === 'Advisory'; }).length + ' advisory (policy) · tuned to ' + locName(p.loc) + ' and your role tier';
+    }).join('') + '<div class="daybeyond"><div><b>Day 31 and beyond: your home base.</b> When the path is behind you, Voyage becomes the place to find anything — search every active course, track renewals, and keep growing with FLH programs.</div><button type="button" class="btn btn--ghost-dark" data-nav="returning">Preview it now →</button></div>';
 
     /* up next: hard-dated first, prereqs met, not done */
+    var today = dayOfPath();
+    function dueDay(it) {
+      if (!it.dueLabel) return 99;
+      var m = /Day (\d+)/.exec(it.dueLabel);
+      if (m) return parseInt(m[1], 10);
+      if (/Week 1/.test(it.dueLabel)) return 7;
+      if (/Verify/.test(it.dueLabel)) return 1;
+      return 60;
+    }
     var next = items.filter(function (it) {
       if (isDone(it.id)) return false;
       if (it.prereq && !isDone(it.prereq)) return false;
       return true;
     }).sort(function (a, b) {
-      var w = function (it) { return (it.due === 'hard' ? 0 : it.due === 'soft' ? 1 : 2); };
-      return w(a) - w(b) || a.mins - b.mins;
+      var da = dueDay(a) - today, db = dueDay(b) - today;
+      var wa = (a.due === 'hard' ? 0 : 1), wb = (b.due === 'hard' ? 0 : 1);
+      return da - db || wa - wb || a.mins - b.mins;
     }).slice(0, 3);
     $('#upNext').innerHTML = next.length ? next.map(function (it) {
       return '<li><a data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + esc(it.title) + '<small>' + it.mins + ' min · ' + esc(it.src) + (it.dueLabel ? ' · due ' + esc(it.dueLabel) : '') + '</small></a></li>';

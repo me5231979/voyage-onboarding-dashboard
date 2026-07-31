@@ -555,3 +555,10 @@ body.view-light .nav { background: rgba(20,20,20,.96); }
 .recbadge { display: inline-block; font: 700 .72rem var(--font-sans); color: var(--vu-oak);
   background: rgba(207,174,112,.18); border: 1px solid rgba(148,110,36,.4); border-radius: 999px;
   padding: .18rem .6rem; vertical-align: middle; white-space: nowrap; }
+
+/* Day 31+ teaser */
+.daybeyond { margin-top: 2.2rem; border: 1px dashed #c9c2b2; border-radius: var(--radius);
+  padding: 1.3rem 1.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem;
+  font-size: .92rem; color: var(--ink-soft); }
+.daybeyond div { flex: 1; min-width: 260px; }
+.daybeyond b { color: var(--vu-black); font-weight: 600; }

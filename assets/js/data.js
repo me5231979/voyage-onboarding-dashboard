@@ -6,7 +6,7 @@
 
 const VOYAGE = {
 
-  user: { first: 'Alex', last: 'Rivera', vunetid: 'riveraa1', manager: 'Jordan Blake', startOffsetDays: 4 },
+  user: { first: 'Alex', last: 'Rivera', vunetid: 'riveraa1' },
 
   locations: [
     { id: 'tn', name: 'Tennessee — Nashville', kicker: 'Nashville campus',
@@ -20,7 +20,6 @@ const VOYAGE = {
   ],
 
   /* Job architecture comes from SBJA (assets/js/sbja.js): 18 families, 95 sub-families */
-  deptStats: { lead: 'Taylor Morgan', recentJoiners: 12 },
 
   /* Futures Learning Hub program portfolio (from FLH_Programs.xlsx).
      aud: 'all' | 'manager' (people leaders) | 'exec' | 'esl' */
@@ -200,11 +199,13 @@ const VOYAGE = {
     { id: 'w24', title: 'Weeks 2–4', kicker: 'Build momentum' }
   ],
 
+  /* Introductions are role-based recommendations — Oracle HCM cannot yet
+     tell us reliably who a person's manager or colleagues are, so no names. */
   people: [
-    { name: 'Jordan Blake', role: 'Your manager', rel: 'Manager', init: 'JB' },
-    { name: 'Sam Whitfield', role: 'Skip-level leader', rel: 'Skip-level', init: 'SW' },
-    { name: 'Priya Natarajan', role: 'Peer · same team', rel: 'Peer', init: 'PN' },
-    { name: 'Chris Okafor', role: 'Cross-functional partner', rel: 'Partner', init: 'CO' }
+    { who: 'your manager', rec: true },
+    { who: 'your skip-level leader' },
+    { who: 'a peer on your team', rec: true },
+    { who: 'a cross-functional partner' }
   ],
 
   announcements: [
@@ -236,7 +237,7 @@ const VOYAGE = {
   ],
 
   quickPeople: [
-    { name: 'Jordan Blake', sub: 'Manager' },
+    { name: 'Your manager', sub: 'Ask PCB if unsure who this is' },
     { name: 'PCB Business Partner', sub: 'People, Culture & Belonging' },
     { name: 'IT Support — 615-343-9999', sub: 'Tech help' },
     { name: 'Benefits contact', sub: 'Total Rewards' },
