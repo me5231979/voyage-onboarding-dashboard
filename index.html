@@ -26,8 +26,9 @@
     <img class="nav__vicon" src="assets/img/vu-v-icon-nav.png" alt="Vanderbilt University" width="34" height="25">
   </a>
   <nav class="nav__links" aria-label="Sections">
-    <a href="#" data-nav="dashboard" hidden id="navDash">My first 30 days</a>
+    <a href="#" data-nav="dashboard" hidden id="navDash">My first 90 days</a>
     <a href="#" data-nav="returning" hidden id="navReturn">Search &amp; library</a>
+    <a href="#" data-nav="engage" id="navEngage">Programs &amp; Partnerships</a>
     <a class="btn" href="#" id="navCta">Begin onboarding</a>
   </nav>
 </header>
@@ -45,7 +46,7 @@
       <img src="assets/img/vu-v-icon.png" alt="Vanderbilt V" width="72" height="66" class="hero__mark" data-reveal>
       <p class="eyebrow" data-reveal>Vanderbilt · Voyage · Staff Onboarding</p>
       <h1 class="h-hero" data-reveal>Welcome. Your path is <em class="gold-text">already&nbsp;built</em>.</h1>
-      <p class="lead" data-reveal>You've finished Vanderbilt Voyage (Classroom) — this is what comes next. Three quick questions tune your first 30 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you.</p>
+      <p class="lead" data-reveal>You've finished Vanderbilt Voyage (Classroom) — this is what comes next. Three quick questions tune your first 90 days to your campus, your department, and your role, then every task, course, and contact lives on one dashboard. We know you. We're ready for you.</p>
       <div class="hero__cta" data-reveal>
         <a class="btn" href="#" id="beginBtn">Let's tailor your first weeks</a>
       </div>
@@ -125,7 +126,7 @@
     <div class="wrap wrap--wide">
       <div class="dashhead">
         <div class="dashhead__greet">
-          <p class="eyebrow" style="margin-bottom:.4rem" id="dashEyebrow">Voyage · Days 1–30</p>
+          <p class="eyebrow" style="margin-bottom:.4rem" id="dashEyebrow">Voyage · Your first 90 days</p>
           <h1 id="dashGreeting">Good morning, Alex</h1>
           <p class="day" id="dashDay">Day 4 of your first 30</p>
         </div>
@@ -135,13 +136,14 @@
             <circle class="track" cx="54" cy="54" r="47"></circle>
             <circle class="bar" id="ringBar" cx="54" cy="54" r="47" stroke-dasharray="295.3" stroke-dashoffset="295.3"></circle>
           </svg>
-          <span class="ring__label"><span><b id="ringPct">0%</b><span>of 30-day path</span></span></span>
+          <span class="ring__label"><span><b id="ringPct">0%</b><span>of 90-day path</span></span></span>
         </div>
         <div class="dashhead__actions">
           <div class="viewtoggle" role="group" aria-label="Switch view">
-            <button class="on" data-nav="dashboard">First 30 days</button>
+            <button class="on" data-nav="dashboard">First 90 days</button>
             <button data-nav="returning">Home base</button>
           </div>
+          <button type="button" class="btn btn--ghost" id="profileBtn" title="Transferred or changed roles? Retune your path.">Change role / campus</button>
           <a class="btn btn--ghost" href="mailto:hr@vanderbilt.edu?subject=Onboarding%20question">Ask PCB</a>
         </div>
       </div>
@@ -192,7 +194,7 @@
         <div class="dashhead__spacer"></div>
         <div class="dashhead__actions">
           <div class="viewtoggle" role="group" aria-label="Switch view">
-            <button data-nav="dashboard">First 30 days</button>
+            <button data-nav="dashboard">First 90 days</button>
             <button class="on" data-nav="returning">Home base</button>
           </div>
           <a class="btn btn--ghost" href="mailto:hr@vanderbilt.edu?subject=Question">Ask PCB</a>
@@ -223,11 +225,6 @@
             <div class="renewals" id="shelfRenewals"></div>
           </div>
 
-          <div class="shelf">
-            <div class="shelf__head"><h3>The Futures <em>Learning Hub</em></h3><span>Programs for you</span></div>
-            <div class="lane__cards" id="shelfExplore"></div>
-          </div>
-
           <div class="profilecard">
             <p><b>Moved to a different campus or changed roles?</b> Update your profile to refresh recommendations across every shelf.</p>
             <button class="btn btn--ghost" id="reProfile">Update my profile</button>
@@ -256,6 +253,25 @@
     </div>
   </section>
 
+  <!-- ============ VIEW: PROGRAMS, EVENTS & PARTNERSHIPS ============ -->
+  <section class="view section on-cream section--day" id="view-engage" data-view="engage" style="padding-top:calc(var(--nav-h) + 2.5rem)">
+    <div class="wrap wrap--wide">
+      <p class="eyebrow">Programs, Events &amp; Partnerships</p>
+      <h1 class="h2" style="font-size:clamp(1.9rem,4vw,2.9rem)">Ways to <em class="gold-text">engage</em>.</h1>
+      <p class="lead">Onboarding ends; belonging doesn't. These are the programs, councils, and communities open to you as a Vanderbilt staff member — from day one and for your whole career.</p>
+
+      <div class="shelf">
+        <div class="shelf__head"><h3>Staff organizations &amp; <em>community</em></h3><span>Get involved</span></div>
+        <div class="lane__cards" id="engageGroups"></div>
+      </div>
+
+      <div class="shelf">
+        <div class="shelf__head"><h3>The Futures <em>Learning Hub</em></h3><span>Programs for you</span></div>
+        <div class="lane__cards" id="engagePrograms"></div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <!-- ============ FOOTER ============ -->
@@ -269,7 +285,7 @@
       <div>
         <h4>Voyage</h4>
         <ul>
-          <li><a href="#" data-nav="dashboard">My first 30 days</a></li>
+          <li><a href="#" data-nav="dashboard">My first 90 days</a></li>
           <li><a href="#" data-nav="returning">Search &amp; library</a></li>
           <li><a href="mailto:hr@vanderbilt.edu">Ask PCB</a></li>
         </ul>
@@ -277,6 +293,7 @@
       <div>
         <h4>Keep growing</h4>
         <ul>
+          <li><a href="#" data-nav="engage">Programs &amp; Partnerships</a></li>
           <li><a href="https://www.vanderbilt.edu/pcb/">People, Culture &amp; Belonging</a></li>
           <li><a href="https://hr.vanderbilt.edu/">Human Resources</a></li>
           <li><a href="https://hr.vanderbilt.edu/benefits/">Benefits</a></li>

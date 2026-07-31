@@ -66,9 +66,10 @@
     $('#navDash').hidden = !hasProfile;
     $('#navReturn').hidden = !hasProfile;
     $('#navCta').textContent = hasProfile ? 'My path' : 'Begin onboarding';
-    document.body.classList.toggle('view-light', view === 'dashboard' || view === 'returning');
+    document.body.classList.toggle('view-light', view === 'dashboard' || view === 'returning' || view === 'engage');
     if (view === 'dashboard') renderDashboard();
     if (view === 'returning') renderReturning();
+    if (view === 'engage') renderEngage();
     window.scrollTo(0, 0);
     reveal();
   }
@@ -93,7 +94,7 @@
   function dayOfPath() {
     if (!state.start) return 1;
     var d = Math.floor((Date.now() - state.start) / 86400000) + 1;
-    return Math.max(1, Math.min(30, d));
+    return Math.max(1, Math.min(90, d));
   }
 
   /* ---------- greeting ---------- */
@@ -127,7 +128,7 @@
         if (it.aud.role && it.aud.role.indexOf(draft.role) === -1) return false;
         return true;
       }).reduce(function (a, it) { return a + it.mins; }, 0);
-      $('#summaryHours').innerHTML = 'Approximately <b>' + (Math.round(mins / 30) / 2) + ' hours</b> across your first 30 days.';
+      $('#summaryHours').innerHTML = 'Approximately <b>' + (Math.round(mins / 30) / 2) + ' hours</b> across your first 90 days.';
       var chips = skillChips(draft.family, draft.sub, 8);
       $('#summarySkills').innerHTML = chips ? '<p class="skillchips__label">Skills that matter in your sub-family</p>' + chips : '';
     }
@@ -341,7 +342,7 @@
     var p = state.profile || {};
 
     $('#dashGreeting').textContent = greeting() + ', ' + firstName();
-    $('#dashDay').textContent = 'Day ' + dayOfPath() + ' of your first 30 · ' + (p.sub || '') + ' · ' + locName(p.loc);
+    $('#dashDay').textContent = 'Day ' + dayOfPath() + ' of your first 90 · ' + (p.sub || '') + ' · ' + locName(p.loc);
 
     var totalMins = items.reduce(function (acc, it) { return acc + it.mins; }, 0);
     var doneMins = items.reduce(function (acc, it) { return acc + (isDone(it.id) ? it.mins : 0); }, 0);
@@ -398,7 +399,7 @@
         : '<div class="lane__empty">Nothing in this lane' + (tile ? ' for ' + esc(tile.label) : '') + '.</div>';
       var note = lane.note ? '<p class="lane__note">' + esc(lane.note) + '</p>' : '';
       return '<div class="lane"><div class="lane__title"><h3>' + esc(lane.title) + '</h3><span>' + esc(lane.kicker) + '</span>' + count + '</div>' + note + cards + '</div>';
-    }).join('') + '<div class="daybeyond"><div><b>Day 31 and beyond: your home base.</b> When the path is behind you, Voyage becomes the place to find anything — search every active course, track renewals, and keep growing with FLH programs.</div><button type="button" class="btn btn--ghost-dark" data-nav="returning">Preview it now →</button></div>';
+    }).join('') + '<div class="daybeyond"><div><b>Day 31 and beyond: your home base.</b> When the path is behind you, Voyage becomes the place to find anything — search every active course, track renewals, and keep growing through Programs, Events & Partnerships.</div><button type="button" class="btn btn--ghost-dark" data-nav="returning">Preview it now →</button></div>';
 
     /* up next: hard-dated first, prereqs met, not done */
     var today = dayOfPath();
@@ -464,14 +465,6 @@
         '<a class="btn" href="' + esc(r.href) + '" target="_blank" rel="noopener">Renew</a></div>';
     }).join('');
 
-    /* FLH programs, filtered by role */
-    $('#shelfExplore').innerHTML = myPrograms(p.role).map(function (x) {
-      return '<article class="item"><div class="item__top"><span class="item__cat">FLH Program</span><span class="srcbadge">' + esc(x.who) + '</span></div>' +
-        '<h4>' + esc(x.name) + '</h4><div class="item__meta"><span>' + esc(x.what) + '</span></div>' +
-        '<p class="item__prereq">' + esc(x.value) + '</p>' +
-        '<div class="item__actions"><a class="btn" href="' + esc(x.href || 'https://www.vanderbilt.edu/pcb/') + '" target="_blank" rel="noopener">Learn more</a></div></article>';
-    }).join('');
-
     /* quick rails */
     $('#quickSystems').innerHTML = VOYAGE.quickSystems.map(function (s) {
       return '<li><a href="' + esc(s.href) + '" target="_blank" rel="noopener">' + esc(s.name) + '</a></li>';
@@ -498,7 +491,26 @@
       return '<li><a data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + esc(it.title) + '<small>' + (statusOf(it.id) === 'verified' ? 'Verified in ' + esc(it.src) : 'Complete') + '</small></a></li>';
     }).join('') : '<li class="empty">Nothing completed yet.</li>';
 
-    $('#reProfile').onclick = function () { draft = { loc: null, family: null, sub: null, role: null }; show('gate'); gateStep(1); };
+    $('#reProfile').onclick = startReprofile;
+  }
+
+  /* =====================================================================
+     ENGAGE — programs, events & partnerships (available at any point)
+     ===================================================================== */
+  function renderEngage() {
+    var p = state.profile || {};
+    $('#engageGroups').innerHTML = VOYAGE.groups.map(function (g) {
+      return '<article class="item"><div class="item__top"><span class="item__cat">Staff community</span><span class="srcbadge">' + esc(g.who) + '</span></div>' +
+        '<h4>' + esc(g.name) + '</h4><div class="item__meta"><span>' + esc(g.what) + '</span></div>' +
+        '<p class="item__prereq">' + esc(g.value) + '</p>' +
+        '<div class="item__actions"><a class="btn" href="' + esc(g.href) + '" target="_blank" rel="noopener">Visit</a></div></article>';
+    }).join('');
+    $('#engagePrograms').innerHTML = myPrograms(p.role).map(function (x) {
+      return '<article class="item"><div class="item__top"><span class="item__cat">FLH Program</span><span class="srcbadge">' + esc(x.who) + '</span></div>' +
+        '<h4>' + esc(x.name) + '</h4><div class="item__meta"><span>' + esc(x.what) + '</span></div>' +
+        '<p class="item__prereq">' + esc(x.value) + '</p>' +
+        '<div class="item__actions"><a class="btn" href="' + esc(x.href || 'https://www.vanderbilt.edu/pcb/') + '" target="_blank" rel="noopener">Learn more</a></div></article>';
+    }).join('');
   }
 
   /* search */
@@ -590,6 +602,12 @@
     });
   }
 
+  function startReprofile() {
+    draft = { loc: null, family: null, sub: null, role: null };
+    show('gate'); gateStep(1);
+    toast('Transferred or changed roles? Answer the three questions again — your completed items stay completed.');
+  }
+
   /* ---------- boot ---------- */
   buildGate();
   buildSearch();
@@ -599,6 +617,7 @@
     if (state.profile) { show('dashboard'); return; }
     show('gate'); gateStep(1);
   });
+  $('#profileBtn').addEventListener('click', startReprofile);
   $('#navCta').addEventListener('click', function (e) {
     e.preventDefault();
     if (state.profile) show('dashboard'); else { show('gate'); gateStep(1); }
