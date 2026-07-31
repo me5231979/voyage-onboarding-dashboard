@@ -4,7 +4,7 @@
 set -euo pipefail
 OUT=voyage-scorm.zip
 rm -f "$OUT"
-zip -r "$OUT" imsmanifest.xml index.html assets \
-  -x "assets/video/*"   # drop the 6MB hero video to keep the package light; the poster covers the hero
+# Videos ship in the package: the 90-day intro gate requires intro-90day.mp4
+# (the gate fails open without it), and both are compressed for streaming.
+zip -r "$OUT" imsmanifest.xml index.html assets
 echo "Built $OUT ($(du -h "$OUT" | cut -f1)). Upload to Oracle Learning as SCORM content."
-echo "To keep the hero video in the package, re-run without the -x exclusion."
