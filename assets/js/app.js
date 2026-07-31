@@ -228,6 +228,12 @@
   }
 
   var CTA_BY_TYPE = { meet: 'How-to guide (PDF)', survey: 'Take survey', read: 'Open', task: 'Start', course: 'Start', compliance: 'Start' };
+  function isManagerOnly(it) {
+    return !!(it.aud && it.aud.role && it.aud.role.length === 1 && it.aud.role[0] === 'manager');
+  }
+  function mvBadge(it) {
+    return isManagerOnly(it) ? '<span class="mvbadge" title="Part of the Manager Voyage — manager-only development">⚓ Manager’s Voyage</span>' : '';
+  }
   function ctaFor(it, done) {
     if (done) return 'Revisit';
     if (it.lane === 'pre') return 'Verify';
