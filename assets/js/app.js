@@ -74,6 +74,7 @@
     $('#navDash').hidden = !hasProfile;
     $('#navReturn').hidden = !hasProfile;
     $('#navCta').textContent = hasProfile ? T('My path') : T('Begin onboarding');
+    $('#beginBtn').textContent = hasProfile ? T('Continue your voyage') : T("Let's tailor your first weeks");
     document.body.classList.toggle('view-light', view === 'dashboard' || view === 'returning' || view === 'engage');
     if (view === 'dashboard') renderDashboard();
     if (view === 'returning') renderReturning();
@@ -464,6 +465,7 @@
     if (name === 'returning') renderReturning();
     if (name === 'engage') renderEngage();
     $('#navCta').textContent = state.profile ? T('My path') : T('Begin onboarding');
+    $('#beginBtn').textContent = state.profile ? T('Continue your voyage') : T("Let's tailor your first weeks");
   }
 
   /* =====================================================================
