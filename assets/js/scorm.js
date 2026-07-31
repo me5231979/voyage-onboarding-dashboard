@@ -54,42 +54,79 @@
     return n;
   }
 
+  /* Some players return boolean true instead of the spec string 'true'. */
+  function ok(r) { return r === 'true' || r === true; }
+
+  function envReport() {
+    var lines = [];
+    try { lines.push('location=' + window.location.href); } catch (e) { lines.push('location=?'); }
+    var win = window, hops = 0;
+    while (hops < 12) {
+      var tag;
+      try {
+        tag = 'depth ' + hops + ': API=' + (typeof win.API) + ' API_1484_11=' + (typeof win.API_1484_11) +
+          (win === window.top ? ' (top)' : '');
+      } catch (e) { tag = 'depth ' + hops + ': cross-origin'; }
+      lines.push(tag);
+      var parent = null;
+      try { parent = (win.parent && win.parent !== win) ? win.parent : null; } catch (e2) { parent = null; }
+      if (!parent) break;
+      win = parent; hops++;
+    }
+    try { lines.push('opener=' + (window.opener ? 'present' : 'none')); } catch (e) { lines.push('opener=?'); }
+    return lines.join(' | ');
+  }
+
   function tryConnect() {
     if (scorm.connected) return true;
     try {
       var a2004 = findAPI('API_1484_11');
-      if (a2004 && a2004.Initialize('') === 'true') {
-        api2004 = a2004;
-        scorm.connected = true; scorm.version = '2004';
-        scorm.name = toFirstLast(a2004.GetValue('cmi.learner_name'));
-        scorm.id = a2004.GetValue('cmi.learner_id') || null;
-        return true;
+      if (a2004) {
+        var r2 = a2004.Initialize('');
+        if (ok(r2) || String(a2004.GetLastError && a2004.GetLastError()) === '103') { // 103: already initialized
+          api2004 = a2004;
+          scorm.connected = true; scorm.version = '2004';
+          scorm.name = toFirstLast(a2004.GetValue('cmi.learner_name'));
+          scorm.id = a2004.GetValue('cmi.learner_id') || null;
+          return true;
+        }
+        try { console.info('[Voyage] found 2004 API but Initialize returned', r2, 'err', a2004.GetLastError && a2004.GetLastError()); } catch (e) {}
       }
       var a12 = findAPI('API');
-      if (a12 && a12.LMSInitialize('') === 'true') {
-        api12 = a12;
-        scorm.connected = true; scorm.version = '1.2';
-        scorm.name = toFirstLast(a12.LMSGetValue('cmi.core.student_name'));
-        scorm.id = a12.LMSGetValue('cmi.core.student_id') || null;
-        return true;
+      if (a12) {
+        var r1 = a12.LMSInitialize('');
+        if (ok(r1) || String(a12.LMSGetLastError && a12.LMSGetLastError()) === '101') { // 101: already initialized (1.2)
+          api12 = a12;
+          scorm.connected = true; scorm.version = '1.2';
+          scorm.name = toFirstLast(a12.LMSGetValue('cmi.core.student_name'));
+          scorm.id = a12.LMSGetValue('cmi.core.student_id') || null;
+          return true;
+        }
+        try { console.info('[Voyage] found 1.2 API but LMSInitialize returned', r1, 'err', a12.LMSGetLastError && a12.LMSGetLastError()); } catch (e) {}
       }
-    } catch (e) { /* keep retrying */ }
+    } catch (e) { try { console.info('[Voyage] connect attempt threw:', e && e.message); } catch (e2) {} }
     return false;
   }
 
   /* The LMS is only required to expose the API before the SCO's load
      event — trying once at parse time is too early for some players.
      Retry for ~6 seconds, then settle into standalone mode. */
+  var BUILD = (function () {
+    try { return (document.currentScript.src.match(/v=([0-9a-f]+)/) || [])[1] || 'dev'; } catch (e) { return 'dev'; }
+  })();
   var attempts = 0;
   function connectLoop() {
     attempts++;
     if (tryConnect()) {
-      try { console.info('[Voyage] SCORM ' + scorm.version + ' API connected (attempt ' + attempts + ') — learner: ' + (scorm.name || 'unnamed')); } catch (e) {}
+      try { console.info('[Voyage build ' + BUILD + '] SCORM ' + scorm.version + ' API connected (attempt ' + attempts + ') — learner: ' + (scorm.name || 'unnamed') + ' id=' + scorm.id); } catch (e) {}
       window.dispatchEvent(new Event('voyage-scorm-connected'));
       return;
     }
+    if (attempts === 1 || attempts === 24) {
+      try { console.info('[Voyage build ' + BUILD + '] SCORM API not found (attempt ' + attempts + '). ' + envReport()); } catch (e) {}
+    }
     if (attempts < 24) setTimeout(connectLoop, 250);
-    else { try { console.info('[Voyage] no SCORM API found — running standalone with demo profile'); } catch (e) {} }
+    else { try { console.info('[Voyage build ' + BUILD + '] no SCORM API after 6s — running standalone with demo profile'); } catch (e) {} }
   }
   connectLoop();
 
