@@ -562,3 +562,11 @@ body.view-light .nav { background: rgba(20,20,20,.96); }
   font-size: .92rem; color: var(--ink-soft); }
 .daybeyond div { flex: 1; min-width: 260px; }
 .daybeyond b { color: var(--vu-black); font-weight: 600; }
+
+/* student/minor-facing checkbox on the role step */
+.studentcheck { display: flex; gap: .8rem; align-items: flex-start; margin-top: 1.4rem;
+  border: 1px solid rgba(255,255,255,.25); border-radius: var(--radius); padding: 1rem 1.2rem;
+  cursor: pointer; font-size: .92rem; color: rgba(255,255,255,.85); }
+.studentcheck:hover { border-color: var(--vu-gold-flat); }
+.studentcheck input { width: 18px; height: 18px; margin-top: .15rem; accent-color: #CFAE70; cursor: pointer; }
+.studentcheck b { color: #fff; font-weight: 600; }

@@ -39,6 +39,7 @@
     return VOYAGE.items.filter(function (it) {
       if (!it.aud) return true;
       if (it.aud.loc && it.aud.loc.indexOf(p.loc) === -1) return false;
+      if (it.aud.student) return !!p.student;
       if (it.aud.role && it.aud.role.indexOf(p.role) === -1) return false;
       return true;
     }).concat(meetItems());
@@ -106,7 +107,7 @@
   /* =====================================================================
      GATE — three-question personalization
      ===================================================================== */
-  var draft = { loc: null, family: null, sub: null, role: null };
+  var draft = { loc: null, family: null, sub: null, role: null, student: false };
 
   function skillsFor(family, sub) {
     return (typeof SBJA !== 'undefined' && SBJA.skills[family + '|' + sub]) || [];
@@ -121,10 +122,11 @@
     $$('.gate__step').forEach(function (s) { s.hidden = s.getAttribute('data-step') !== String(n); });
     $$('.gate__dots i').forEach(function (d, i) { d.classList.toggle('on', i < n); });
     if (n === 4) {
-      $('#summaryPath').innerHTML = 'Here’s your custom path: <b>' + esc(roleName(draft.role)) + '</b> · <b>' + esc(draft.sub) + '</b> (' + esc(draft.family) + ') · <b>' + esc(locName(draft.loc)) + '</b>';
+      $('#summaryPath').innerHTML = 'Here’s your custom path: <b>' + esc(roleName(draft.role)) + (draft.student ? ' · student/minor-facing' : '') + '</b> · <b>' + esc(draft.sub) + '</b> (' + esc(draft.family) + ') · <b>' + esc(locName(draft.loc)) + '</b>';
       var mins = VOYAGE.items.filter(function (it) {
         if (!it.aud) return true;
         if (it.aud.loc && it.aud.loc.indexOf(draft.loc) === -1) return false;
+        if (it.aud.student) return draft.student;
         if (it.aud.role && it.aud.role.indexOf(draft.role) === -1) return false;
         return true;
       }).reduce(function (a, it) { return a + it.mins; }, 0);
@@ -171,6 +173,7 @@
       $$('[data-role]', rt).forEach(function (t) { t.classList.toggle('on', t === b); });
       $('#roleNext').disabled = false;
     });
+    $('#studentFacing').addEventListener('change', function () { draft.student = this.checked; });
 
     $('#locNext').addEventListener('click', function () { gateStep(2); });
     $('#deptNext').addEventListener('click', function () { gateStep(3); });
@@ -182,7 +185,7 @@
       });
     });
     $('#gateFinish').addEventListener('click', function () {
-      state.profile = { loc: draft.loc, family: draft.family, sub: draft.sub, role: draft.role };
+      state.profile = { loc: draft.loc, family: draft.family, sub: draft.sub, role: draft.role, student: draft.student };
       save();
       if (window.VoyageSCORM && window.VoyageSCORM.connected) window.VoyageSCORM.complete();
       show('dashboard');
@@ -604,7 +607,8 @@
   }
 
   function startReprofile() {
-    draft = { loc: null, family: null, sub: null, role: null };
+    draft = { loc: null, family: null, sub: null, role: null, student: false };
+    $('#studentFacing').checked = false;
     show('gate'); gateStep(1);
     toast('Transferred or changed roles? Answer the three questions again — your completed items stay completed.');
   }
