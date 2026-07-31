@@ -68,6 +68,24 @@
     reveal();
   }
 
+  /* ---------- start date: anchored at first launch ---------- */
+  function ensureStart() {
+    var sc = window.VoyageSCORM;
+    if (sc && sc.connected) {
+      var d = sc.getData();
+      if (d.start) { state.start = d.start; save(); return; }
+      if (!state.start) state.start = Date.now();
+      d.start = state.start;
+      sc.setData(d); save(); return;
+    }
+    if (!state.start) { state.start = Date.now(); save(); }
+  }
+  function dayOfPath() {
+    if (!state.start) return 1;
+    var d = Math.floor((Date.now() - state.start) / 86400000) + 1;
+    return Math.max(1, Math.min(30, d));
+  }
+
   /* ---------- greeting ---------- */
   function greeting() {
     var h = new Date().getHours();
@@ -317,7 +335,7 @@
     var p = state.profile || {};
 
     $('#dashGreeting').textContent = greeting() + ', ' + firstName();
-    $('#dashDay').textContent = 'Day ' + VOYAGE.user.startOffsetDays + ' of your first 30 · ' + (p.sub || '') + ' · ' + locName(p.loc);
+    $('#dashDay').textContent = 'Day ' + dayOfPath() + ' of your first 30 · ' + (p.sub || '') + ' · ' + locName(p.loc);
 
     var doneCount = items.filter(function (it) { return isDone(it.id); }).length;
     var pct = items.length ? Math.round(doneCount / items.length * 100) : 0;
@@ -325,7 +343,7 @@
     var C = 295.3;
     $('#ringBar').style.strokeDashoffset = String(C - C * pct / 100);
 
-    $('#benefitDays').textContent = String(30 - VOYAGE.user.startOffsetDays);
+    $('#benefitDays').textContent = String(Math.max(0, 30 - dayOfPath()));
 
     /* six tiles */
     $('#catTiles').innerHTML = VOYAGE.tiles.map(function (t) {
@@ -591,6 +609,7 @@
     $('#idInitials').textContent = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
     $('#idName').textContent = full;
   }
+  ensureStart();
   var sc = window.VoyageSCORM;
   if (sc && sc.connected) {
     if (sc.name && !state.name) { state.name = sc.name; save(); }

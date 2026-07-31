@@ -54,6 +54,24 @@
     }
   } catch (e) { scorm.connected = false; }
 
+  /* suspend_data: Oracle stores this per learner, server-side — we keep
+     the first-launch timestamp there so the day counter follows the
+     learner across devices. */
+  scorm.getData = function () {
+    try {
+      var raw = scorm.version === '2004' ? api2004.GetValue('cmi.suspend_data')
+              : scorm.version === '1.2' ? api12.LMSGetValue('cmi.suspend_data') : '';
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  };
+  scorm.setData = function (obj) {
+    try {
+      var raw = JSON.stringify(obj);
+      if (scorm.version === '2004') { api2004.SetValue('cmi.suspend_data', raw); api2004.Commit(''); }
+      else if (scorm.version === '1.2') { api12.LMSSetValue('cmi.suspend_data', raw); api12.LMSCommit(''); }
+    } catch (e) { /* keep local copy only */ }
+  };
+
   scorm.complete = function () {
     try {
       if (scorm.version === '2004') {
