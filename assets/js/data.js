@@ -75,13 +75,13 @@ const VOYAGE = {
   /* lanes: pre | w1 | w24 · due: hard | soft | null · api: true = completion verified nightly */
   items: [
     /* ---- Universal ---- */
-    { id: 'alertvu', type: 'task',   title: 'Sign up for AlertVU emergency notifications', cat: 'safety', lane: 'pre', mins: 5,  src: 'SharePoint', api: false, due: 'hard', dueLabel: 'Before Day 1', href: 'https://emergency.vanderbilt.edu/alertvu/' },
+    { id: 'alertvu', type: 'task',   title: 'Sign up for AlertVU emergency notifications', cat: 'safety', lane: 'pre', mins: 5,  src: 'SharePoint', api: false, due: 'soft', dueLabel: 'Verify on Day 1', href: 'https://emergency.vanderbilt.edu/alertvu/' },
     { id: 'ferpa', type: 'compliance',     title: 'FERPA Tutorial', cat: 'compliance', lane: 'w1', mins: 15, src: 'Oracle Learn', api: true, due: 'hard', dueLabel: 'Day 10', href: 'https://ecsr.fa.us2.oraclecloud.com/fscmUI/redwood/learner/learn/redirect?learningItemType=ORA_COURSE&learningItemId=300001262145866' },
     { id: 'benefits', type: 'task',  title: 'Enroll in medical, dental & vision', cat: 'benefits', lane: 'w1', mins: 35, src: 'Oracle HCM', api: true, due: 'hard', dueLabel: 'Day 30 — enrollment window', href: 'https://hr.vanderbilt.edu/benefits/' },
     { id: 'retire', type: 'task',    title: 'Retirement plan election', cat: 'benefits', lane: 'w24', mins: 25, src: 'Oracle HCM', api: true, due: 'soft', dueLabel: 'Day 30', href: 'https://hr.vanderbilt.edu/benefits/retirement.php' },
     { id: 'chancellor', type: 'read',title: 'Chancellor welcome video', cat: 'mission', lane: 'pre', mins: 8, src: 'SharePoint', api: false, due: null, href: 'https://www.vanderbilt.edu/chancellor/' },
     { id: 'daretogrow', type: 'read',title: '“Dare to Grow” — the strategic plan', cat: 'mission', lane: 'w1', mins: 18, src: 'SharePoint', api: false, due: null, href: 'https://www.vanderbilt.edu/strategicplan/' },
-    { id: 'vunetid', type: 'task',   title: 'Activate VUnetID & multi-factor login', cat: 'systems', lane: 'pre', mins: 10, src: 'IT Portal', api: false, due: 'hard', dueLabel: 'Before Day 1', href: 'https://it.vanderbilt.edu/' },
+    { id: 'vunetid', type: 'task',   title: 'Activate VUnetID & multi-factor login', cat: 'systems', lane: 'pre', mins: 10, src: 'IT Portal', api: false, due: 'soft', dueLabel: 'Verify on Day 1', href: 'https://it.vanderbilt.edu/' },
     { id: 'ms365', type: 'task',     title: 'Set up Microsoft 365, Teams & OneDrive', cat: 'systems', lane: 'w1', mins: 20, src: 'Microsoft 365', api: true, due: 'soft', dueLabel: 'Day 3', href: 'https://www.office.com/' },
     { id: 'oraclehcm', type: 'task', title: 'Oracle HCM self-service tour — pay, W-4, direct deposit', cat: 'systems', lane: 'w1', mins: 15, src: 'Oracle HCM', api: true, due: 'soft', dueLabel: 'Day 5', href: 'https://hr.vanderbilt.edu/oracle/' },
     { id: 'badge', type: 'task',     title: 'Campus ID badge & building access', cat: 'systems', lane: 'w1', mins: 15, src: 'IT Portal', api: false, due: 'soft', dueLabel: 'Day 2', href: 'https://cardservices.vanderbilt.edu/' },
@@ -115,10 +115,10 @@ const VOYAGE = {
     /* ---- Location-driven ---- */
     { id: 'vupd', type: 'read',      title: 'VUPD, evacuation routes & campus safety', cat: 'safety', lane: 'w1', mins: 12, src: 'SharePoint', api: false, due: 'soft', dueLabel: 'Day 3', aud: { loc: ['tn'] }, href: 'https://police.vanderbilt.edu/' },
     { id: 'localpd', type: 'read',   title: 'Local site safety contacts & evacuation routes', cat: 'safety', lane: 'w1', mins: 10, src: 'SharePoint', api: false, due: 'soft', dueLabel: 'Day 3', aud: { loc: ['ny', 'fl', 'ca'] }, href: 'https://emergency.vanderbilt.edu/' },
-    { id: 'park-tn', type: 'task',   title: 'Register for parking — VU Parking Services', cat: 'parking', lane: 'pre', mins: 10, src: 'Parking Vendor', api: false, due: 'soft', dueLabel: 'Before Day 1', aud: { loc: ['tn'] }, href: 'https://www.vanderbilt.edu/parking/' },
-    { id: 'park-ny', type: 'task',   title: 'Partnered garage & commuter benefits — New York', cat: 'parking', lane: 'pre', mins: 10, src: 'Parking Vendor', api: false, due: 'soft', dueLabel: 'Before Day 1', aud: { loc: ['ny'] }, href: 'https://hr.vanderbilt.edu/benefits/' },
-    { id: 'park-fl', type: 'task',   title: 'On-site lot registration — Florida', cat: 'parking', lane: 'pre', mins: 8, src: 'Parking Vendor', api: false, due: 'soft', dueLabel: 'Before Day 1', aud: { loc: ['fl'] }, href: 'https://hr.vanderbilt.edu/benefits/' },
-    { id: 'park-ca', type: 'task',   title: 'Commuter benefits & transit pass — California', cat: 'parking', lane: 'pre', mins: 10, src: 'Parking Vendor', api: false, due: 'soft', dueLabel: 'Before Day 1', aud: { loc: ['ca'] }, href: 'https://hr.vanderbilt.edu/benefits/' },
+    { id: 'park-tn', type: 'task',   title: 'Register for parking — VU Parking Services', cat: 'parking', lane: 'pre', mins: 10, src: 'Parking Vendor', api: false, due: 'soft', dueLabel: 'Verify on Day 1', aud: { loc: ['tn'] }, href: 'https://www.vanderbilt.edu/parking/' },
+    { id: 'park-ny', type: 'task',   title: 'Partnered garage & commuter benefits — New York', cat: 'parking', lane: 'pre', mins: 10, src: 'Parking Vendor', api: false, due: 'soft', dueLabel: 'Verify on Day 1', aud: { loc: ['ny'] }, href: 'https://hr.vanderbilt.edu/benefits/' },
+    { id: 'park-fl', type: 'task',   title: 'On-site lot registration — Florida', cat: 'parking', lane: 'pre', mins: 8, src: 'Parking Vendor', api: false, due: 'soft', dueLabel: 'Verify on Day 1', aud: { loc: ['fl'] }, href: 'https://hr.vanderbilt.edu/benefits/' },
+    { id: 'park-ca', type: 'task',   title: 'Commuter benefits & transit pass — California', cat: 'parking', lane: 'pre', mins: 10, src: 'Parking Vendor', api: false, due: 'soft', dueLabel: 'Verify on Day 1', aud: { loc: ['ca'] }, href: 'https://hr.vanderbilt.edu/benefits/' },
     { id: 'kaiser', type: 'read',    title: 'Kaiser plan options & state disability — California', cat: 'benefits', lane: 'w1', mins: 15, src: 'Oracle HCM', api: false, due: 'soft', dueLabel: 'Day 30', aud: { loc: ['ca'] }, href: 'https://hr.vanderbilt.edu/benefits/' },
     { id: 'stateadd', type: 'read',  title: 'State employment law addenda for your site', cat: 'policies', lane: 'w24', mins: 15, src: 'SharePoint', api: false, due: 'soft', dueLabel: 'Day 21', aud: { loc: ['ny', 'fl', 'ca'] }, href: 'https://hr.vanderbilt.edu/policies/' },
     { id: 'traditions', type: 'read',title: 'Campus traditions — Anchor Down 101', cat: 'mission', lane: 'w24', mins: 10, src: 'SharePoint', api: false, due: null, aud: { loc: ['tn'] }, href: 'https://www.vanderbilt.edu/about/' },
@@ -182,7 +182,8 @@ const VOYAGE = {
   peopleLanes: ['w1', 'w24', 'w1', 'w24'],
 
   lanes: [
-    { id: 'pre', title: 'Before Day 1', kicker: 'Get ready' },
+    { id: 'pre', title: 'Verify & Validate', kicker: 'Covered in Voyage Classroom',
+      note: 'You completed these during Vanderbilt Voyage (Classroom). Open each one to verify it carried over, then confirm it here.' },
     { id: 'w1',  title: 'Week 1', kicker: 'Land well' },
     { id: 'w24', title: 'Weeks 2–4', kicker: 'Build momentum' }
   ],

@@ -185,6 +185,11 @@
   }
 
   var CTA_BY_TYPE = { meet: 'Schedule intro', survey: 'Take survey', read: 'Open', task: 'Start', course: 'Start', compliance: 'Start' };
+  function ctaFor(it, done) {
+    if (done) return 'Revisit';
+    if (it.lane === 'pre') return 'Verify';
+    return CTA_BY_TYPE[it.type] || 'Start';
+  }
   function typeChip(it) {
     var t = VOYAGE.typeDefs[it.type] || VOYAGE.typeDefs.task;
     return '<span class="typechip typechip--' + (it.type || 'task') + '">' + t.label + '</span>';
@@ -208,8 +213,8 @@
       '<div class="item__meta"><span>' + it.mins + ' min</span><span class="srcbadge">' + esc(it.src) + '</span>' + legal + due + cad + '</div>' +
       cond + prereq +
       '<div class="item__actions">' +
-        '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + (done ? 'Revisit' : (CTA_BY_TYPE[it.type] || 'Start')) + '</a>' +
-        (done ? '' : '<button type="button" class="item__minor" data-done="' + it.id + '">Mark as done</button>') +
+        '<a class="btn" data-go="' + it.id + '" href="' + esc(it.href) + '" target="_blank" rel="noopener">' + ctaFor(it, done) + '</a>' +
+        (done ? '' : '<button type="button" class="item__minor" data-done="' + it.id + '">' + (it.lane === 'pre' ? 'Confirm complete' : 'Mark as done') + '</button>') +
         '<button type="button" class="item__minor" data-save="' + it.id + '">' + (saved ? 'Saved ✓' : 'Save for later') + '</button>' +
       '</div></article>';
   }
@@ -339,7 +344,8 @@
       var count = mine.length ? '<span class="lane__count">' + laneDone + ' of ' + mine.length + ' complete</span>' : '';
       var cards = mine.length ? '<div class="lane__cards">' + mine.map(cardHTML).join('') + '</div>'
         : '<div class="lane__empty">Nothing in this lane' + (tile ? ' for ' + esc(tile.label) : '') + '.</div>';
-      return '<div class="lane"><div class="lane__title"><h3>' + esc(lane.title) + '</h3><span>' + esc(lane.kicker) + '</span>' + count + '</div>' + cards + '</div>';
+      var note = lane.note ? '<p class="lane__note">' + esc(lane.note) + '</p>' : '';
+      return '<div class="lane"><div class="lane__title"><h3>' + esc(lane.title) + '</h3><span>' + esc(lane.kicker) + '</span>' + count + '</div>' + note + cards + '</div>';
     }).join('');
 
     /* compliance center */
