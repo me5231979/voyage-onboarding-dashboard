@@ -570,3 +570,12 @@ body.view-light .nav { background: rgba(20,20,20,.96); }
 .studentcheck:hover { border-color: var(--vu-gold-flat); }
 .studentcheck input { width: 18px; height: 18px; margin-top: .15rem; accent-color: #CFAE70; cursor: pointer; }
 .studentcheck b { color: #fff; font-weight: 600; }
+
+/* yes / no / unsure selector */
+.studentcheck { flex-direction: column; }
+.studentopts { display: flex; gap: .6rem; margin-top: .9rem; }
+.studentopts button { background: transparent; border: 1px solid rgba(255,255,255,.35); color: rgba(255,255,255,.85);
+  border-radius: 999px; padding: .5rem 1.4rem; font: 600 .88rem var(--font-sans); cursor: pointer;
+  transition: all .2s var(--ease); }
+.studentopts button:hover { border-color: var(--vu-gold-flat); color: var(--vu-gold-flat); }
+.studentopts button.on { background: var(--vu-gold-flat); border-color: var(--vu-gold-flat); color: var(--vu-black); }

@@ -107,7 +107,7 @@
   /* =====================================================================
      GATE — three-question personalization
      ===================================================================== */
-  var draft = { loc: null, family: null, sub: null, role: null, student: false };
+  var draft = { loc: null, family: null, sub: null, role: null, student: false, studentAns: null };
 
   function skillsFor(family, sub) {
     return (typeof SBJA !== 'undefined' && SBJA.skills[family + '|' + sub]) || [];
@@ -122,7 +122,7 @@
     $$('.gate__step').forEach(function (s) { s.hidden = s.getAttribute('data-step') !== String(n); });
     $$('.gate__dots i').forEach(function (d, i) { d.classList.toggle('on', i < n); });
     if (n === 4) {
-      $('#summaryPath').innerHTML = 'Here’s your custom path: <b>' + esc(roleName(draft.role)) + (draft.student ? ' · student/minor-facing' : '') + '</b> · <b>' + esc(draft.sub) + '</b> (' + esc(draft.family) + ') · <b>' + esc(locName(draft.loc)) + '</b>';
+      $('#summaryPath').innerHTML = 'Here’s your custom path: <b>' + esc(roleName(draft.role)) + (draft.student ? ' · student/minor-facing' + (draft.studentAns === 'unsure' ? ' (enrolled to be safe)' : '') : '') + '</b> · <b>' + esc(draft.sub) + '</b> (' + esc(draft.family) + ') · <b>' + esc(locName(draft.loc)) + '</b>';
       var mins = VOYAGE.items.filter(function (it) {
         if (!it.aud) return true;
         if (it.aud.loc && it.aud.loc.indexOf(draft.loc) === -1) return false;
@@ -171,9 +171,17 @@
       var b = e.target.closest('[data-role]'); if (!b) return;
       draft.role = b.getAttribute('data-role');
       $$('[data-role]', rt).forEach(function (t) { t.classList.toggle('on', t === b); });
-      $('#roleNext').disabled = false;
+      $('#roleNext').disabled = !(draft.role && draft.studentAns);
     });
-    $('#studentFacing').addEventListener('change', function () { draft.student = this.checked; });
+    function gateRoleReady() { $('#roleNext').disabled = !(draft.role && draft.studentAns); }
+    $$('.studentopts button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        draft.studentAns = b.getAttribute('data-student');
+        draft.student = draft.studentAns !== 'no';   // unsure enrolls as a precaution
+        $$('.studentopts button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        gateRoleReady();
+      });
+    });
 
     $('#locNext').addEventListener('click', function () { gateStep(2); });
     $('#deptNext').addEventListener('click', function () { gateStep(3); });
@@ -607,8 +615,8 @@
   }
 
   function startReprofile() {
-    draft = { loc: null, family: null, sub: null, role: null, student: false };
-    $('#studentFacing').checked = false;
+    draft = { loc: null, family: null, sub: null, role: null, student: false, studentAns: null };
+    $$('.studentopts button').forEach(function (x) { x.classList.remove('on'); });
     show('gate'); gateStep(1);
     toast('Transferred or changed roles? Answer the three questions again — your completed items stay completed.');
   }

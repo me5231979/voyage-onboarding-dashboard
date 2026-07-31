@@ -98,8 +98,14 @@
         <h2 class="h2">What kind of <em class="gold-text">work</em>?</h2>
         <p class="lead">Auto-suggested from your Oracle job code — confirm or change it. This sets the depth of your path.</p>
         <div class="tiles" id="roleTiles" role="group" aria-label="Choose your role type"></div>
-        <label class="studentcheck"><input type="checkbox" id="studentFacing">
-          <span><b>I work with students or minors.</b> Adds Protection of Minors 101 and Clery Act training to your path — this stacks with any role.</span></label>
+        <div class="studentcheck" role="group" aria-labelledby="studentQ">
+          <span id="studentQ"><b>I have the potential to work with students or minors.</b> A yes — or an unsure — adds Protection of Minors 101 and Clery Act training to your path. This stacks with any role.</span>
+          <div class="studentopts">
+            <button type="button" data-student="yes">Yes</button>
+            <button type="button" data-student="no">No</button>
+            <button type="button" data-student="unsure">Unsure</button>
+          </div>
+        </div>
         <div class="gate__nav">
           <button class="gate__back" data-back="2">← Back</button>
           <button class="btn" id="roleNext" disabled>Continue</button>
