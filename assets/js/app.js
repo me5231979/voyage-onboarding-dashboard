@@ -18,10 +18,15 @@
 
   function load() { try { return JSON.parse(localStorage.getItem(LS)); } catch (e) { return null; } }
   function firstName() { return (state.name && state.name.split(' ')[0]) || VOYAGE.user.first; }
+  /* Never mirror state into the LMS before the registration has been read
+     and adopted once (ensureStart) — otherwise an early save() echoes
+     stale local state into a freshly reset registration, and the reset
+     appears to do nothing. */
+  var scormAdopted = false;
   function save() {
     try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {}
     var sc = window.VoyageSCORM;
-    if (sc && sc.connected && sc.setData) {
+    if (sc && sc.connected && sc.setData && scormAdopted) {
       sc.setData({ s: state.start, p: state.profile, st: state.status, n: state.name, o: state.optout, dn: state.scoDone, dt: state.doneTs, iv: state.introSeen ? 1 : 0 });
     }
   }
@@ -141,6 +146,7 @@
       /* Connected to an LMS: the registration's suspend_data is the
          source of truth, not this browser's local copy. */
       var d = sc.getData();
+      scormAdopted = true;
       if (d.s || d.start) {
         /* registration has history — adopt it wholesale (cross-device resume) */
         state.start = d.s || d.start;
