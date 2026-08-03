@@ -138,19 +138,29 @@
   function ensureStart() {
     var sc = window.VoyageSCORM;
     if (sc && sc.connected) {
+      /* Connected to an LMS: the registration's suspend_data is the
+         source of truth, not this browser's local copy. */
       var d = sc.getData();
       if (d.s || d.start) {
+        /* registration has history — adopt it wholesale (cross-device resume) */
         state.start = d.s || d.start;
-        if (d.p && !state.profile) state.profile = d.p;
-        if (d.st) state.status = d.st;
-        if (d.o) state.optout = d.o;
-        if (d.dn) state.scoDone = true;
-        if (d.dt) state.doneTs = d.dt;
-        if (d.iv) state.introSeen = true;
-        if (d.n && !state.name) state.name = d.n;
+        state.profile = d.p || null;
+        state.status = d.st || {};
+        state.optout = d.o || {};
+        state.doneTs = d.dt || {};
+        state.scoDone = !!d.dn;
+        state.introSeen = !!d.iv;
+        if (d.n) state.name = d.n;
         save(); return;
       }
-      if (!state.start) state.start = Date.now();
+      /* empty registration — a brand-new learner OR an admin reset in the
+         LMS. Either way the experience starts fresh: discard any stale
+         local copy so a reset truly resets. */
+      state.profile = null; state.status = {}; state.saved = []; state.events = [];
+      state.filter = null; state.optout = {}; state.doneTs = {};
+      state.scoDone = false; state.introSeen = false; state.mvOnly = false;
+      state.name = null;
+      state.start = Date.now();
       save(); return;
     }
     if (!state.start) { state.start = Date.now(); save(); }
@@ -848,15 +858,17 @@
   function adoptScorm() {
     var sc = window.VoyageSCORM;
     if (!sc || !sc.connected) return;
-    ensureStart();                         /* merge suspend_data (start date, profile, statuses, opt-outs) */
+    ensureStart();                         /* adopt suspend_data — or start fresh if the registration was reset */
     if (sc.name && !state.name) { state.name = sc.name; save(); }
     $('#idMeta').textContent = 'Signed in via Oracle Learning' + (sc.id ? ' · Learner ID ' + sc.id : '') + ' — pulled live from the LMS';
     $('#renameBtn').hidden = true;
     paintIdentity();
     var av = $('.view.active');
     if (av) {
-      rerenderActive();
-      introGate(av.getAttribute('data-view') === 'dashboard');
+      /* full repaint: nav visibility, hero labels, renders, intro gate.
+         If a reset emptied the profile, profile-dependent views bounce home. */
+      var name = av.getAttribute('data-view');
+      show(!state.profile && (name === 'dashboard' || name === 'returning') ? 'welcome' : name);
     }
   }
   adoptScorm();
